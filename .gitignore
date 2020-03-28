@@ -2,4 +2,13 @@
 # Il file gitignore è stato creato automaticamente da Microsoft(R) Visual Studio.
 ################################################################################
 
-/EasyReportDispatcher_Lib_Common/bin/Debug
+/EasyReportDispatcher_Lib_Common/bin
+/EasyReportDispatcher_Lib_BIZ/bin
+/EasyReportDispatcher_Lib_BIZ/obj
+/EasyReportDispatcher_Lib_Common/obj
+/EasyReportDispatcher_Lib_DAL/bin
+/EasyReportDispatcher_Lib_DAL/obj
+/EasyReportDispatcher_RUN/bin
+/EasyReportDispatcher_RUN/obj
+/packages
+/.vs
