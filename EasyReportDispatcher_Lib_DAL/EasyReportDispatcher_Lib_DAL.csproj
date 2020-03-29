@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Business.Data.Objects, Version=4.0.0.0, Culture=neutral, PublicKeyToken=1dc0a08b888e7d1a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Business.Data.Objects.4.0.3\lib\net\Business.Data.Objects.dll</HintPath>
+      <HintPath>..\packages\bdo.4.0.7\lib\net20\Business.Data.Objects.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
