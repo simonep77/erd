@@ -10,6 +10,7 @@ using System.Net;
 using EasyReportDispatcher_Lib_Common.src.enums;
 using EasyReportDispatcher_Lib_DAL.src.report;
 using EasyReportDispatcher_Lib_BIZ.src.utils;
+using Ionic.Zip;
 
 namespace EasyReportDispatcher_Lib_BIZ.src.report
 {
@@ -245,7 +246,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 return;
 
             //Accorpa ed imposta su questo risultato
-            this.LastResult.DataBlob = ExcelUT.EseguiAccorpamento(estraz, this.DataObj.Password);
+            this.LastResult.DataBlob = ExcelUT.EseguiAccorpamento(estraz);
             this.LastResult.DataLen = this.LastResult.DataBlob.Length;
 
 
@@ -301,7 +302,28 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                             switch (this.DataObj.TipoNotificaId)
                             {
                                 case eReport.TipoNotifica.EmailConAllegato:
-                                    msg.Attachments.Add(new System.Net.Mail.Attachment(new MemoryStream(this.LastResult.DataBlob), string.Format(@"{0}_{1:yyyy_MM_dd}.xlsx", this.DataObj.Nome.Replace(' ', '_'), this.LastResult.DataOraInizio.Date)));
+
+                                    MemoryStream blob = null;
+                                    var filename = string.Format(@"{0}_{1:yyyy_MM_dd}.xlsx", this.DataObj.Nome.Replace(' ', '_'), this.LastResult.DataOraInizio.Date);
+                                    var filenameMail = filename;
+                                    
+                                    if (!string.IsNullOrEmpty(this.DataObj.Password))
+                                    {
+                                        blob = new MemoryStream();
+                                        filenameMail = Path.ChangeExtension(filename, @".zip");
+                                        using (var zip = new ZipFile())
+                                        {
+                                            zip.Password = this.DataObj.Password;
+                                            zip.AddEntry(filename, blob);
+                                            zip.Save(blob);
+                                        }
+
+                                        blob.Position = 0;
+                                    }
+                                    else
+                                        blob = new MemoryStream(this.LastResult.DataBlob);
+
+                                    msg.Attachments.Add(new System.Net.Mail.Attachment(blob, filename));
 
                                     break;
 
@@ -431,7 +453,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
             var sheetname = !string.IsNullOrEmpty(this.DataObj.SheetName) ? this.DataObj.SheetName : this.DataObj.Nome.PadRight(30, ' ').Substring(0, 30).Trim();
             var password = this.IsAccorpato ? string.Empty : this.DataObj.Password;
-            var excel = ExcelUT.EseguiRenderDataTableExcel(this.mTabResultSQL, this.DataObj.Nome, this.DataObj.Titolo, sheetname , null, password);
+            var excel = ExcelUT.EseguiRenderDataTableExcel(this.mTabResultSQL, this.DataObj.Nome, this.DataObj.Titolo, sheetname , null);
             this.mLastResult.DataLen = excel.DatiMemory.Length;
             this.mLastResult.DataBlob = excel.DatiMemory;
 
