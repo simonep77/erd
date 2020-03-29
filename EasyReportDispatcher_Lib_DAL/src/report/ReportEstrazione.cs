@@ -46,5 +46,8 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
 
         [AcceptNull()]
         public abstract string EstrazioniAccorpateIds { get; }
+
+        [AcceptNull()]
+        public abstract string Password { get; }
     }
 }

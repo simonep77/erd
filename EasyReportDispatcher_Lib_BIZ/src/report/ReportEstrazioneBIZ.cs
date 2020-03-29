@@ -118,6 +118,17 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             }
         }
 
+        
+        /// <summary>
+        /// Indica se presenti altre estrazioni da accorpare a questa
+        /// </summary>
+        public bool IsAccorpato
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(this.DataObj.EstrazioniAccorpateIds);
+            }
+        }
 
        #endregion
 
@@ -187,8 +198,12 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
         private void runAccorpaAltreEstrazioni()
         {
-            if (this.DataObj.TipoFileId != eReport.TipoFile.Excel || string.IsNullOrEmpty(this.DataObj.EstrazioniAccorpateIds))
+            if (!this.IsAccorpato)
                 return;
+
+            //Solo excel si puo' accorpare
+            if (this.DataObj.TipoFileId != eReport.TipoFile.Excel)
+                throw new ApplicationException(@"E' possibile accorpare solo estrazioni di tipo Excel");
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin accorpamento");
 
@@ -206,6 +221,13 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 {
                     //Esegue altra estrazione
                     var repBiz = this.Slot.BizNewWithLoadByPK<ReportEstrazioneBIZ>(id);
+                    //Tutte le estrazioni devono essere dello stesso tipo
+                    
+                    //Solo excel si puo' accorpare
+                    if (repBiz.DataObj.TipoFileId != this.DataObj.TipoFileId)
+                        throw new ApplicationException(string.Format(@"L'estrazione {0} - {1} deve essere dello stesso tipo di quella principale {2}", 
+                            repBiz.DataObj.Id, repBiz.DataObj.Nome, this.DataObj.Id));
+
                     repBiz.Run();
                     //Aggiunge ad elenco
                     estraz.Add(repBiz.LastResult.DataBlob);
@@ -223,7 +245,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 return;
 
             //Accorpa ed imposta su questo risultato
-            this.LastResult.DataBlob = ExcelUT.EseguiAccorpamento(estraz);
+            this.LastResult.DataBlob = ExcelUT.EseguiAccorpamento(estraz, this.DataObj.Password);
             this.LastResult.DataLen = this.LastResult.DataBlob.Length;
 
 
@@ -408,8 +430,8 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin render excel");
 
             var sheetname = !string.IsNullOrEmpty(this.DataObj.SheetName) ? this.DataObj.SheetName : this.DataObj.Nome.PadRight(30, ' ').Substring(0, 30).Trim();
-
-            var excel = ExcelUT.EseguiRenderDataTableExcel(this.mTabResultSQL, this.DataObj.Nome, this.DataObj.Titolo, sheetname ,null);
+            var password = this.IsAccorpato ? string.Empty : this.DataObj.Password;
+            var excel = ExcelUT.EseguiRenderDataTableExcel(this.mTabResultSQL, this.DataObj.Nome, this.DataObj.Titolo, sheetname , null, password);
             this.mLastResult.DataLen = excel.DatiMemory.Length;
             this.mLastResult.DataBlob = excel.DatiMemory;
 

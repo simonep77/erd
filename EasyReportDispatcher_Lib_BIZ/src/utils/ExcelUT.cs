@@ -28,7 +28,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.utils
         /// <param name="sheetName"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static ExcelRender EseguiRenderDataTableExcel(DataTable dt, string nomeStat,string titolo, string sheetName, Dictionary<string, string>  args)
+        public static ExcelRender EseguiRenderDataTableExcel(DataTable dt, string nomeStat,string titolo, string sheetName, Dictionary<string, string> args, string password)
         {
             var oEsitoRender = new ExcelRender();
 
@@ -105,11 +105,14 @@ namespace EasyReportDispatcher_Lib_BIZ.src.utils
                 worksheetp.Rows(1, 1).Style.Font.Bold = true;
             }
 
+            //Se fornita password la imposta
+            if (!string.IsNullOrEmpty(password))
+                workbook.Protect(password);
+
             //Scrive
             var memoryStream = new MemoryStream();
             workbook.SaveAs(memoryStream);
             oEsitoRender.DatiMemory = memoryStream.ToArray();
-
 
             return oEsitoRender;
         }
@@ -120,7 +123,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.utils
         /// </summary>
         /// <param name="wbks"></param>
         /// <returns></returns>
-        public static byte[] EseguiAccorpamento(IList<byte[]> wbks)
+        public static byte[] EseguiAccorpamento(IList<byte[]> wbks, string password)
         {
             using (var ms = new MemoryStream())
             {
@@ -141,8 +144,11 @@ namespace EasyReportDispatcher_Lib_BIZ.src.utils
 
                 using (var mso = new MemoryStream())
                 {
-                    workbook.SaveAs(mso);
+                    //Se fornita password la imposta
+                    if (!string.IsNullOrEmpty(password))
+                        workbook.Protect(password);
 
+                    workbook.SaveAs(mso);
                     //Reimposta il blob dell'output
                     return mso.ToArray();
                 }
