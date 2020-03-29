@@ -1,8 +1,8 @@
 /*
-SQLyog Ultimate v13.0.1 (64 bit)
-MySQL - 5.5.33 : Database - postesvc_preview
+SQLyog Ultimate v12.08 (32 bit)
+MySQL - 8.0.13-4 : Database - ourKl13l8f
 *********************************************************************
-*/
+*/
 
 /*!40101 SET NAMES utf8 */;
 
@@ -26,7 +26,7 @@ CREATE TABLE `report_connessioni` (
 
 /*Data for the table `report_connessioni` */
 
-insert  into `report_connessioni`(`Id`,`Nome`,`ConnectionString`,`BdoDbConnectioType`) values (1,'GestioneSinistri','','MYSQLDataBase');
+insert  into `report_connessioni`(`Id`,`Nome`,`ConnectionString`,`BdoDbConnectioType`) values (1,'GestioneSinistri','Server=remotemysql.com;UserId=ourKl13l8f;Password=IXehc1qbkZ;Database=ourKl13l8f;','MYSQLDataBase');
 
 /*Table structure for table `report_destinatari_email` */
 
@@ -45,12 +45,11 @@ CREATE TABLE `report_destinatari_email` (
   `MailBODY` text NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `EstrazioneId` (`EstrazioneId`),
-  CONSTRAINT `report_destinatari_email_ibfk_2` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`Id`),
-  CONSTRAINT `report_destinatari_email_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+  CONSTRAINT `report_destinatari_email_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`id`),
+  CONSTRAINT `report_destinatari_email_ibfk_2` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `report_destinatari_email` */
-
 
 /*Table structure for table `report_estrazioni` */
 
@@ -76,11 +75,13 @@ CREATE TABLE `report_estrazioni` (
   PRIMARY KEY (`Id`),
   KEY `ConnessioneId` (`ConnessioneId`),
   KEY `TipoFileId` (`TipoFileId`),
-  CONSTRAINT `report_estrazioni_ibfk_1` FOREIGN KEY (`ConnessioneId`) REFERENCES `report_connessioni` (`Id`),
-  CONSTRAINT `report_estrazioni_ibfk_2` FOREIGN KEY (`TipoFileId`) REFERENCES `report_tipi_file` (`Id`)
+  CONSTRAINT `report_estrazioni_ibfk_1` FOREIGN KEY (`ConnessioneId`) REFERENCES `report_connessioni` (`id`),
+  CONSTRAINT `report_estrazioni_ibfk_2` FOREIGN KEY (`TipoFileId`) REFERENCES `report_tipi_file` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `report_estrazioni` */
+
+insert  into `report_estrazioni`(`Id`,`Nome`,`Titolo`,`Note`,`Attivo`,`ConnessioneId`,`TipoFileId`,`SheetName`,`SqlText`,`CronString`,`DataInizio`,`DataFine`,`NumOutputStorico`,`EstrazioniAccorpateIds`,`Password`,`TipoNotificaId`) values (1,'Prova','Estrazione test',NULL,1,1,2,'Test','SELECT *\r\nFROM report_tipi_file','30 0 * * *','2001-01-01','9999-12-31',10,NULL,'abcdef',1);
 
 /*Table structure for table `report_estrazioni_output` */
 
@@ -104,11 +105,12 @@ CREATE TABLE `report_estrazioni_output` (
   KEY `TipoFileId` (`TipoFileId`),
   KEY `EstrazioneId` (`EstrazioneId`),
   KEY `StatoId` (`StatoId`),
-  CONSTRAINT `report_estrazioni_output_ibfk_1` FOREIGN KEY (`TipoFileId`) REFERENCES `report_tipi_file` (`Id`),
-  CONSTRAINT `report_estrazioni_output_ibfk_2` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`Id`),
-  CONSTRAINT `report_estrazioni_output_ibfk_3` FOREIGN KEY (`StatoId`) REFERENCES `report_estrazioni_output_stati` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=275 DEFAULT CHARSET=latin1;
+  CONSTRAINT `report_estrazioni_output_ibfk_1` FOREIGN KEY (`TipoFileId`) REFERENCES `report_tipi_file` (`id`),
+  CONSTRAINT `report_estrazioni_output_ibfk_2` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`id`),
+  CONSTRAINT `report_estrazioni_output_ibfk_3` FOREIGN KEY (`StatoId`) REFERENCES `report_estrazioni_output_stati` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+/*Data for the table `report_estrazioni_output` */
 
 /*Table structure for table `report_estrazioni_output_stati` */
 
