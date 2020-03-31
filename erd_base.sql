@@ -176,6 +176,20 @@ CREATE TABLE `report_tipi_notifica` (
 
 insert  into `report_tipi_notifica`(`Id`,`Nome`) values (1,'Nessuna'),(2,'Email con allegato'),(3,'Email con link');
 
+CREATE TABLE `report_estrazioni_copyto` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `EstrazioneId` int(11) NOT NULL,
+  `Path` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'Può includere l''interopolazione {output.xxx} dove output è l''oggetto con il risultato dell''esecuzione',
+  `User` varchar(80) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Da valorizzare solo se diverse da quelle di esecuzione',
+  `Pass` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Da valorizzare solo se diverse da quelle di esecuzione',
+  `Domain` varchar(80) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Da valorizzare solo se diverse da quelle di esecuzione',
+  PRIMARY KEY (`Id`),
+  KEY `EstrazioneId` (`EstrazioneId`),
+  CONSTRAINT `report_estrazioni_copyto_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+
+
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;

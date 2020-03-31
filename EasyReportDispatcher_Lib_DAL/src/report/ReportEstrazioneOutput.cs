@@ -29,6 +29,8 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
 
         public abstract sbyte TipoFileId { get; set; }
 
+        public abstract string NomeFile { get; set; }
+
         [AcceptNull()]
         public abstract int DataLen { get; set; }
 

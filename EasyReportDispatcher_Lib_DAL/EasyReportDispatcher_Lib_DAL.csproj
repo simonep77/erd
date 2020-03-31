@@ -51,7 +51,9 @@
     <Compile Include="src\report\ReportEstrazioneDestinatarioEmail.cs" />
     <Compile Include="src\report\ReportEstrazioneDestinatarioEmailLista.cs" />
     <Compile Include="src\report\ReportEstrazioneLista.cs" />
+    <Compile Include="src\report\ReportEstrazioneCopyTo.cs" />
     <Compile Include="src\report\ReportEstrazioneOutput.cs" />
+    <Compile Include="src\report\ReportEstrazioneCopyToLista.cs" />
     <Compile Include="src\report\ReportEstrazioneOutputLista.cs" />
     <Compile Include="src\report\ReportSmtpConfig.cs" />
     <Compile Include="src\report\ReportTipoFile.cs" />

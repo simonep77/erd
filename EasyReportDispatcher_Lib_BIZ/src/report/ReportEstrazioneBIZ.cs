@@ -68,6 +68,24 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             }
         }
 
+
+        private ReportEstrazioneCopyToLista mListaCopyTo;
+        /// <summary>
+        /// Lista posizioni su cui copiare il file
+        /// </summary>
+        public ReportEstrazioneCopyToLista ListaCopyTo
+        {
+            get
+            {
+                if (this.mListaCopyTo == null)
+                {
+                    this.mListaCopyTo = this.Slot.CreateList<ReportEstrazioneCopyToLista>()
+                         .SearchByColumn(new FilterEQUAL(nameof(ReportEstrazioneDestinatarioEmail.EstrazioneId), this.DataObj.Id));
+                }
+                return this.mListaCopyTo;
+            }
+        }
+
         /// <summary>
         /// Data la stringa cron di schedulazione indica se puo' girare oppure no. Funziona solo su base giornaliera
         /// </summary>
@@ -165,6 +183,8 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 //Se estrazione excel e presenti altre estrazioni da accorpare le esegue e mette tutto insieme
                 this.runAccorpaAltreEstrazioni();
 
+                //Esegue copia
+
                 //Esito OK
                 this.mLastResult.StatoId = eReport.StatoEstrazione.TerminataConSuccesso;
             }
@@ -254,6 +274,51 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
         }
 
+        /// <summary>
+        /// Data una destinazione di copia e l'output ritorna un path completo
+        /// </summary>
+        /// <param name="copyto"></param>
+        /// <param name="output"></param>
+        /// <returns></returns>
+        private string getCopyToDestFile(ReportEstrazioneCopyTo copyto, ReportEstrazioneOutput output)
+        {
+            var destDir = string.Format(@"$" + copyto.Path).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+            return Path.Combine(destDir, output.NomeFile);
+        }
+
+
+        /// <summary>
+        /// Esegue copia in directory specifica
+        /// </summary>
+        private void runCopyTo()
+        {
+
+            this.Slot.LogDebug(DebugLevel.Debug_1, "Begin Copy To");
+
+
+            foreach (var item in this.ListaCopyTo)
+            {
+                var output = this.LastResult;
+                var tempFile = Path.Combine(Path.GetTempPath(), output.NomeFile);
+                
+                var destFile = this.getCopyToDestFile(item, output);
+
+                var destDir = destFile.Substring(0, destFile.LastIndexOf(output.NomeFile));
+
+                File.WriteAllBytes(tempFile, output.DataBlob);
+                try
+                {
+                    RunUT.XCopyTo(tempFile, destDir, item.User, item.Pass, item.Domain);
+                }
+                finally
+                {
+                    File.Delete(tempFile);
+                }
+            }
+
+            this.Slot.LogDebug(DebugLevel.Debug_1, "End Copy To");
+
+        }
 
         public List<ReportEstrazioneDestinatarioEmail> SendEmail()
         {
@@ -331,7 +396,12 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
                                     msg.Body += "<br/><br/>LINK al file: <a hrf='www.google.it' target='_blank' >clicca qui</a>";
 
-                                    break;
+                                    foreach (var ct in this.ListaCopyTo)
+                                    {
+                                        msg.Body += "<br/><br/>LINK al file: <a href='file:" + this.getCopyToDestFile() + "' target='_blank' >clicca qui</a>";
+                                    }
+
+                                        break;
                             }
 
 
