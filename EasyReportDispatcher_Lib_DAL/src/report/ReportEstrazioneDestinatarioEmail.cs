@@ -40,6 +40,11 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         public abstract string MailSUBJ { get; }
 
         public abstract string MailBODY { get; }
-       
+
+        [AcceptNull()]
+        public abstract string Password { get; }
+
+        [AcceptNull()]
+        public abstract int CopyToId { get; }
     }
 }

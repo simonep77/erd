@@ -133,7 +133,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         {
             get
             {
-                return (this.DataObj.TipoNotificaId == eReport.TipoNotifica.EmailConAllegato || this.DataObj.TipoNotificaId == eReport.TipoNotifica.EmailConLink);
+                return (this.DataObj.InvioMailAttivo > 0);
             }
         }
 
@@ -320,6 +320,36 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
         }
 
+
+        /// <summary>
+        /// Ritorna lo stream ed il nome file per il dispatch del file via mail o su cartelle
+        /// </summary>
+        /// <returns></returns>
+        private dynamic getBlobForDispatch(ReportEstrazioneDestinatarioEmail dest)
+        {
+            MemoryStream ms = null;
+            var filenameMail = this.LastResult.NomeFile;
+
+            if (!string.IsNullOrEmpty(dest.Password))
+            {
+                ms = new MemoryStream();
+                filenameMail = Path.ChangeExtension(this.LastResult.NomeFile, @".zip");
+                using (var zip = new ZipFile())
+                {
+                    zip.Password = dest.Password;
+                    zip.AddEntry(this.LastResult.NomeFile, ms);
+                    zip.Save(ms);
+                }
+
+            }
+            else
+                ms = new MemoryStream(this.LastResult.DataBlob);
+
+            ms.Position = 0;
+
+            return new { NomeFile= filenameMail, Stream = ms};
+        }
+
         public List<ReportEstrazioneDestinatarioEmail> SendEmail()
         {
             var retList = new List<ReportEstrazioneDestinatarioEmail>();
@@ -364,46 +394,21 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                             msg.Subject = item.MailSUBJ;
                             msg.Body = item.MailBODY;
 
-                            switch (this.DataObj.TipoNotificaId)
+                            if (item.CopyToId == 0)
                             {
-                                case eReport.TipoNotifica.EmailConAllegato:
+                                var filePath = this.getCopyToDestFile(this.ListaCopyTo.First(ct => ct.Id == item.CopyToId), this.ListaOutput.GetLast()).Replace('\\', '/');
 
-                                    MemoryStream blob = null;
-                                    var filename = string.Format(@"{0}_{1:yyyy_MM_dd}.xlsx", this.DataObj.Nome.Replace(' ', '_'), this.LastResult.DataOraInizio.Date);
-                                    var filenameMail = filename;
-                                    
-                                    if (!string.IsNullOrEmpty(this.DataObj.Password))
-                                    {
-                                        blob = new MemoryStream();
-                                        filenameMail = Path.ChangeExtension(filename, @".zip");
-                                        using (var zip = new ZipFile())
-                                        {
-                                            zip.Password = this.DataObj.Password;
-                                            zip.AddEntry(filename, blob);
-                                            zip.Save(blob);
-                                        }
+                                msg.Body += string.Format($"<br/><br/>LINK al file: <a href='file:///{filePath}' target='_blank' >clicca qui</a>");
+                                msg.Body += string.Format($"<br/>Se il link non funzionasse copiare il seguente percorso ed utilizzarlo dal proprio PC: <b>{filePath}</b>");
 
-                                        blob.Position = 0;
-                                    }
-                                    else
-                                        blob = new MemoryStream(this.LastResult.DataBlob);
-
-                                    msg.Attachments.Add(new System.Net.Mail.Attachment(blob, filename));
-
-                                    break;
-
-                                case eReport.TipoNotifica.EmailConLink:
-
-                                    msg.Body += "<br/><br/>LINK al file: <a hrf='www.google.it' target='_blank' >clicca qui</a>";
-
-                                    foreach (var ct in this.ListaCopyTo)
-                                    {
-                                        msg.Body += "<br/><br/>LINK al file: <a href='file:" + this.getCopyToDestFile() + "' target='_blank' >clicca qui</a>";
-                                    }
-
-                                        break;
                             }
+                            else
+                            {
+                                var fileout = this.getBlobForDispatch(item);
 
+                                msg.Attachments.Add(new System.Net.Mail.Attachment(fileout.Stream, fileout.NomeFile));
+
+                            }
 
                             smtp.Send(msg);
 
@@ -522,8 +527,9 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin render excel");
 
             var sheetname = !string.IsNullOrEmpty(this.DataObj.SheetName) ? this.DataObj.SheetName : this.DataObj.Nome.PadRight(30, ' ').Substring(0, 30).Trim();
-            var password = this.IsAccorpato ? string.Empty : this.DataObj.Password;
+
             var excel = ExcelUT.EseguiRenderDataTableExcel(this.mTabResultSQL, this.DataObj.Nome, this.DataObj.Titolo, sheetname , null);
+            this.mLastResult.NomeFile = string.Format(@"{0}_{1:yyyy_MM_dd}.xlsx", this.DataObj.Nome.Replace(' ', '_'), this.LastResult.DataOraInizio.Date);
             this.mLastResult.DataLen = excel.DatiMemory.Length;
             this.mLastResult.DataBlob = excel.DatiMemory;
 

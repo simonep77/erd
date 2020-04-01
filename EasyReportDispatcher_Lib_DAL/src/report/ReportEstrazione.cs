@@ -29,10 +29,8 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         [PropertyMap(nameof(ConnessioneId))]
         public abstract ReportConnessione Connessione { get; }
         public abstract sbyte TipoFileId { get; }
-        public abstract sbyte TipoNotificaId { get; }
+        public abstract sbyte InvioMailAttivo { get; }
 
-        [PropertyMap(nameof(TipoNotificaId))]
-        public abstract ReportTipoNotifica TipoNotifica { get; }
         public abstract string SqlText { get; }
 
         public abstract string SheetName { get; }
@@ -47,7 +45,5 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         [AcceptNull()]
         public abstract string EstrazioniAccorpateIds { get; }
 
-        [AcceptNull()]
-        public abstract string Password { get; }
     }
 }

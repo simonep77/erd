@@ -43,11 +43,15 @@ CREATE TABLE `report_destinatari_email` (
   `MailBCC` text,
   `MailSUBJ` text NOT NULL,
   `MailBODY` text NOT NULL,
+  `Password` varchar(60) DEFAULT NULL,
+  `CopyToId` int(11) DEFAULT NULL COMMENT 'Se valorizzato indica che la mail deve contener il link al file depositato piuttosto che l''allegato',
   PRIMARY KEY (`Id`),
   KEY `EstrazioneId` (`EstrazioneId`),
+  KEY `CopyToId` (`CopyToId`),
   CONSTRAINT `report_destinatari_email_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`id`),
-  CONSTRAINT `report_destinatari_email_ibfk_2` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `report_destinatari_email_ibfk_3` FOREIGN KEY (`CopyToId`) REFERENCES `report_estrazioni_copyto` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
 
 /*Data for the table `report_destinatari_email` */
 
@@ -70,8 +74,7 @@ CREATE TABLE `report_estrazioni` (
   `DataFine` date NOT NULL DEFAULT '9999-12-31',
   `NumOutputStorico` smallint(6) NOT NULL DEFAULT '10',
   `EstrazioniAccorpateIds` varchar(50) DEFAULT NULL COMMENT 'Eventuali Id di altre estrazioni separati da virgola da eseguire contestualemnte ed accorpare (solo Excel)',
-  `Password` varchar(30) DEFAULT NULL COMMENT 'Eventuale password con cui bloccare il file (solo Excel)',
-  `TipoNotificaId` tinyint(4) NOT NULL DEFAULT '2',
+  `InvioMailAttivo` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`Id`),
   KEY `ConnessioneId` (`ConnessioneId`),
   KEY `TipoFileId` (`TipoFileId`),
