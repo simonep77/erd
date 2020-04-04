@@ -394,7 +394,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                             msg.Subject = item.MailSUBJ;
                             msg.Body = item.MailBODY;
 
-                            if (item.CopyToId == 0)
+                            if (item.CopyToId > 0)
                             {
                                 var filePath = this.getCopyToDestFile(this.ListaCopyTo.First(ct => ct.Id == item.CopyToId), this.ListaOutput.GetLast()).Replace('\\', '/');
 

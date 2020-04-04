@@ -8,7 +8,7 @@ using Bdo.Objects;
 
 namespace EasyReportDispatcher_Lib_DAL.src.report
 {
-    [Table("report_estrazioni_destinatari_email")]
+    [Table("report_destinatari_email")]
     public abstract class ReportEstrazioneDestinatarioEmail : DataObject<ReportEstrazioneDestinatarioEmail>
     {
         [PrimaryKey]

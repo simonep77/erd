@@ -48,12 +48,13 @@ CREATE TABLE `report_destinatari_email` (
   PRIMARY KEY (`Id`),
   KEY `EstrazioneId` (`EstrazioneId`),
   KEY `CopyToId` (`CopyToId`),
-  CONSTRAINT `report_destinatari_email_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`id`),
+  CONSTRAINT `report_destinatari_email_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`Id`),
   CONSTRAINT `report_destinatari_email_ibfk_3` FOREIGN KEY (`CopyToId`) REFERENCES `report_estrazioni_copyto` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1
-
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 /*Data for the table `report_destinatari_email` */
+
+insert  into `report_destinatari_email`(`Id`,`EstrazioneId`,`SmtpConfigId`,`Attivo`,`MailFROM`,`MailTO`,`MailCC`,`MailBCC`,`MailSUBJ`,`MailBODY`,`Password`,`CopyToId`) values (1,1,1,1,'simonep@fastwebnet.it','simone.pelaia@gmail.com',NULL,NULL,'Report Test 1','In allegato',NULL,NULL),(2,1,1,2,'simonep@fastwebnet.it','simone.pelaia@gmail.com',NULL,NULL,'Report Test 2','In allegato','1234',NULL),(3,1,1,3,'simonep@fastwebnet.it','simone.pelaia@gmail.com',NULL,NULL,'Report Link','',NULL,NULL);
 
 /*Table structure for table `report_estrazioni` */
 
@@ -84,7 +85,25 @@ CREATE TABLE `report_estrazioni` (
 
 /*Data for the table `report_estrazioni` */
 
-insert  into `report_estrazioni`(`Id`,`Nome`,`Titolo`,`Note`,`Attivo`,`ConnessioneId`,`TipoFileId`,`SheetName`,`SqlText`,`CronString`,`DataInizio`,`DataFine`,`NumOutputStorico`,`EstrazioniAccorpateIds`,`Password`,`TipoNotificaId`) values (1,'Prova','Estrazione test',NULL,1,1,2,'Test','SELECT *\r\nFROM report_tipi_file','30 0 * * *','2001-01-01','9999-12-31',10,NULL,'abcdef',1);
+insert  into `report_estrazioni`(`Id`,`Nome`,`Titolo`,`Note`,`Attivo`,`ConnessioneId`,`TipoFileId`,`SheetName`,`SqlText`,`CronString`,`DataInizio`,`DataFine`,`NumOutputStorico`,`EstrazioniAccorpateIds`,`InvioMailAttivo`) values (1,'Prova','Estrazione test',NULL,1,1,2,'Test','SELECT *\r\nFROM report_tipi_file','30 0 * * *','2001-01-01','9999-12-31',10,NULL,1),(2,'Prova 2','Estrazione test 2',NULL,1,1,2,'Test2','SELECT *\r\nFROM report_tipi_file','30 0 * * *','2001-01-01','9999-12-31',10,NULL,1);
+
+/*Table structure for table `report_estrazioni_copyto` */
+
+DROP TABLE IF EXISTS `report_estrazioni_copyto`;
+
+CREATE TABLE `report_estrazioni_copyto` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `EstrazioneId` int(11) NOT NULL,
+  `Path` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'Può includere l''interopolazione {output.xxx} dove output è l''oggetto con il risultato dell''esecuzione',
+  `User` varchar(80) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Da valorizzare solo se diverse da quelle di esecuzione',
+  `Pass` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Da valorizzare solo se diverse da quelle di esecuzione',
+  `Domain` varchar(80) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Da valorizzare solo se diverse da quelle di esecuzione',
+  PRIMARY KEY (`Id`),
+  KEY `EstrazioneId` (`EstrazioneId`),
+  CONSTRAINT `report_estrazioni_copyto_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `report_estrazioni_copyto` */
 
 /*Table structure for table `report_estrazioni_output` */
 
@@ -98,6 +117,7 @@ CREATE TABLE `report_estrazioni_output` (
   `DataOraInizio` datetime NOT NULL,
   `DataOraFine` datetime DEFAULT NULL,
   `TipoFileId` tinyint(4) NOT NULL,
+  `NomeFile` varchar(80) NOT NULL,
   `DataLen` int(11) DEFAULT NULL,
   `DataBlob` mediumblob,
   `MailEsito` text,
@@ -109,7 +129,7 @@ CREATE TABLE `report_estrazioni_output` (
   KEY `EstrazioneId` (`EstrazioneId`),
   KEY `StatoId` (`StatoId`),
   CONSTRAINT `report_estrazioni_output_ibfk_1` FOREIGN KEY (`TipoFileId`) REFERENCES `report_tipi_file` (`id`),
-  CONSTRAINT `report_estrazioni_output_ibfk_2` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`id`),
+  CONSTRAINT `report_estrazioni_output_ibfk_2` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`Id`),
   CONSTRAINT `report_estrazioni_output_ibfk_3` FOREIGN KEY (`StatoId`) REFERENCES `report_estrazioni_output_stati` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -148,7 +168,7 @@ CREATE TABLE `report_smtp_configs` (
 
 /*Data for the table `report_smtp_configs` */
 
-insert  into `report_smtp_configs`(`Id`,`Nome`,`Smtp`,`Port`,`UseSSL`,`Auth`,`UserName`,`Password`,`Note`) values (1,'Default','mail.xx.yy',25,0,0,NULL,NULL,NULL);
+insert  into `report_smtp_configs`(`Id`,`Nome`,`Smtp`,`Port`,`UseSSL`,`Auth`,`UserName`,`Password`,`Note`) values (1,'Gmail','smtp.gmail.com',587,1,1,'simone.pelaia@gmail.com','tT3X5hs4',NULL);
 
 /*Table structure for table `report_tipi_file` */
 
@@ -178,20 +198,6 @@ CREATE TABLE `report_tipi_notifica` (
 /*Data for the table `report_tipi_notifica` */
 
 insert  into `report_tipi_notifica`(`Id`,`Nome`) values (1,'Nessuna'),(2,'Email con allegato'),(3,'Email con link');
-
-CREATE TABLE `report_estrazioni_copyto` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `EstrazioneId` int(11) NOT NULL,
-  `Path` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'Può includere l''interopolazione {output.xxx} dove output è l''oggetto con il risultato dell''esecuzione',
-  `User` varchar(80) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Da valorizzare solo se diverse da quelle di esecuzione',
-  `Pass` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Da valorizzare solo se diverse da quelle di esecuzione',
-  `Domain` varchar(80) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Da valorizzare solo se diverse da quelle di esecuzione',
-  PRIMARY KEY (`Id`),
-  KEY `EstrazioneId` (`EstrazioneId`),
-  CONSTRAINT `report_estrazioni_copyto_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-
-
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
