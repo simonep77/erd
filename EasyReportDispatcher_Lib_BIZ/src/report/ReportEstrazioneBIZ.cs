@@ -184,6 +184,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 this.runAccorpaAltreEstrazioni();
 
                 //Esegue copia
+                this.runCopyTo();
 
                 //Esito OK
                 this.mLastResult.StatoId = eReport.StatoEstrazione.TerminataConSuccesso;
