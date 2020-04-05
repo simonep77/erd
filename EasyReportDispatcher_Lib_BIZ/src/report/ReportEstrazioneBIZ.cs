@@ -282,7 +282,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         /// <returns></returns>
         private string getCopyToDestFile(ReportEstrazioneCopyTo copyto, ReportEstrazioneOutput output)
         {
-            var destDir = string.Format(@"$" + copyto.Path).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+            var destDir = string.Format(copyto.Path, output.DataOraInizio).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
             return Path.Combine(destDir, output.NomeFile);
         }
 
