@@ -188,6 +188,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
                 //Esito OK
                 this.mLastResult.StatoId = eReport.StatoEstrazione.TerminataConSuccesso;
+
             }
             catch (Exception e)
             {
@@ -334,13 +335,18 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             if (!string.IsNullOrEmpty(dest.Password))
             {
                 ms = new MemoryStream();
-                filenameMail = Path.ChangeExtension(this.LastResult.NomeFile, @".zip");
-                using (var zip = new ZipFile())
+                using (var input = new MemoryStream(this.LastResult.DataBlob))
                 {
-                    zip.Password = dest.Password;
-                    zip.AddEntry(this.LastResult.NomeFile, ms);
-                    zip.Save(ms);
+                    filenameMail = Path.ChangeExtension(this.LastResult.NomeFile, @".zip");
+                    using (var zip = new ZipFile())
+                    {
+                        zip.Encryption = EncryptionAlgorithm.WinZipAes256;
+                        zip.Password = dest.Password;
+                        zip.AddEntry(this.LastResult.NomeFile, input);
+                        zip.Save(ms);
+                    }
                 }
+
 
             }
             else
@@ -406,6 +412,9 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                             else
                             {
                                 var fileout = this.getBlobForDispatch(item);
+
+
+                                File.WriteAllBytes(@"D:\DESKTOP\aaa\" + fileout.NomeFile, fileout.Stream.ToArray());
 
                                 msg.Attachments.Add(new System.Net.Mail.Attachment(fileout.Stream, fileout.NomeFile));
 
