@@ -413,9 +413,6 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                             {
                                 var fileout = this.getBlobForDispatch(item);
 
-
-                                File.WriteAllBytes(@"D:\DESKTOP\aaa\" + fileout.NomeFile, fileout.Stream.ToArray());
-
                                 msg.Attachments.Add(new System.Net.Mail.Attachment(fileout.Stream, fileout.NomeFile));
 
                             }
