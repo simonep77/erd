@@ -24,10 +24,6 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         [AcceptNull()]
         public abstract string Pass { get; set; }
 
-        [AcceptNull()]
-        public abstract string Domain { get; set; }
-
-      
 
     }
 }

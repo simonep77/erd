@@ -301,21 +301,33 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             foreach (var item in this.ListaCopyTo)
             {
                 var output = this.LastResult;
-                var tempFile = Path.Combine(Path.GetTempPath(), output.NomeFile);
-                
                 var destFile = this.getCopyToDestFile(item, output);
+                var destDir = Path.GetDirectoryName(destFile);
 
-                var destDir = destFile.Substring(0, destFile.LastIndexOf(output.NomeFile));
+                //Lambda di creazione dir e salvataggio file
+                Action actCopy = () =>
+                {
+                    this.Slot.LogDebug(DebugLevel.Debug_1, "Begin create dir");
+                    Directory.CreateDirectory(destDir);
+                    this.Slot.LogDebug(DebugLevel.Debug_1, "End create dir");
 
-                File.WriteAllBytes(tempFile, output.DataBlob);
-                try
+                    this.Slot.LogDebug(DebugLevel.Debug_1, "Begin write file");
+                    File.WriteAllBytes(destFile, output.DataBlob);
+                    this.Slot.LogDebug(DebugLevel.Debug_1, "End write file");
+                };
+
+                if (!string.IsNullOrWhiteSpace(item.User))
                 {
-                    RunUT.XCopyTo(tempFile, destDir, item.User, item.Pass, item.Domain);
+                    var cred = new SimpleImpersonation.UserCredentials(item.User, item.Pass);
+                    this.Slot.LogDebug(DebugLevel.Debug_1, "Begin Impersonation");
+                    SimpleImpersonation.Impersonation.RunAsUser(cred, SimpleImpersonation.LogonType.Interactive, actCopy);
+                    this.Slot.LogDebug(DebugLevel.Debug_1, "End Impersonation");
                 }
-                finally
+                else
                 {
-                    File.Delete(tempFile);
+                    actCopy.Invoke();
                 }
+               
             }
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "End Copy To");
@@ -405,7 +417,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                             {
                                 var filePath = this.getCopyToDestFile(this.ListaCopyTo.First(ct => ct.Id == item.CopyToId), this.ListaOutput.GetLast()).Replace('\\', '/');
 
-                                msg.Body += string.Format($"<br/><br/>LINK al file: <a href='file:///{filePath}' target='_blank' >clicca qui</a>");
+                                msg.Body += string.Format($"<br/><br/>LINK al file: <a href=\"file:///{filePath}\" target=\"_blank\" >clicca qui</a>");
                                 msg.Body += string.Format($"<br/>Se il link non funzionasse copiare il seguente percorso ed utilizzarlo dal proprio PC: <b>{filePath}</b>");
 
                             }

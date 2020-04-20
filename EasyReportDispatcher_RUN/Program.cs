@@ -6,20 +6,32 @@ using Bdo.Objects;
 using EasyReportDispatcher_Lib_Common.src.enums;
 using EasyReportDispatcher_Lib_DAL.src.report;
 using EasyReportDispatcher_Lib_BIZ.src.report;
+using System.IO;
+using Bdo.Logging;
 
 namespace EasyReportDispacher_RUN
 {
     class Program
     {
 
-        private static string _ConnectionStr;
+        private static BusinessSlot _Slot;
         private static bool _SendMail = true;
         private static int[] _ReportForzati = { };
 
+        private static string _TaskLogDir;
+        private static FileStreamLogger _TaskLogger;
+
         static void Main(string[] args)
         {
-            
-            Environment.Exit(TaskExecute());
+            printInfo();
+
+            init();
+
+            var rc = TaskExecute();
+
+            _TaskLogger.Dispose();
+
+            Environment.Exit(rc);
         }
 
 
@@ -27,10 +39,49 @@ namespace EasyReportDispacher_RUN
         private const string SEP = @"======================================================================================================";
 
 
+        private static void init()
+        {
+            WriteLog(@"Inizializzazione");
+
+            //Slot
+            _Slot = new BusinessSlot(@"Default");
+
+            //Directory log
+            _TaskLogDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ERD");
+
+            if (!string.IsNullOrWhiteSpace(EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogDir))
+                _TaskLogDir = EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogDir;
+
+            //Assicura creazione directory
+            Directory.CreateDirectory(_TaskLogDir);
+
+            //Pulizia log
+            if (EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogKeepNum > 0)
+                keepLogFiles();
+
+            //Avvia logger
+            _TaskLogger = new FileStreamLogger(Path.Combine(_TaskLogDir, string.Format(@"erd_{0:yyyy_MM_dd}.log", DateTime.Now)));
+        }
+
+        private static void keepLogFiles()
+        {
+            WriteLog(@"Pulizia logs");
+            
+            var dirInfo = new DirectoryInfo(_TaskLogDir);
+            var delFiles = dirInfo.GetFiles(@".log").OrderByDescending(f => f.LastWriteTime).Skip(EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogKeepNum - 1);
+
+            WriteLog(@"  > Eliminazione {0} logs", delFiles.Count());
+
+            foreach (var item in delFiles)
+            {
+                item.Delete();
+            }
+
+        }
+
 
         protected static int TaskExecute()
         {
-            WriteLog(@"Creazione slot");
 
             var esito = 0;
 
@@ -38,11 +89,11 @@ namespace EasyReportDispacher_RUN
 
             WriteLog("Invio email attivo: {0}", bSendEmail.ToString());
 
-            using (var slot = new BusinessSlot(@"Default"))
+            using (_Slot)
             {
                 WriteLog(@"Caricamento estrazioni da valutare");
 
-                var reports = slot.CreateList<ReportEstrazioneLista>()
+                var reports = _Slot.CreateList<ReportEstrazioneLista>()
                     .SearchByColumn(new FilterEQUAL(nameof(ReportEstrazione.Attivo), 1)
                     .And(new FilterLESSEQ(nameof(ReportEstrazione.DataInizio), DateTime.Today)
                     .And(new FilterGREATEREQ(nameof(ReportEstrazione.DataFine), DateTime.Today))));
@@ -123,12 +174,29 @@ namespace EasyReportDispacher_RUN
         }
 
 
+        private static void printInfo()
+        {
+            WriteLog("*****************************************");
+            WriteLog("*                                       *");
+            WriteLog("*        EASY REPORT DISPATCHER         *");
+            WriteLog("*               v1.0                    *");
+            WriteLog("*                                       *");
+            WriteLog("*                                       *");
+            WriteLog("*****************************************");
+            WriteLog("");
+            WriteLog("");
+        }
+
         private static void WriteLog(string logFmt, params object[] args)
         {
             Console.Write(string.Format(@"{0:yyyy-MM-dd HH:mm:ss}  -  ", DateTime.Now));
             Console.WriteLine(logFmt, args);
 
             //Altro
+            if (_TaskLogger != null)
+            {
+                _TaskLogger.LogMessage(logFmt, args);
+            }
         }
 
     }

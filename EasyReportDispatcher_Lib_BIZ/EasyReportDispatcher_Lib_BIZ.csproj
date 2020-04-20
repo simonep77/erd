@@ -52,6 +52,9 @@
     <Reference Include="NCrontab, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NCrontab.3.3.1\lib\net35\NCrontab.dll</HintPath>
     </Reference>
+    <Reference Include="SimpleImpersonation, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleImpersonation.3.0.0\lib\net45\SimpleImpersonation.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -67,7 +70,6 @@
     <Compile Include="src\report\ReportEstrazioneBIZ.cs" />
     <Compile Include="src\report\ReportEstrazioneBIZ_Lista.cs" />
     <Compile Include="src\utils\ExcelUT.cs" />
-    <Compile Include="src\utils\RunUT.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

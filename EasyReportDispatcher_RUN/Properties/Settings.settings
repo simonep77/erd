@@ -5,16 +5,16 @@
     <Setting Name="TaskLogDir" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="TaskLogMailFrom" Type="System.String" Scope="User">
+    <Setting Name="TaskLogMailFrom" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="TaskLogMailTO" Type="System.String" Scope="User">
+    <Setting Name="TaskLogMailTO" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="TaskLogSmtpConfigId" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="TaskLogKeepNum" Type="System.Int32" Scope="User">
+    <Setting Name="TaskLogKeepNum" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">90</Value>
     </Setting>
   </Settings>

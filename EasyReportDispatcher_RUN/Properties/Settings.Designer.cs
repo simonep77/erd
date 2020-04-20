@@ -32,27 +32,21 @@ namespace EasyReportDispatcher_RUN.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string TaskLogMailFrom {
             get {
                 return ((string)(this["TaskLogMailFrom"]));
             }
-            set {
-                this["TaskLogMailFrom"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string TaskLogMailTO {
             get {
                 return ((string)(this["TaskLogMailTO"]));
-            }
-            set {
-                this["TaskLogMailTO"] = value;
             }
         }
         
@@ -65,15 +59,12 @@ namespace EasyReportDispatcher_RUN.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("90")]
         public int TaskLogKeepNum {
             get {
                 return ((int)(this["TaskLogKeepNum"]));
-            }
-            set {
-                this["TaskLogKeepNum"] = value;
             }
         }
     }

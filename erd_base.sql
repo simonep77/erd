@@ -48,13 +48,13 @@ CREATE TABLE `report_destinatari_email` (
   PRIMARY KEY (`Id`),
   KEY `EstrazioneId` (`EstrazioneId`),
   KEY `CopyToId` (`CopyToId`),
-  CONSTRAINT `report_destinatari_email_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`Id`),
+  CONSTRAINT `report_destinatari_email_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`id`),
   CONSTRAINT `report_destinatari_email_ibfk_3` FOREIGN KEY (`CopyToId`) REFERENCES `report_estrazioni_copyto` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 /*Data for the table `report_destinatari_email` */
 
-insert  into `report_destinatari_email`(`Id`,`EstrazioneId`,`SmtpConfigId`,`Attivo`,`MailFROM`,`MailTO`,`MailCC`,`MailBCC`,`MailSUBJ`,`MailBODY`,`Password`,`CopyToId`) values (1,1,1,1,'simonep@fastwebnet.it','simone.pelaia@gmail.com',NULL,NULL,'Report Test 1','In allegato',NULL,NULL),(2,1,1,2,'simonep@fastwebnet.it','simone.pelaia@gmail.com',NULL,NULL,'Report Test 2','In allegato','1234',NULL),(3,1,1,3,'simonep@fastwebnet.it','simone.pelaia@gmail.com',NULL,NULL,'Report Link','',NULL,NULL);
+insert  into `report_destinatari_email`(`Id`,`EstrazioneId`,`SmtpConfigId`,`Attivo`,`MailFROM`,`MailTO`,`MailCC`,`MailBCC`,`MailSUBJ`,`MailBODY`,`Password`,`CopyToId`) values (1,1,1,1,'simonep@fastwebnet.it','simone.pelaia@gmail.com',NULL,NULL,'Report Test 1','In allegato',NULL,NULL),(2,2,1,2,'simonep@fastwebnet.it','simone.pelaia@gmail.com',NULL,NULL,'Report Test 2','',NULL,1),(3,2,1,3,'simonep@fastwebnet.it','simone.pelaia@gmail.com',NULL,NULL,'Report Link','In allegato','1234',NULL);
 
 /*Table structure for table `report_estrazioni` */
 
@@ -85,7 +85,7 @@ CREATE TABLE `report_estrazioni` (
 
 /*Data for the table `report_estrazioni` */
 
-insert  into `report_estrazioni`(`Id`,`Nome`,`Titolo`,`Note`,`Attivo`,`ConnessioneId`,`TipoFileId`,`SheetName`,`SqlText`,`CronString`,`DataInizio`,`DataFine`,`NumOutputStorico`,`EstrazioniAccorpateIds`,`InvioMailAttivo`) values (1,'Prova','Estrazione test',NULL,1,1,2,'Test','SELECT *\r\nFROM report_tipi_file','30 0 * * *','2001-01-01','9999-12-31',10,NULL,1),(2,'Prova 2','Estrazione test 2',NULL,1,1,2,'Test2','SELECT *\r\nFROM report_tipi_file','30 0 * * *','2001-01-01','9999-12-31',10,NULL,1);
+insert  into `report_estrazioni`(`Id`,`Nome`,`Titolo`,`Note`,`Attivo`,`ConnessioneId`,`TipoFileId`,`SheetName`,`SqlText`,`CronString`,`DataInizio`,`DataFine`,`NumOutputStorico`,`EstrazioniAccorpateIds`,`InvioMailAttivo`) values (1,'Prova','Estrazione test',NULL,1,1,2,'Test','SELECT *\r\nFROM report_tipi_file','10 0 * * *','2001-01-01','9999-12-31',10,NULL,1),(2,'Prova 2','Estrazione test 2',NULL,1,1,2,'Test2','SELECT *\r\nFROM report_tipi_file','10 0 * * *','2001-01-01','9999-12-31',10,NULL,1);
 
 /*Table structure for table `report_estrazioni_copyto` */
 
@@ -97,13 +97,14 @@ CREATE TABLE `report_estrazioni_copyto` (
   `Path` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'Può includere l''interopolazione {output.xxx} dove output è l''oggetto con il risultato dell''esecuzione',
   `User` varchar(80) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Da valorizzare solo se diverse da quelle di esecuzione',
   `Pass` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Da valorizzare solo se diverse da quelle di esecuzione',
-  `Domain` varchar(80) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Da valorizzare solo se diverse da quelle di esecuzione',
   PRIMARY KEY (`Id`),
   KEY `EstrazioneId` (`EstrazioneId`),
-  CONSTRAINT `report_estrazioni_copyto_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  CONSTRAINT `report_estrazioni_copyto_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `report_estrazioni_copyto` */
+
+insert  into `report_estrazioni_copyto`(`Id`,`EstrazioneId`,`Path`,`User`,`Pass`) values (1,2,'D:\\DESKTOP\\aaa','sminky','volley2');
 
 /*Table structure for table `report_estrazioni_output` */
 
@@ -129,7 +130,7 @@ CREATE TABLE `report_estrazioni_output` (
   KEY `EstrazioneId` (`EstrazioneId`),
   KEY `StatoId` (`StatoId`),
   CONSTRAINT `report_estrazioni_output_ibfk_1` FOREIGN KEY (`TipoFileId`) REFERENCES `report_tipi_file` (`id`),
-  CONSTRAINT `report_estrazioni_output_ibfk_2` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`Id`),
+  CONSTRAINT `report_estrazioni_output_ibfk_2` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`id`),
   CONSTRAINT `report_estrazioni_output_ibfk_3` FOREIGN KEY (`StatoId`) REFERENCES `report_estrazioni_output_stati` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -168,7 +169,7 @@ CREATE TABLE `report_smtp_configs` (
 
 /*Data for the table `report_smtp_configs` */
 
-insert  into `report_smtp_configs`(`Id`,`Nome`,`Smtp`,`Port`,`UseSSL`,`Auth`,`UserName`,`Password`,`Note`) values (1,'Gmail','smtp.gmail.com',587,1,1,'simone.pelaia@gmail.com','tT3X5hs4',NULL);
+insert  into `report_smtp_configs`(`Id`,`Nome`,`Smtp`,`Port`,`UseSSL`,`Auth`,`UserName`,`Password`,`Note`) values (1,'Gmail','smtp.fastwebnet.it',587,1,1,'simonep@fastwebnet.it','tT3X5hs4',NULL);
 
 /*Table structure for table `report_tipi_file` */
 
