@@ -219,6 +219,15 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
         }
 
+        /// <summary>
+        /// Ritorna il nome file da utilizzare per gli putput dell estrazione
+        /// </summary>
+        /// <returns></returns>
+        public string getNomeFileIstantaneo()
+        {
+            return String.Format("Report_{0}_{1:yyyy_MM_dd}.xlsx", this.DataObj.Titolo.Replace(' ','_'), DateTime.Now);
+        }
+
         private void runAccorpaAltreEstrazioni()
         {
             if (!this.IsAccorpato)
@@ -502,9 +511,15 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 case eReport.TipoFile.Csv:
                     this.renderCsv();
                     break;
+
                 case eReport.TipoFile.Excel:
-                    this.renderExcel();
+
+                    if (this.DataObj.TemplateId == 0)
+                        this.renderExcel();
+                    else
+                        this.renderExcelTemplate();
                     break;
+
                 default:
                     break;
             }
@@ -543,7 +558,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
         private void renderExcel()
         {
-            this.Slot.LogDebug(DebugLevel.Debug_1, "Begin render excel");
+            this.Slot.LogDebug(DebugLevel.Debug_1, "Begin render excel flat");
 
             var sheetname = !string.IsNullOrEmpty(this.DataObj.SheetName) ? this.DataObj.SheetName : this.DataObj.Nome.PadRight(30, ' ').Substring(0, 30).Trim();
 
@@ -552,8 +567,55 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             this.mLastResult.DataLen = excel.DatiMemory.Length;
             this.mLastResult.DataBlob = excel.DatiMemory;
 
-            this.Slot.LogDebug(DebugLevel.Debug_1, "End render excel");
+            this.Slot.LogDebug(DebugLevel.Debug_1, "End render excel flat");
         }
+
+
+        private void renderExcelTemplate()
+        {
+            this.Slot.LogDebug(DebugLevel.Debug_1, "Begin render excel template");
+
+            var sheetname = !string.IsNullOrEmpty(this.DataObj.SheetName) ? this.DataObj.SheetName : this.DataObj.Nome.PadRight(30, ' ').Substring(0, 30).Trim();
+
+            if (this.DataObj.TemplateId == 0)
+                throw new ArgumentException("Deve essere specificato un Id template nella definizione dell'estrazione");
+
+            if (this.DataObj.Template.TemplateBlob == null || this.DataObj.Template.TemplateBlob.Length == 0)
+                throw new ArgumentException("Deve essere caricato un file Excel template nella notazione prevista dal pacchetto ClosedXML.Reports");
+
+            using (var msIn = new MemoryStream(this.DataObj.Template.TemplateBlob))
+            {
+                //var ms = new MemoryStream(File.ReadAllBytes(@"C:\DATI_SIMONE\Desktop\aaa.xlsx"));
+
+                var tpl = new ClosedXML.Report.XLTemplate(msIn);
+
+                //ms.Dispose();
+
+                tpl.AddVariable("Estrazione", this);
+                tpl.AddVariable("Dati", this.mTabResultSQL.Rows.Cast<DataRow>());
+
+                var ret = tpl.Generate();
+                if (ret.HasErrors)
+                    throw new ApplicationException("Errore nel rendering del template Excel: " + string.Join(" - ", ret.ParsingErrors.Select(s => s.Message)));
+
+                //Scrive
+                using (var msOut = new MemoryStream())
+                {
+                    tpl.SaveAs(msOut);
+
+                    //Imposta blob output
+                    this.mLastResult.NomeFile = this.getNomeFileIstantaneo();
+                    this.mLastResult.DataBlob = msOut.ToArray();
+                    this.mLastResult.DataLen = this.mLastResult.DataBlob.Length;
+
+                }
+            }
+
+
+
+            this.Slot.LogDebug(DebugLevel.Debug_1, "End render excel template");
+        }
+
 
         #endregion
 

@@ -48,6 +48,7 @@
     <Compile Include="src\report\ReportConnessione.cs" />
     <Compile Include="src\report\ReportConnessioneLista.cs" />
     <Compile Include="src\report\ReportEstrazione.cs" />
+    <Compile Include="src\report\ReportTemplate.cs" />
     <Compile Include="src\report\ReportEstrazioneDestinatarioEmail.cs" />
     <Compile Include="src\report\ReportEstrazioneDestinatarioEmailLista.cs" />
     <Compile Include="src\report\ReportEstrazioneLista.cs" />

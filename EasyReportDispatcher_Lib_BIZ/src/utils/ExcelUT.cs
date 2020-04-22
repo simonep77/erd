@@ -1,4 +1,7 @@
 ﻿using ClosedXML.Excel;
+using ClosedXML.Report;
+using EasyReportDispatcher_Lib_BIZ.src.report;
+using EasyReportDispatcher_Lib_DAL.src.report;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -28,7 +31,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.utils
         /// <param name="sheetName"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static ExcelRender EseguiRenderDataTableExcel(DataTable dt, string nomeStat,string titolo, string sheetName, Dictionary<string, string> args)
+        public static ExcelRender EseguiRenderDataTableExcel(DataTable dt, string nomeStat, string titolo, string sheetName, Dictionary<string, string> args)
         {
             var oEsitoRender = new ExcelRender();
 
@@ -108,6 +111,38 @@ namespace EasyReportDispatcher_Lib_BIZ.src.utils
             //Scrive
             var memoryStream = new MemoryStream();
             workbook.SaveAs(memoryStream);
+            oEsitoRender.DatiMemory = memoryStream.ToArray();
+
+            return oEsitoRender;
+        }
+
+
+
+
+        public static ExcelRender EseguiRenderDataTableExcelTemplate(DataTable dt, string nomeFile, byte[] template, Dictionary<string, string> args)
+        {
+            var oEsitoRender = new ExcelRender();
+
+            oEsitoRender.NomeFile = nomeFile;
+
+            var ms = new MemoryStream(template);
+
+            var tpl = new ClosedXML.Report.XLTemplate(ms);
+
+            ms.Dispose();
+
+            tpl.AddVariable("Dati", dt);
+            tpl.AddVariable("Parametri", args);
+
+            var ret = tpl.Generate();
+            if (ret.HasErrors)
+                throw new ApplicationException(string.Join(" - ", ret.ParsingErrors.Select(s => s.Message)));
+            
+            //Scrive
+            var memoryStream = new MemoryStream();
+            tpl.SaveAs(memoryStream);
+
+            //Imposta blob output
             oEsitoRender.DatiMemory = memoryStream.ToArray();
 
             return oEsitoRender;
