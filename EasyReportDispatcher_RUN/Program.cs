@@ -8,6 +8,8 @@ using EasyReportDispatcher_Lib_DAL.src.report;
 using EasyReportDispatcher_Lib_BIZ.src.report;
 using System.IO;
 using Bdo.Logging;
+using Amib.Threading;
+using System.Runtime.InteropServices;
 
 namespace EasyReportDispacher_RUN
 {
@@ -86,6 +88,8 @@ namespace EasyReportDispacher_RUN
             var esito = 0;
 
             var bSendEmail = _SendMail;
+            var smPool = new SmartThreadPool();
+
 
             WriteLog("Invio email attivo: {0}", bSendEmail.ToString());
 
@@ -118,61 +122,98 @@ namespace EasyReportDispacher_RUN
                 }
 
                 var iCount = reportExec.Count();
-                var index = 1;
 
                 WriteLog("Numero estrazioni da eseguire: {0}", iCount);
 
+                //new
 
-                foreach (var repBiz in reportExec)
+                //Raggruppa per connessione
+                var connGroup = reportExec.GroupBy(r => r.DataObj.ConnessioneId);
+
+                WriteLog("Numero estrazioni parallele: {0}", connGroup.Count());
+
+                //Carica un threadgroup per ogni connessione
+                foreach (var gp in connGroup)
                 {
-                    WriteLog(SEP);
-                    //RaiseOnProgress(index, iCount);
-                    WriteLog("Avvio report {0}", repBiz.DataObj.Nome);
-                    try
+                    var cfg = new WIGStartInfo() { StartSuspended = true };
+                    var wig = smPool.CreateWorkItemsGroup(1);
+
+                    foreach (var est in gp)
                     {
-                        //Esegue
-                        repBiz.Run();
-
-                        //Invia email
-                        if (bSendEmail)
-                        {
-
-                            WriteLog("Previsto invio mail {0}", repBiz.IsPrevistoInvioMail ? "SI" : "NO");
-
-                            if (repBiz.IsPrevistoInvioMail)
-                            {
-                                var mails = repBiz.SendEmail();
-
-                                foreach (var item in mails)
-                                {
-                                    WriteLog("Mail inviata");
-                                    WriteLog(" >> MailTO: {0}", item.MailTO);
-                                    WriteLog(" >> MailCC: {0}", item.MailCC);
-                                    WriteLog(" >> MailBCC: {0}", item.MailBCC);
-                                }
-
-
-                            }
-                        }
-
-                    }
-                    catch (Exception e)
-                    {
-                        esito = 1;
-                        WriteLog("**Errore report {0}: {1}", repBiz.DataObj.Nome, e.Message);
-                        WriteLog(e.StackTrace);
-                    }
-                    finally
-                    {
-                        index++;
-                        WriteLog("Fine report {0}", repBiz.DataObj.Nome);
+                        
+                        wig.QueueWorkItem(execSingleReport, 
+                            new { EstrazioneId=est.DataObj.Id, SendEmail = bSendEmail },
+                            r =>  esito += ((!r.IsCompleted || r.Exception != null || (bool)r.Result==false) ? 1 : 0)
+                            );
                     }
                 }
             }
 
+            smPool.Start();
+            smPool.WaitForIdle();
+
+                //end new
+
             return esito;
         }
 
+
+        private static object execSingleReport(dynamic state)
+        {
+            var retObj = true;
+            var repDefId = state.EstrazioneId;
+            var bSendEmail = state.SendEmail;
+
+            using (var slot = new BusinessSlot(@"Default"))
+            {
+                WriteLog(SEP);
+
+                ReportEstrazioneBIZ repBiz = slot.BizNewWithLoadByPK<ReportEstrazioneBIZ>(repDefId);
+                //RaiseOnProgress(index, iCount);
+                WriteLog("Avvio report {0}", repBiz.DataObj.Nome);
+                try
+                {
+                    //Esegue
+                    WriteLog("Esecuzione");
+                    repBiz.Run();
+
+                    //Invia email
+                    if (bSendEmail)
+                    {
+
+                        WriteLog("Previsto invio mail {0}", repBiz.IsPrevistoInvioMail ? "SI" : "NO");
+
+                        if (repBiz.IsPrevistoInvioMail)
+                        {
+                            var mails = repBiz.SendEmail();
+
+                            foreach (var item in mails)
+                            {
+                                WriteLog("Mail inviata");
+                                WriteLog(" >> MailTO: {0}", item.MailTO);
+                                WriteLog(" >> MailCC: {0}", item.MailCC);
+                                WriteLog(" >> MailBCC: {0}", item.MailBCC);
+                            }
+
+
+                        }
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    WriteLog("**Errore report {0}: {1}", repBiz.DataObj.Nome, e.Message);
+                    WriteLog(e.StackTrace);
+                    retObj = false;
+                }
+                finally
+                {
+                    WriteLog("Fine report {0}", repBiz.DataObj.Nome);
+                }
+            }
+
+            return retObj;
+        }
 
         private static void printInfo()
         {
@@ -187,16 +228,21 @@ namespace EasyReportDispacher_RUN
             WriteLog("");
         }
 
+        private static object _logLoc = new object();
         private static void WriteLog(string logFmt, params object[] args)
         {
-            Console.Write(string.Format(@"{0:yyyy-MM-dd HH:mm:ss}  -  ", DateTime.Now));
-            Console.WriteLine(logFmt, args);
-
-            //Altro
-            if (_TaskLogger != null)
+            lock(_logLoc)
             {
-                _TaskLogger.LogMessage(logFmt, args);
+                Console.Write(string.Format(@"{0:yyyy-MM-dd HH:mm:ss}  -  ", DateTime.Now));
+                Console.WriteLine(logFmt, args);
+
+                //Altro
+                if (_TaskLogger != null)
+                {
+                    _TaskLogger.LogMessage(string.Concat(@" ", logFmt), args);
+                }
             }
+
         }
 
     }
