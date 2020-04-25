@@ -11,15 +11,15 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
     [Table("report_templates")]
     public abstract class ReportTemplate : DataObject<ReportTemplate>
     {
-        [PrimaryKey]
+        [PrimaryKey, AutoIncrement]
         public abstract int Id { get; }
 
-        public abstract string Nome { get; }
+        public abstract string Nome { get; set; }
 
-        public abstract byte[] TemplateBlob { get; }
+        public abstract byte[] TemplateBlob { get; set; }
 
         [AcceptNull]
-        public abstract string Note { get; }
+        public abstract string Note { get; set; }
 
 
 

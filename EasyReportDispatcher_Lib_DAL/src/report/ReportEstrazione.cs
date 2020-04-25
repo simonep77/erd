@@ -45,7 +45,8 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         [AcceptNull()]
         public abstract string EstrazioniAccorpateIds { get; }
 
-        public abstract int TemplateId { get; }
+        [AcceptNull]
+        public abstract int TemplateId { get; set; }
 
         [PropertyMap(nameof(TemplateId))]
         public abstract ReportTemplate Template { get; }

@@ -149,6 +149,25 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             }
         }
 
+
+        private byte[] mForcedTemplate;
+        
+        /// <summary>
+        /// Template XLSX da utilizzare al posto di quello a DB
+        /// </summary>
+        public byte[] ForcedTemplate
+        {
+            get
+            {
+                return this.mForcedTemplate;
+            }
+            set
+            {
+                this.mForcedTemplate = value;
+            }
+        }
+
+
        #endregion
 
             #region PUBLIC
@@ -245,6 +264,8 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
             estraz.Add(this.LastResult.DataBlob);
 
+            //Salva stato simulate per consentire ripristino senza sovrascrittura (es. gia' in simulate)
+            var oldSimulate = this.Slot.Simulate;
             try
             {
                 this.Slot.Simulate = true;
@@ -268,7 +289,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             }
             finally
             {
-                this.Slot.Simulate = false;
+                this.Slot.Simulate = oldSimulate;
             }
 
 
@@ -514,7 +535,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
                 case eReport.TipoFile.Excel:
 
-                    if (this.DataObj.TemplateId == 0)
+                    if (this.DataObj.TemplateId == 0 && this.ForcedTemplate == null)
                         this.renderExcel();
                     else
                         this.renderExcelTemplate();
@@ -577,13 +598,15 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
             var sheetname = !string.IsNullOrEmpty(this.DataObj.SheetName) ? this.DataObj.SheetName : this.DataObj.Nome.PadRight(30, ' ').Substring(0, 30).Trim();
 
-            if (this.DataObj.TemplateId == 0)
-                throw new ArgumentException("Deve essere specificato un Id template nella definizione dell'estrazione");
+            if (this.DataObj.TemplateId == 0 && this.ForcedTemplate == null)
+                throw new ArgumentException("Deve essere specificato un Id template nella definizione dell'estrazione oopure impostato un template esterno (ForcedTemplate)");
 
-            if (this.DataObj.Template.TemplateBlob == null || this.DataObj.Template.TemplateBlob.Length == 0)
-                throw new ArgumentException("Deve essere caricato un file Excel template nella notazione prevista dal pacchetto ClosedXML.Reports");
+            if (this.ForcedTemplate == null && (this.DataObj.Template.TemplateBlob == null || this.DataObj.Template.TemplateBlob.Length == 0))
+                throw new ArgumentException("Deve essere impostato un file template Excel [ClosedXML.Reports] a livello di estrazione valorizzando TemplateId impostando ForcedTemplate");
 
-            using (var msIn = new MemoryStream(this.DataObj.Template.TemplateBlob))
+            var tplBlob = this.ForcedTemplate ?? this.DataObj.Template.TemplateBlob;
+
+            using (var msIn = new MemoryStream(tplBlob))
             {
                 //var ms = new MemoryStream(File.ReadAllBytes(@"C:\DATI_SIMONE\Desktop\aaa.xlsx"));
 
@@ -610,7 +633,6 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
                 }
             }
-
 
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "End render excel template");

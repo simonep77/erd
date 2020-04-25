@@ -12,3 +12,5 @@
 /EasyReportDispatcher_RUN/obj
 /packages
 /.vs
+/EasyReportDispatcher_DESKTOP/bin/Debug
+/EasyReportDispatcher_DESKTOP/obj/Debug

@@ -88,7 +88,7 @@ CREATE TABLE `report_estrazioni` (
 
 /*Data for the table `report_estrazioni` */
 
-insert  into `report_estrazioni`(`Id`,`Nome`,`Titolo`,`Note`,`Attivo`,`ConnessioneId`,`TipoFileId`,`TemplateId`,`SheetName`,`SqlText`,`CronString`,`DataInizio`,`DataFine`,`NumOutputStorico`,`EstrazioniAccorpateIds`,`InvioMailAttivo`) values (1,'Prova','Estrazione test',NULL,1,1,2,NULL,'Test','SELECT *\r\nFROM report_tipi_file','10 0 * * *','2001-01-01','9999-12-31',10,NULL,1),(2,'Prova 2','Estrazione test 2',NULL,1,1,2,NULL,'Test2','SELECT *\r\nFROM report_tipi_file','10 0 * * *','2001-01-01','9999-12-31',10,NULL,1);
+insert  into `report_estrazioni`(`Id`,`Nome`,`Titolo`,`Note`,`Attivo`,`ConnessioneId`,`TipoFileId`,`TemplateId`,`SheetName`,`SqlText`,`CronString`,`DataInizio`,`DataFine`,`NumOutputStorico`,`EstrazioniAccorpateIds`,`InvioMailAttivo`) values (1,'Prova','Estrazione test',NULL,1,1,2,1,'Test','SELECT *\r\nFROM report_tipi_file','10 0 * * *','2001-01-01','9999-12-31',10,NULL,1),(2,'Prova 2','Estrazione test 2',NULL,1,1,2,NULL,'Test2','SELECT *\r\nFROM report_tipi_file','10 0 * * *','2001-01-01','9999-12-31',10,NULL,1);
 
 /*Table structure for table `report_estrazioni_copyto` */
 
