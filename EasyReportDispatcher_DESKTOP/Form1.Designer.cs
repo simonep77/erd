@@ -156,24 +156,24 @@
             this.panMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panMain.Location = new System.Drawing.Point(0, 24);
             this.panMain.Name = "panMain";
+            this.panMain.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.panMain.Size = new System.Drawing.Size(1224, 587);
             this.panMain.TabIndex = 3;
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.lvEstrazioni);
-            this.groupBox1.Location = new System.Drawing.Point(72, 33);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox1.Location = new System.Drawing.Point(0, 10);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1068, 357);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(10);
+            this.groupBox1.Size = new System.Drawing.Size(1224, 357);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Elenco Estrazioni";
             // 
             // lvEstrazioni
             // 
-            this.lvEstrazioni.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.lvEstrazioni.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colID,
             this.colNome,
@@ -181,16 +181,17 @@
             this.colAttivo,
             this.colTemplate,
             this.colTemplateLocale});
+            this.lvEstrazioni.Dock = System.Windows.Forms.DockStyle.Top;
             this.lvEstrazioni.FullRowSelect = true;
             this.lvEstrazioni.GridLines = true;
             this.lvEstrazioni.HideSelection = false;
-            this.lvEstrazioni.Location = new System.Drawing.Point(23, 32);
+            this.lvEstrazioni.Location = new System.Drawing.Point(10, 30);
             this.lvEstrazioni.Margin = new System.Windows.Forms.Padding(20);
             this.lvEstrazioni.MultiSelect = false;
             this.lvEstrazioni.Name = "lvEstrazioni";
             this.lvEstrazioni.Scrollable = false;
             this.lvEstrazioni.ShowGroups = false;
-            this.lvEstrazioni.Size = new System.Drawing.Size(1022, 302);
+            this.lvEstrazioni.Size = new System.Drawing.Size(1204, 302);
             this.lvEstrazioni.TabIndex = 0;
             this.lvEstrazioni.UseCompatibleStateImageBehavior = false;
             this.lvEstrazioni.View = System.Windows.Forms.View.Details;

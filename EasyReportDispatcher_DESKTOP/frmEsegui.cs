@@ -33,6 +33,8 @@ namespace EasyReportDispatcher_DESKTOP
         {
             var estBiz = this.mEstrazione.ToBizObject<ReportEstrazioneBIZ>();
 
+            this.Cursor = Cursors.WaitCursor;
+
             try
             {
                 if (this.chkUsaTemplateLocale.Checked)
@@ -52,6 +54,10 @@ namespace EasyReportDispatcher_DESKTOP
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                this.Cursor = this.DefaultCursor;
             }
 
         }

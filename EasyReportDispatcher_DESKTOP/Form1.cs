@@ -125,15 +125,29 @@ namespace EasyReportDispatcher_DESKTOP
                 if (MessageBox.Show(@"Esiste una copia locale del template, vuoi riutilizzarla o scaricare la versione sul server?", "Conferma", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     useLocal = true;
 
-            if(!useLocal)
+                this.Cursor = Cursors.WaitCursor;
+            try
             {
-                File.WriteAllBytes(localtemplate, est.Template.TemplateBlob);
-                this.lvEstrazioni.SelectedItems[0].SubItems[this.colTemplateLocale.DisplayIndex].Text = "SI";
+                if (!useLocal)
+                {
+                    File.WriteAllBytes(localtemplate, est.Template.TemplateBlob);
+                    this.lvEstrazioni.SelectedItems[0].SubItems[this.colTemplateLocale.DisplayIndex].Text = "SI";
+                }
+
+                this.handleSelezioneEstrazione();
+
+                Process.Start(localtemplate);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
             }
 
-            this.handleSelezioneEstrazione();
 
-            Process.Start(localtemplate);
 
         }
 
@@ -182,6 +196,7 @@ namespace EasyReportDispatcher_DESKTOP
             if (MessageBox.Show(@"Vuoi salvare la copia locale del template sul DB?", "Conferma", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
 
+            this.Cursor = Cursors.WaitCursor;
             try
             {
                 var est = this.getSelectedEstrazione();
@@ -195,7 +210,12 @@ namespace EasyReportDispatcher_DESKTOP
             {
                 MessageBox.Show(ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
 
         }
+
     }
 }
