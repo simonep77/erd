@@ -30,6 +30,8 @@ namespace EasyReportDispatcher_DESKTOP
             if (AppContext.Slot == null)
                 AppContext.Slot = new BusinessSlot(@"MYSQLDataBase", @"Server=remotemysql.com;UserId=ourKl13l8f;Password=IXehc1qbkZ;Database=ourKl13l8f;");
 
+            Directory.CreateDirectory(AppContext.UserDataDir);
+            Directory.CreateDirectory(AppContext.UserDataDirOutput);
 
             this.loadEstrazioni();
 
@@ -54,6 +56,7 @@ namespace EasyReportDispatcher_DESKTOP
                 item.SubItems.Add(est.Connessione.Nome);
                 item.SubItems.Add(est.Attivo == 1 ? "SI" : "NO");
                 item.SubItems.Add(est.TemplateId > 0 ? "SI" : "NO");
+                item.SubItems.Add(File.Exists(this.getLocalTemplate(est)) ? "SI" : "NO");
 
                 this.lvEstrazioni.Items.Add(item);
             }
@@ -96,12 +99,17 @@ namespace EasyReportDispatcher_DESKTOP
             if (this.lvEstrazioni.SelectedItems.Count == 0)
             {
                 this.btnOpenTemplate.Enabled = false;
+                this.btnEsegui.Enabled = false;
+                this.btnELiminaTplLocale.Enabled = false;
+                this.btnSalvaTemplate.Enabled = false;
             }
             else
             {
                 ReportEstrazione est = this.getSelectedEstrazione();
                 this.btnOpenTemplate.Enabled = (est.TemplateId > 0);
-
+                this.btnEsegui.Enabled = true;
+                this.btnELiminaTplLocale.Enabled = File.Exists(this.getLocalTemplate(est));
+                this.btnSalvaTemplate.Enabled = File.Exists(this.getLocalTemplate(est));
             }
 
         }
@@ -110,7 +118,7 @@ namespace EasyReportDispatcher_DESKTOP
         {
             ReportEstrazione est = this.getSelectedEstrazione();
 
-            var localtemplate = Path.Combine(Path.GetTempPath(), string.Format(@"ReportEstrazione_{0}.xlsx", est.Id));
+            var localtemplate = this.getLocalTemplate(est);
             var useLocal = false;
 
             if (File.Exists(localtemplate))
@@ -118,33 +126,24 @@ namespace EasyReportDispatcher_DESKTOP
                     useLocal = true;
 
             if(!useLocal)
+            {
                 File.WriteAllBytes(localtemplate, est.Template.TemplateBlob);
+                this.lvEstrazioni.SelectedItems[0].SubItems[this.colTemplateLocale.DisplayIndex].Text = "SI";
+            }
 
+            this.handleSelezioneEstrazione();
 
             Process.Start(localtemplate);
 
         }
 
 
-        private void handleTestTemplate()
+
+
+        private string getLocalTemplate(ReportEstrazione est)
         {
-            ReportEstrazione est = this.getSelectedEstrazione();
-
-            var localtemplate = Path.Combine(Path.GetTempPath(), string.Format(@"ReportEstrazione_{0}.xlsx", est.Id));
-            var useLocal = false;
-
-            if (File.Exists(localtemplate))
-                if (MessageBox.Show(@"Esiste una copia locale del template, vuoi riutilizzarla o scaricare la versione sul server?", "Conferma", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    useLocal = true;
-
-            if (!useLocal)
-                File.WriteAllBytes(localtemplate, est.Template.TemplateBlob);
-
-
-            Process.Start(localtemplate);
-
+            return Path.Combine(AppContext.UserDataDir, string.Format(@"ReportEstrazione_{0}.xlsx", est.Id));
         }
-
 
 
         private void lvEstrazioni_SelectedIndexChanged(object sender, EventArgs e)
@@ -155,6 +154,48 @@ namespace EasyReportDispatcher_DESKTOP
         private void btnOpenTemplate_Click(object sender, EventArgs e)
         {
             this.handleOpenTemplate();
+        }
+
+        private void btnEsegui_Click(object sender, EventArgs e)
+        {
+            var est = this.getSelectedEstrazione();
+            using (var frm = new frmEsegui(est, getLocalTemplate(est)))
+            {
+                frm.ShowDialog();
+            }
+        }
+
+        private void btnELiminaTplLocale_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(@"Vuoi eliminare la copia locale del template?", "Conferma", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+
+            var est = this.getSelectedEstrazione();
+            var localTemplate = this.getLocalTemplate(est);
+            File.Delete(localTemplate);
+            this.lvEstrazioni.SelectedItems[0].SubItems[this.colTemplateLocale.DisplayIndex].Text = "NO";
+            this.handleSelezioneEstrazione();
+        }
+
+        private void btnSalvaTemplate_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(@"Vuoi salvare la copia locale del template sul DB?", "Conferma", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+
+            try
+            {
+                var est = this.getSelectedEstrazione();
+                var localTemplate = this.getLocalTemplate(est);
+
+                est.Template.TemplateBlob = File.ReadAllBytes(localTemplate);
+
+                this.handleSelezioneEstrazione();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
     }
 }
