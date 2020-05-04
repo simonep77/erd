@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EasyReportDispatcher_DESKTOP.src
 {
-    public class AppContext
+    public class AppContextERD
     {
 
         public static BusinessSlot Slot { get; set; }

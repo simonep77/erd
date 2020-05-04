@@ -37,8 +37,12 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnConnetti = new System.Windows.Forms.ToolStripButton();
             this.btnDisconnetti = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnOpenTemplate = new System.Windows.Forms.ToolStripButton();
+            this.btnELiminaTplLocale = new System.Windows.Forms.ToolStripButton();
+            this.btnSalvaTemplate = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnEsegui = new System.Windows.Forms.ToolStripButton();
             this.panMain = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lvEstrazioni = new System.Windows.Forms.ListView();
@@ -47,16 +51,17 @@
             this.colConnessione = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colAttivo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colTemplate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnEsegui = new System.Windows.Forms.ToolStripButton();
             this.colTemplateLocale = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnELiminaTplLocale = new System.Windows.Forms.ToolStripButton();
-            this.btnSalvaTemplate = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.btnAddEstrazione = new System.Windows.Forms.ToolStripButton();
+            this.btnEditEstrazione = new System.Windows.Forms.ToolStripButton();
+            this.colInvioEmail = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panMain.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -136,10 +141,10 @@
             this.btnDisconnetti.Text = "Disconnetti";
             this.btnDisconnetti.Click += new System.EventHandler(this.btnDisconnetti_Click);
             // 
-            // toolStripSeparator1
+            // toolStripSeparator2
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // btnOpenTemplate
             // 
@@ -150,8 +155,42 @@
             this.btnOpenTemplate.Text = "Apri template";
             this.btnOpenTemplate.Click += new System.EventHandler(this.btnOpenTemplate_Click);
             // 
+            // btnELiminaTplLocale
+            // 
+            this.btnELiminaTplLocale.Image = ((System.Drawing.Image)(resources.GetObject("btnELiminaTplLocale.Image")));
+            this.btnELiminaTplLocale.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnELiminaTplLocale.Name = "btnELiminaTplLocale";
+            this.btnELiminaTplLocale.Size = new System.Drawing.Size(154, 22);
+            this.btnELiminaTplLocale.Text = "Elimina Template Locale";
+            this.btnELiminaTplLocale.Click += new System.EventHandler(this.btnELiminaTplLocale_Click);
+            // 
+            // btnSalvaTemplate
+            // 
+            this.btnSalvaTemplate.Image = ((System.Drawing.Image)(resources.GetObject("btnSalvaTemplate.Image")));
+            this.btnSalvaTemplate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSalvaTemplate.Name = "btnSalvaTemplate";
+            this.btnSalvaTemplate.Size = new System.Drawing.Size(142, 22);
+            this.btnSalvaTemplate.Text = "Salva Template Locale";
+            this.btnSalvaTemplate.Click += new System.EventHandler(this.btnSalvaTemplate_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // btnEsegui
+            // 
+            this.btnEsegui.Image = ((System.Drawing.Image)(resources.GetObject("btnEsegui.Image")));
+            this.btnEsegui.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnEsegui.Name = "btnEsegui";
+            this.btnEsegui.Size = new System.Drawing.Size(61, 22);
+            this.btnEsegui.Text = "Esegui";
+            this.btnEsegui.ToolTipText = "Esegui Estrazione";
+            this.btnEsegui.Click += new System.EventHandler(this.btnEsegui_Click);
+            // 
             // panMain
             // 
+            this.panMain.Controls.Add(this.toolStrip2);
             this.panMain.Controls.Add(this.groupBox1);
             this.panMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panMain.Location = new System.Drawing.Point(0, 24);
@@ -179,6 +218,7 @@
             this.colNome,
             this.colConnessione,
             this.colAttivo,
+            this.colInvioEmail,
             this.colTemplate,
             this.colTemplateLocale});
             this.lvEstrazioni.Dock = System.Windows.Forms.DockStyle.Top;
@@ -220,43 +260,45 @@
             this.colTemplate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.colTemplate.Width = 100;
             // 
-            // btnEsegui
-            // 
-            this.btnEsegui.Image = ((System.Drawing.Image)(resources.GetObject("btnEsegui.Image")));
-            this.btnEsegui.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnEsegui.Name = "btnEsegui";
-            this.btnEsegui.Size = new System.Drawing.Size(61, 22);
-            this.btnEsegui.Text = "Esegui";
-            this.btnEsegui.ToolTipText = "Esegui Estrazione";
-            this.btnEsegui.Click += new System.EventHandler(this.btnEsegui_Click);
-            // 
             // colTemplateLocale
             // 
             this.colTemplateLocale.Text = "Template Locale";
             this.colTemplateLocale.Width = 120;
             // 
-            // btnELiminaTplLocale
+            // toolStrip2
             // 
-            this.btnELiminaTplLocale.Image = ((System.Drawing.Image)(resources.GetObject("btnELiminaTplLocale.Image")));
-            this.btnELiminaTplLocale.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnELiminaTplLocale.Name = "btnELiminaTplLocale";
-            this.btnELiminaTplLocale.Size = new System.Drawing.Size(154, 22);
-            this.btnELiminaTplLocale.Text = "Elimina Template Locale";
-            this.btnELiminaTplLocale.Click += new System.EventHandler(this.btnELiminaTplLocale_Click);
+            this.toolStrip2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnAddEstrazione,
+            this.btnEditEstrazione});
+            this.toolStrip2.Location = new System.Drawing.Point(0, 562);
+            this.toolStrip2.Name = "toolStrip2";
+            this.toolStrip2.Size = new System.Drawing.Size(1224, 25);
+            this.toolStrip2.TabIndex = 1;
+            this.toolStrip2.Text = "toolStrip2";
             // 
-            // btnSalvaTemplate
+            // btnAddEstrazione
             // 
-            this.btnSalvaTemplate.Image = ((System.Drawing.Image)(resources.GetObject("btnSalvaTemplate.Image")));
-            this.btnSalvaTemplate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnSalvaTemplate.Name = "btnSalvaTemplate";
-            this.btnSalvaTemplate.Size = new System.Drawing.Size(142, 22);
-            this.btnSalvaTemplate.Text = "Salva Template Locale";
-            this.btnSalvaTemplate.Click += new System.EventHandler(this.btnSalvaTemplate_Click);
+            this.btnAddEstrazione.Image = ((System.Drawing.Image)(resources.GetObject("btnAddEstrazione.Image")));
+            this.btnAddEstrazione.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAddEstrazione.Name = "btnAddEstrazione";
+            this.btnAddEstrazione.Size = new System.Drawing.Size(118, 22);
+            this.btnAddEstrazione.Text = "Nuova Estrazione";
+            this.btnAddEstrazione.Click += new System.EventHandler(this.btnAddEstrazione_Click);
             // 
-            // toolStripSeparator2
+            // btnEditEstrazione
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.btnEditEstrazione.Image = ((System.Drawing.Image)(resources.GetObject("btnEditEstrazione.Image")));
+            this.btnEditEstrazione.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnEditEstrazione.Name = "btnEditEstrazione";
+            this.btnEditEstrazione.Size = new System.Drawing.Size(130, 22);
+            this.btnEditEstrazione.Text = "Modifica Estrazione";
+            this.btnEditEstrazione.Click += new System.EventHandler(this.btnEditEstrazione_Click);
+            // 
+            // colInvioEmail
+            // 
+            this.colInvioEmail.Text = "Invio Email";
+            this.colInvioEmail.Width = 120;
             // 
             // frmMain
             // 
@@ -279,7 +321,10 @@
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.panMain.ResumeLayout(false);
+            this.panMain.PerformLayout();
             this.groupBox1.ResumeLayout(false);
+            this.toolStrip2.ResumeLayout(false);
+            this.toolStrip2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -310,6 +355,10 @@
         private System.Windows.Forms.ToolStripButton btnELiminaTplLocale;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton btnSalvaTemplate;
+        private System.Windows.Forms.ToolStrip toolStrip2;
+        private System.Windows.Forms.ToolStripButton btnAddEstrazione;
+        private System.Windows.Forms.ToolStripButton btnEditEstrazione;
+        private System.Windows.Forms.ColumnHeader colInvioEmail;
     }
 }
 

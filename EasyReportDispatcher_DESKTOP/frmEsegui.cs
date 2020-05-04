@@ -42,9 +42,9 @@ namespace EasyReportDispatcher_DESKTOP
 
                 estBiz.Run();
 
-                Directory.CreateDirectory(AppContext.UserDataDirOutput);
+                Directory.CreateDirectory(AppContextERD.UserDataDirOutput);
 
-                var outFilePath = Path.Combine(AppContext.UserDataDirOutput, estBiz.LastResult.NomeFile);
+                var outFilePath = Path.Combine(AppContextERD.UserDataDirOutput, estBiz.LastResult.NomeFile);
                 File.WriteAllBytes(outFilePath, estBiz.LastResult.DataBlob);
 
                 Process.Start(outFilePath);

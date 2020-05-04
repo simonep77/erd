@@ -1,0 +1,257 @@
+﻿using EasyReportDispatcher_DESKTOP.src;
+using EasyReportDispatcher_Lib_BIZ.src.report;
+using EasyReportDispatcher_Lib_Common.src.enums;
+using EasyReportDispatcher_Lib_DAL.src.report;
+using ScintillaNET;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace EasyReportDispatcher_DESKTOP
+{
+    public partial class frmEstrazione : Form
+    {
+
+        private ReportEstrazioneBIZ mEstrazioneBiz;
+        public frmEstrazione(ReportEstrazione est)
+        {
+            InitializeComponent();
+
+            this.mEstrazioneBiz = est.ToBizObject<ReportEstrazioneBIZ>();
+
+            this.addBindings();
+        }
+
+
+        private void addBindings()
+        {
+
+            this.lblID.Text = this.mEstrazioneBiz.DataObj.Id.ToString();
+
+            this.txtNome.Text = this.mEstrazioneBiz.DataObj.Nome;
+            this.txtNote.Text = this.mEstrazioneBiz.DataObj.Note;
+            this.txtCronString.Text = this.mEstrazioneBiz.DataObj.CronString;
+            this.chkAttivo.Checked = (this.mEstrazioneBiz.DataObj.Attivo == 1);
+            this.chbInvioEmail.Checked = (this.mEstrazioneBiz.DataObj.InvioMailAttivo == 1);
+
+            this.txtSQL.Text = this.mEstrazioneBiz.DataObj.SqlText;
+            this.txtExcelTitolo.Text = this.mEstrazioneBiz.DataObj.Titolo;
+            this.txtExcelSheet.Text = this.mEstrazioneBiz.DataObj.SheetName;
+
+            
+            this.rbTemplateBase.Checked = (this.mEstrazioneBiz.DataObj.TipoFileId == eReport.TipoFile.Excel && this.mEstrazioneBiz.DataObj.TemplateId == 0);
+            this.rbTemplateCustom.Checked = (this.mEstrazioneBiz.DataObj.TipoFileId == eReport.TipoFile.Excel && this.mEstrazioneBiz.DataObj.TemplateId > 0);
+
+            this.txtNomeTemplate.Text = (this.mEstrazioneBiz.DataObj.TemplateId > 0) ? this.mEstrazioneBiz.DataObj.Nome : "<Nuovo>";
+            this.lbTemplatePath.Text = (this.mEstrazioneBiz.DataObj.TemplateId > 0) ? "Id " + (this.mEstrazioneBiz.DataObj.TemplateId.ToString()) : "";
+
+            this.btnEmailDest.Enabled = (this.mEstrazioneBiz.DataObj.ObjectState == Bdo.Objects.EObjectState.Loaded);
+
+            //Load
+            this.loadTipiFile();
+            this.loadTemplates();
+
+            this.rbTemplateBase_CheckedChanged(null, null);
+            this.rbTemplateCustom_CheckedChanged(null, null);
+
+        }
+
+        #region LOADING
+
+        private void loadTipiFile()
+        {
+            var tipi = AppContextERD.Slot.CreateList<ReportTipoFileLista>().CacheResult().SearchAllObjects();
+
+            this.cmbTipoFile.DisplayMember = nameof(ReportTipoFile.Nome);
+            this.cmbTipoFile.ValueMember = nameof(ReportTipoFile.Id);
+            this.cmbTipoFile.DataSource = tipi;
+
+
+            this.cmbTipoFile.SelectedItem = this.mEstrazioneBiz.DataObj.TipoFile;
+        }
+
+        private void loadTemplates()
+        {
+      
+        }
+
+        #endregion
+
+        private void frmEstrazione_Load(object sender, EventArgs e)
+        {
+            this.setScintillaStyle();
+        }
+
+
+        private void setScintillaStyle()
+        {
+            var editor = this.txtSQL;
+
+            editor.StyleResetDefault();
+            editor.Styles[Style.Default].Size = Convert.ToInt32(this.Font.Size);
+            editor.Styles[Style.Default].Font = this.Font.FontFamily.Name;
+            editor.StyleClearAll();
+            
+            editor.Lexer = Lexer.Sql;
+
+
+            editor.Styles[Style.Sql.Word].ForeColor = Color.Blue;
+            editor.Styles[Style.Sql.Word2].ForeColor = Color.Magenta;
+            editor.Styles[Style.Sql.Default].ForeColor = Color.Black;
+            editor.Styles[Style.Sql.Character].ForeColor = Color.Maroon;
+            editor.Styles[Style.Sql.Comment].ForeColor = Color.Green;
+            editor.Styles[Style.Sql.CommentDoc].ForeColor = Color.Green;
+            editor.Styles[Style.Sql.CommentLine].ForeColor = Color.Green;
+            editor.Styles[Style.Sql.Identifier].ForeColor = Color.Red;
+            editor.Styles[Style.Sql.Number].ForeColor = Color.Black;
+            editor.Styles[Style.Sql.Operator].ForeColor = Color.Black;
+            editor.Styles[Style.Sql.QOperator].ForeColor = Color.Black;
+            editor.Styles[Style.Sql.QuotedIdentifier].ForeColor = Color.Maroon;
+
+            // Set the Styles
+            editor.Styles[Style.LineNumber].ForeColor = Color.FromArgb(255, 128, 128, 128);  //Dark Gray
+            editor.Styles[Style.LineNumber].BackColor = Color.FromArgb(255, 228, 228, 228);  //Light Gray
+            editor.Styles[Style.Sql.Comment].ForeColor = Color.Green;
+            editor.Styles[Style.Sql.CommentLine].ForeColor = Color.Green;
+            editor.Styles[Style.Sql.CommentLineDoc].ForeColor = Color.Green;
+            editor.Styles[Style.Sql.Number].ForeColor = Color.Maroon;
+            editor.Styles[Style.Sql.Word].ForeColor = Color.Blue;
+            editor.Styles[Style.Sql.Word2].ForeColor = Color.Fuchsia;
+            editor.Styles[Style.Sql.User1].ForeColor = Color.Gray;
+            editor.Styles[Style.Sql.User2].ForeColor = Color.FromArgb(255, 00, 128, 192);    //Medium Blue-Green
+            editor.Styles[Style.Sql.String].ForeColor = Color.Red;
+            editor.Styles[Style.Sql.Character].ForeColor = Color.Red;
+            editor.Styles[Style.Sql.Operator].ForeColor = Color.Black;
+
+            // Set keyword lists
+            // Word = 0
+            editor.SetKeywords(0, @"add alter as authorization backup begin bigint binary bit break browse bulk by cascade case catch check checkpoint close clustered column commit compute constraint containstable continue create current cursor cursor database date datetime datetime2 datetimeoffset dbcc deallocate decimal declare default delete deny desc disk distinct distributed double drop dump else end errlvl escape except exec execute exit external fetch file fillfactor float for foreign freetext freetexttable from full function goto grant group having hierarchyid holdlock identity identity_insert identitycol if image index insert int intersect into key kill lineno load merge money national nchar nocheck nocount nolock nonclustered ntext numeric nvarchar of off offsets on open opendatasource openquery openrowset openxml option order over percent plan precision primary print proc procedure public raiserror read readtext real reconfigure references replication restore restrict return revert revoke rollback rowcount rowguidcol rule save schema securityaudit select set setuser shutdown smalldatetime smallint smallmoney sql_variant statistics table table tablesample text textsize then time timestamp tinyint to top tran transaction trigger truncate try union unique uniqueidentifier update updatetext use user values varbinary varchar varying view waitfor when where while with writetext xml go ");
+            // Word2 = 1
+            editor.SetKeywords(1, @"ascii cast char charindex ceiling coalesce collate contains convert current_date current_time current_timestamp current_user floor isnull max min nullif object_id session_user substring system_user tsequal ");
+            // User1 = 4
+            editor.SetKeywords(4, @"all and any between cross exists in inner is join left like not null or outer pivot right some unpivot ( ) * ");
+
+
+        }
+
+        private void cmbTipoFile_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var iTipo = this.cmbTipoFile.SelectedItem == null ? 0 : Convert.ToInt32(this.cmbTipoFile.SelectedValue);
+
+
+            this.gbExcel.Visible = (iTipo == (int)EasyReportDispatcher_Lib_Common.src.enums.eReport.TipoFile.Excel);
+
+        }
+
+        private void rbTemplateBase_CheckedChanged(object sender, EventArgs e)
+        {
+            this.panExcelBase.Enabled = this.rbTemplateBase.Checked;
+        }
+
+        private void rbTemplateCustom_CheckedChanged(object sender, EventArgs e)
+        {
+            this.panExcelCustom.Enabled = this.rbTemplateCustom.Checked;
+
+        }
+
+        private void btnCloneTemplate_Click(object sender, EventArgs e)
+        {
+
+            using (var frm = new OpenFileDialog())
+            {
+                frm.Filter = @"File Excel|*.xlsx";
+                frm.DefaultExt = ".xlsx";
+
+                if (frm.ShowDialog() != DialogResult.OK)
+                    return;
+
+                this.lbTemplatePath.Text = Path.GetFileName(frm.FileName);
+                this.lbTemplatePath.Tag = frm.FileName;
+            }
+            
+
+        }
+
+        private void btnEliminaTemplate_Click(object sender, EventArgs e)
+        {
+            if (this.mEstrazioneBiz.DataObj.TemplateId > 0)
+            {
+
+            }
+            else
+            {
+
+            }
+
+            this.lbTemplatePath.Text = @"nessun file";
+            this.lbTemplatePath.Tag = null; ;
+        }
+
+        private void btnSalva_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+                //Template custom
+                var tpl = this.mEstrazioneBiz.DataObj.Template;
+
+                if (tpl == null)
+                {
+                    tpl = AppContextERD.Slot.CreateObject<ReportTemplate>();
+                }
+
+                tpl.Nome = this.txtNomeTemplate.Text;
+
+                if (this.lbTemplatePath.Tag != null)
+                {
+                    tpl.TemplateBlob = File.ReadAllBytes(this.lbTemplatePath.Tag.ToString());
+                }
+
+                AppContextERD.Slot.SaveObject(tpl);
+
+                this.mEstrazioneBiz.DataObj.TemplateId = tpl.Id;
+
+
+
+                //Estrazione
+                this.mEstrazioneBiz.DataObj.Nome = this.txtNome.Text;
+                this.mEstrazioneBiz.DataObj.Note = this.txtNote.Text;
+                this.mEstrazioneBiz.DataObj.CronString = this.txtCronString.Text;
+                this.mEstrazioneBiz.DataObj.SqlText = this.txtSQL.Text;
+                this.mEstrazioneBiz.DataObj.Titolo = this.txtExcelSheet.Text;
+                this.mEstrazioneBiz.DataObj.SheetName = this.txtExcelSheet.Text;
+                
+                if (this.mEstrazioneBiz.DataObj.ObjectState == Bdo.Objects.EObjectState.New)
+                {
+                    this.mEstrazioneBiz.DataObj.DataInizio = new DateTime(2001, 1, 1);
+                    this.mEstrazioneBiz.DataObj.DataFine = new DateTime(9999, 12, 31);
+
+                }
+                this.mEstrazioneBiz.DataObj.Attivo = (sbyte)((this.chkAttivo.Checked) ? 1 : 0);
+                this.mEstrazioneBiz.DataObj.InvioMailAttivo =(sbyte)((this.chbInvioEmail.Checked) ? 1 : 0);
+                this.mEstrazioneBiz.DataObj.Nome = this.txtNome.Text;
+
+                AppContextERD.Slot.SaveObject(this.mEstrazioneBiz.DataObj);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            }
+
+
+
+
+
+        }
+    }
+}

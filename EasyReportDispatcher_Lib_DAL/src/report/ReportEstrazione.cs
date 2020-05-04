@@ -15,35 +15,40 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         public abstract int Id { get; }
 
         [MaxLength(100)]
-        public abstract string Nome { get; }
+        public abstract string Nome { get; set; }
 
-        public abstract sbyte Attivo { get; }
+        public abstract sbyte Attivo { get; set; }
 
         [AcceptNull()]
-        public abstract String Titolo { get; }
+        public abstract String Titolo { get; set; }
         [AcceptNull()]
-        public abstract String Note { get; }
+        public abstract String Note { get; set; }
 
-        public abstract Int16 ConnessioneId { get; }
+        public abstract Int16 ConnessioneId { get; set; }
 
         [PropertyMap(nameof(ConnessioneId))]
         public abstract ReportConnessione Connessione { get; }
-        public abstract sbyte TipoFileId { get; }
-        public abstract sbyte InvioMailAttivo { get; }
+        public abstract sbyte TipoFileId { get; set; }
+       
+        [PropertyMap(nameof(TipoFileId))]
+        public abstract ReportTipoFile TipoFile { get; }
 
-        public abstract string SqlText { get; }
 
-        public abstract string SheetName { get; }
+        public abstract sbyte InvioMailAttivo { get; set; }
 
-        public abstract string CronString { get; }
+        public abstract string SqlText { get; set; }
 
-        public abstract DateTime DataInizio { get; }
-        public abstract DateTime DataFine { get; }
-        public abstract sbyte NumOutputStorico { get; }
+        public abstract string SheetName { get; set; }
+
+        public abstract string CronString { get; set; }
+
+        public abstract DateTime DataInizio { get; set; }
+        public abstract DateTime DataFine { get; set; }
+        public abstract sbyte NumOutputStorico { get; set; }
 
 
         [AcceptNull()]
-        public abstract string EstrazioniAccorpateIds { get; }
+        public abstract string EstrazioniAccorpateIds { get; set; }
 
         [AcceptNull]
         public abstract int TemplateId { get; set; }
