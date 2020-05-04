@@ -17,13 +17,13 @@ using System.Windows.Forms;
 
 namespace EasyReportDispatcher_DESKTOP
 {
-    public partial class frmEstrazione : Form
+    public partial class frmSelEstrazioni : Form
     {
 
         private ReportEstrazioneBIZ mEstrazioneBiz;
         private DialogResult mResult = DialogResult.Cancel;
 
-        public frmEstrazione(ReportEstrazione est)
+        public frmSelEstrazioni(ReportEstrazione est)
         {
             InitializeComponent();
 
@@ -41,7 +41,6 @@ namespace EasyReportDispatcher_DESKTOP
             this.txtNome.Text = this.mEstrazioneBiz.DataObj.Nome;
             this.txtNote.Text = this.mEstrazioneBiz.DataObj.Note;
             this.txtCronString.Text = this.mEstrazioneBiz.DataObj.CronString;
-            this.txtEstrazioniAcc.Text = this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds;
             this.chkAttivo.Checked = (this.mEstrazioneBiz.DataObj.Attivo == 1);
             this.chbInvioEmail.Checked = (this.mEstrazioneBiz.DataObj.InvioMailAttivo == 1);
 
@@ -290,7 +289,6 @@ namespace EasyReportDispatcher_DESKTOP
                 this.mEstrazioneBiz.DataObj.TipoFileId = (this.cmbTipoFile.SelectedItem as ReportTipoFile).Id;
                 this.mEstrazioneBiz.DataObj.ConnessioneId = (this.cmbConnessioni.SelectedItem as ReportConnessione).Id;
                 this.mEstrazioneBiz.DataObj.NumOutputStorico = Convert.ToSByte(this.txtNumOutput.Value);
-                this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds = this.txtEstrazioniAcc.Text.Trim(',');
 
                 AppContextERD.Slot.SaveObject(this.mEstrazioneBiz.DataObj);
 

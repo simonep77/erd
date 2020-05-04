@@ -12,7 +12,7 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
     public abstract class ReportConnessione : DataObject<ReportConnessione>
     {
         [PrimaryKey]
-        public abstract long Id { get; }
+        public abstract short Id { get; }
 
         [MaxLength(100)]
         public abstract string Nome { get; }

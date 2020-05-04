@@ -11,7 +11,7 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
     [Table("report_estrazioni")]
     public abstract class ReportEstrazione : DataObject<ReportEstrazione>
     {
-        [PrimaryKey]
+        [PrimaryKey, AutoIncrement]
         public abstract int Id { get; }
 
         [MaxLength(100)]
@@ -38,14 +38,16 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
 
         public abstract string SqlText { get; set; }
 
+        [AcceptNull()]
         public abstract string SheetName { get; set; }
 
         public abstract string CronString { get; set; }
 
         public abstract DateTime DataInizio { get; set; }
         public abstract DateTime DataFine { get; set; }
+        
+        [DefaultValue("20")]
         public abstract sbyte NumOutputStorico { get; set; }
-
 
         [AcceptNull()]
         public abstract string EstrazioniAccorpateIds { get; set; }

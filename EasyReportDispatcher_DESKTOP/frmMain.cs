@@ -1,5 +1,6 @@
 ﻿using Bdo.Objects;
 using EasyReportDispatcher_DESKTOP.src;
+using EasyReportDispatcher_Lib_BIZ.src.report;
 using EasyReportDispatcher_Lib_DAL.src.report;
 using System;
 using System.Collections.Generic;
@@ -51,6 +52,7 @@ namespace EasyReportDispatcher_DESKTOP
                 this.tsConnessione.Text = "Connesso";
                 this.btnConnetti.Enabled = false;
                 this.btnDisconnetti.Enabled = true;
+                this.btnAddEstrazione.Enabled = true;
 
                 this.handleSelezioneEstrazione();
             }
@@ -69,7 +71,9 @@ namespace EasyReportDispatcher_DESKTOP
         {
             this.clearAll();
 
-            var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>().SearchAllObjects();
+            var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>()
+                .OrderBy(nameof(ReportEstrazione.Id), OrderVersus.Desc)
+                .SearchByColumn(Filter.Gt(nameof(ReportEstrazione.Attivo), -1));
 
             foreach (var est in lst)
             {
@@ -113,6 +117,7 @@ namespace EasyReportDispatcher_DESKTOP
             this.clearAll();
             this.btnConnetti.Enabled = true;
             this.btnDisconnetti.Enabled = false;
+            this.btnAddEstrazione.Enabled = false;
 
             if (AppContextERD.Slot != null)
                 AppContextERD.Slot.Dispose();
@@ -146,6 +151,8 @@ namespace EasyReportDispatcher_DESKTOP
                 this.btnELiminaTplLocale.Enabled = false;
                 this.btnSalvaTemplate.Enabled = false;
                 this.btnEditEstrazione.Enabled = false;
+                this.btnClonaEstrazione.Enabled = false;
+                this.btnDelEstrazione.Enabled = false;
             }
             else
             {
@@ -155,6 +162,8 @@ namespace EasyReportDispatcher_DESKTOP
                 this.btnELiminaTplLocale.Enabled = File.Exists(this.getLocalTemplate(est));
                 this.btnSalvaTemplate.Enabled = File.Exists(this.getLocalTemplate(est));
                 this.btnEditEstrazione.Enabled = true;
+                this.btnClonaEstrazione.Enabled = true;
+                this.btnDelEstrazione.Enabled = true;
             }
 
         }
@@ -291,7 +300,12 @@ namespace EasyReportDispatcher_DESKTOP
             var est = this.getSelectedEstrazione();
             using (var frm = new frmEstrazione(est))
             {
-                frm.ShowDialog();
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    this.setListItem(this.lvEstrazioni.SelectedItems[0], est);
+                }
+                else
+                    AppContextERD.Slot.RefreshObject(est, true);
             }
         }
 
@@ -304,11 +318,53 @@ namespace EasyReportDispatcher_DESKTOP
                 if (frm.ShowDialog() != DialogResult.OK)
                     return;
 
-                var item = new ListViewItem();
-                this.setListItem(item, est);
-                this.lvEstrazioni.Items.Add(item);
-                this.updateEstCount();
+                this.addEstrazioneToList(est);
+
+
             }
         }
+
+        private void btnClonaEstrazione_Click(object sender, EventArgs e)
+        {
+            var est = this.getSelectedEstrazione();
+            var estNew = AppContextERD.Slot.CloneObjectForNew<ReportEstrazione>(est);
+
+            estNew.Nome = "Clone di " + estNew.Nome;
+
+            using (var frm = new frmEstrazione(estNew))
+            {
+                if (frm.ShowDialog() != DialogResult.OK)
+                    return;
+
+                this.addEstrazioneToList(estNew);
+            }
+        }
+
+        private void addEstrazioneToList(ReportEstrazione est)
+        {
+            var item = new ListViewItem();
+            this.setListItem(item, est);
+            this.lvEstrazioni.Items.Insert(0, item);
+            this.updateEstCount();
+            item.Selected = true;
+        }
+
+        private void btnDelEstrazione_Click(object sender, EventArgs e)
+        {
+            var est = this.getSelectedEstrazione();
+
+            if (MessageBox.Show(string.Format($"Vuoi eliminare l'estrazione {est.Id}?"), "Conferma", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+
+            var estBiz = est.ToBizObject<ReportEstrazioneBIZ>();
+            estBiz.EliminaLogicamente();
+
+            MessageBox.Show("ELiminazione (logica) effettuata.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            this.lvEstrazioni.Items.Remove(this.lvEstrazioni.SelectedItems[0]);
+            this.updateEstCount();
+        }
+
+
     }
 }

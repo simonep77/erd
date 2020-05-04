@@ -170,7 +170,14 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
        #endregion
 
-            #region PUBLIC
+        #region PUBLIC
+
+
+        public void EliminaLogicamente()
+        {
+            this.DataObj.Attivo = -1;
+            this.Slot.SaveObject(this.DataObj);
+        }
 
 
         public void Run()

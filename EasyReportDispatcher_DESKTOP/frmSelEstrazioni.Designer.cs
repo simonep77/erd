@@ -1,6 +1,6 @@
 ﻿namespace EasyReportDispatcher_DESKTOP
 {
-    partial class frmEstrazione
+    partial class frmSelEstrazioni
     {
         /// <summary>
         /// Required designer variable.
@@ -29,12 +29,6 @@
         private void InitializeComponent()
         {
             this.gbGenerali = new System.Windows.Forms.GroupBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.txtEstrazioniAcc = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.txtNumOutput = new System.Windows.Forms.NumericUpDown();
-            this.cmbConnessioni = new System.Windows.Forms.ComboBox();
-            this.label9 = new System.Windows.Forms.Label();
             this.btnEmailDest = new System.Windows.Forms.Button();
             this.chbInvioEmail = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -65,16 +59,24 @@
             this.gbSql = new System.Windows.Forms.GroupBox();
             this.txtSQL = new ScintillaNET.Scintilla();
             this.btnSalva = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.cmbConnessioni = new System.Windows.Forms.ComboBox();
+            this.txtNumOutput = new System.Windows.Forms.NumericUpDown();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.txtEstrazioniAcc = new System.Windows.Forms.TextBox();
+            this.btnSelezionaEstrazioni = new System.Windows.Forms.Button();
             this.gbGenerali.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.txtNumOutput)).BeginInit();
             this.gbExcel.SuspendLayout();
             this.panExcelCustom.SuspendLayout();
             this.panExcelBase.SuspendLayout();
             this.gbSql.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtNumOutput)).BeginInit();
             this.SuspendLayout();
             // 
             // gbGenerali
             // 
+            this.gbGenerali.Controls.Add(this.btnSelezionaEstrazioni);
             this.gbGenerali.Controls.Add(this.label11);
             this.gbGenerali.Controls.Add(this.txtEstrazioniAcc);
             this.gbGenerali.Controls.Add(this.label10);
@@ -102,61 +104,6 @@
             this.gbGenerali.TabIndex = 0;
             this.gbGenerali.TabStop = false;
             this.gbGenerali.Text = "Generali";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(425, 169);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(133, 18);
-            this.label11.TabIndex = 19;
-            this.label11.Text = "Estrazioni Accorpate";
-            // 
-            // txtEstrazioniAcc
-            // 
-            this.txtEstrazioniAcc.Location = new System.Drawing.Point(626, 165);
-            this.txtEstrazioniAcc.Name = "txtEstrazioniAcc";
-            this.txtEstrazioniAcc.Size = new System.Drawing.Size(201, 26);
-            this.txtEstrazioniAcc.TabIndex = 18;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(425, 137);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(89, 18);
-            this.label10.TabIndex = 17;
-            this.label10.Text = "Num. Output";
-            // 
-            // txtNumOutput
-            // 
-            this.txtNumOutput.Location = new System.Drawing.Point(626, 133);
-            this.txtNumOutput.Maximum = new decimal(new int[] {
-            127,
-            0,
-            0,
-            0});
-            this.txtNumOutput.Name = "txtNumOutput";
-            this.txtNumOutput.Size = new System.Drawing.Size(72, 26);
-            this.txtNumOutput.TabIndex = 16;
-            // 
-            // cmbConnessioni
-            // 
-            this.cmbConnessioni.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbConnessioni.FormattingEnabled = true;
-            this.cmbConnessioni.Location = new System.Drawing.Point(151, 42);
-            this.cmbConnessioni.Name = "cmbConnessioni";
-            this.cmbConnessioni.Size = new System.Drawing.Size(201, 26);
-            this.cmbConnessioni.TabIndex = 15;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(56, 45);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(88, 18);
-            this.label9.TabIndex = 14;
-            this.label9.Text = "Connessione";
             // 
             // btnEmailDest
             // 
@@ -447,6 +394,71 @@
             this.btnSalva.UseVisualStyleBackColor = true;
             this.btnSalva.Click += new System.EventHandler(this.btnSalva_Click);
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(56, 45);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(88, 18);
+            this.label9.TabIndex = 14;
+            this.label9.Text = "Connessione";
+            // 
+            // cmbConnessioni
+            // 
+            this.cmbConnessioni.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbConnessioni.FormattingEnabled = true;
+            this.cmbConnessioni.Location = new System.Drawing.Point(151, 42);
+            this.cmbConnessioni.Name = "cmbConnessioni";
+            this.cmbConnessioni.Size = new System.Drawing.Size(201, 26);
+            this.cmbConnessioni.TabIndex = 15;
+            // 
+            // txtNumOutput
+            // 
+            this.txtNumOutput.Location = new System.Drawing.Point(626, 133);
+            this.txtNumOutput.Maximum = new decimal(new int[] {
+            127,
+            0,
+            0,
+            0});
+            this.txtNumOutput.Name = "txtNumOutput";
+            this.txtNumOutput.Size = new System.Drawing.Size(72, 26);
+            this.txtNumOutput.TabIndex = 16;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(425, 137);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(89, 18);
+            this.label10.TabIndex = 17;
+            this.label10.Text = "Num. Output";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(425, 169);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(133, 18);
+            this.label11.TabIndex = 19;
+            this.label11.Text = "Estrazioni Accorpate";
+            // 
+            // txtEstrazioniAcc
+            // 
+            this.txtEstrazioniAcc.Location = new System.Drawing.Point(626, 165);
+            this.txtEstrazioniAcc.Name = "txtEstrazioniAcc";
+            this.txtEstrazioniAcc.ReadOnly = true;
+            this.txtEstrazioniAcc.Size = new System.Drawing.Size(201, 26);
+            this.txtEstrazioniAcc.TabIndex = 18;
+            // 
+            // btnSelezionaEstrazioni
+            // 
+            this.btnSelezionaEstrazioni.Location = new System.Drawing.Point(833, 165);
+            this.btnSelezionaEstrazioni.Name = "btnSelezionaEstrazioni";
+            this.btnSelezionaEstrazioni.Size = new System.Drawing.Size(87, 23);
+            this.btnSelezionaEstrazioni.TabIndex = 20;
+            this.btnSelezionaEstrazioni.Text = "Seleziona";
+            this.btnSelezionaEstrazioni.UseVisualStyleBackColor = true;
+            // 
             // frmEstrazione
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
@@ -467,7 +479,6 @@
             this.Load += new System.EventHandler(this.frmEstrazione_Load);
             this.gbGenerali.ResumeLayout(false);
             this.gbGenerali.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.txtNumOutput)).EndInit();
             this.gbExcel.ResumeLayout(false);
             this.gbExcel.PerformLayout();
             this.panExcelCustom.ResumeLayout(false);
@@ -475,6 +486,7 @@
             this.panExcelBase.ResumeLayout(false);
             this.panExcelBase.PerformLayout();
             this.gbSql.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.txtNumOutput)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -516,6 +528,7 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.NumericUpDown txtNumOutput;
+        private System.Windows.Forms.Button btnSelezionaEstrazioni;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox txtEstrazioniAcc;
     }
