@@ -156,29 +156,34 @@ namespace EasyReportDispatcher_Lib_BIZ.src.utils
         /// <returns></returns>
         public static byte[] EseguiAccorpamento(IList<byte[]> wbks)
         {
-            using (var ms = new MemoryStream())
+            var workbook = new XLWorkbook();
+            var idx_Sheet = 1;
+
+            foreach (var item in wbks)
             {
-                var workbook = new XLWorkbook(ms);
-
-                foreach (var item in wbks)
+                using (var mst = new MemoryStream(item))
                 {
-                    using (var mst = new MemoryStream(item))
-                    {
-                        var wb = new XLWorkbook(mst);
+                    var wb = new XLWorkbook(mst);
 
-                        foreach (var ws in wb.Worksheets)
+                    foreach (var ws in wb.Worksheets)
+                    {
+                        var sheetname = ws.Name;
+                        while (workbook.Worksheets.Where(s => s.Name.Equals(sheetname)).Any())
                         {
-                            ws.CopyTo(workbook, ws.Name);
+                            sheetname = ws.Name + "_" + idx_Sheet.ToString();
+                            idx_Sheet++;
                         }
+
+                        ws.CopyTo(workbook, sheetname);
                     }
                 }
+            }
 
-                using (var mso = new MemoryStream())
-                {
-                    workbook.SaveAs(mso);
-                    //Reimposta il blob dell'output
-                    return mso.ToArray();
-                }
+            using (var mso = new MemoryStream())
+            {
+                workbook.SaveAs(mso);
+                //Reimposta il blob dell'output
+                return mso.ToArray();
             }
 
         }

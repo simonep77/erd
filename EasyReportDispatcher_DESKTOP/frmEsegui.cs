@@ -40,7 +40,7 @@ namespace EasyReportDispatcher_DESKTOP
                 if (this.chkUsaTemplateLocale.Checked)
                     estBiz.ForcedTemplate = File.ReadAllBytes(this.mLocalTemplatePath);
 
-                estBiz.Run();
+                estBiz.Run(this.chkSaveOutput.Checked);
 
                 Directory.CreateDirectory(AppContextERD.UserDataDirOutput);
 
@@ -53,7 +53,14 @@ namespace EasyReportDispatcher_DESKTOP
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                var sb = new StringBuilder();
+                sb.AppendLine(@"Si e' verificato un errore:");
+                sb.AppendLine();
+                sb.AppendLine(ex.Message);
+                sb.AppendLine();
+                sb.AppendLine(@"Stack:");
+                sb.AppendLine(ex.StackTrace);
+                MessageBox.Show(sb.ToString(), "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {

@@ -180,7 +180,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         }
 
 
-        public void Run()
+        public void Run(bool saveOutput)
        {
             this.Slot.LogDebug(DebugLevel.Debug_1, "Avvio Run()");
 
@@ -191,7 +191,8 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             this.mLastResult.StatoId = eReport.StatoEstrazione.Avviata;
             this.mLastResult.TipoFileId = this.DataObj.TipoFileId;
 
-            this.Slot.SaveObject(this.mLastResult);
+            if (saveOutput)
+                this.Slot.SaveObject(this.mLastResult);
             this.Slot.LogDebug(DebugLevel.Debug_1, "End salvataggio output");
 
             try
@@ -201,12 +202,15 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 this.runSQL();
                 this.Slot.LogDebug(DebugLevel.Debug_1, "End runSQL()");
 
+                //se accorpamento dati (allora neanche esefue render finale)
+                this.runAccorpaSoloDati();
+
                 //Render
                 this.Slot.LogDebug(DebugLevel.Debug_1, "Begin renderOutput()");
                 this.renderOutput();
                 this.Slot.LogDebug(DebugLevel.Debug_1, "End renderOutput()");
 
-                //Se estrazione excel e presenti altre estrazioni da accorpare le esegue e mette tutto insieme
+                //Se accorpamento postumo solo excel...
                 this.runAccorpaAltreEstrazioni();
 
                 //Esegue copia
@@ -229,7 +233,10 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             //Fine: aggiornamento output
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin aggiornamento output");
             this.mLastResult.DataOraFine = DateTime.Now;
-            this.Slot.SaveObject(this.mLastResult);
+            
+            if (saveOutput)
+                this.Slot.SaveObject(this.mLastResult);
+            
             this.Slot.LogDebug(DebugLevel.Debug_1, "End aggiornamento output");
 
             //Se errori esce
@@ -243,6 +250,44 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             this.cleanOutput();
             this.Slot.LogDebug(DebugLevel.Debug_1, "End pulizia output");
 
+        }
+
+
+        private void runAccorpaSoloDati()
+        {
+            if (!this.IsAccorpato)
+                return;
+
+            //Indicatore di accorpamento
+            if (this.DataObj.AccorpaSoloDati < 1)
+                return;
+            //Solo excel si puo' accorpare
+
+
+            this.Slot.LogDebug(DebugLevel.Debug_1, "Begin accorpamento dati");
+
+
+            var ids = this.DataObj.EstrazioniAccorpateIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id));
+
+
+            //Salva stato simulate per consentire ripristino senza sovrascrittura (es. gia' in simulate)
+
+            foreach (var id in ids)
+            {
+                this.Slot.LogDebug(DebugLevel.Debug_1, "Begin merge dati id {0}", id);
+                //Esegue altra estrazione
+                var repBiz = this.Slot.BizNewWithLoadByPK<ReportEstrazioneBIZ>(id);
+                //Lancia Query
+                repBiz.runSQL();
+                //Esegue merge
+                this.mTabResultSQL.Merge(repBiz.mTabResultSQL);
+                this.Slot.LogDebug(DebugLevel.Debug_1, "End merge dati id {0}", id);
+            }
+
+
+
+
+            this.Slot.LogDebug(DebugLevel.Debug_1, "End accorpamento dati");
         }
 
         /// <summary>
@@ -259,6 +304,10 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             if (!this.IsAccorpato)
                 return;
 
+            //Se richiesto solo accorpamento dati esce
+            if (this.DataObj.AccorpaSoloDati > 0)
+                return;
+
             //Solo excel si puo' accorpare
             if (this.DataObj.TipoFileId != eReport.TipoFile.Excel)
                 throw new ApplicationException(@"E' possibile accorpare solo estrazioni di tipo Excel");
@@ -272,31 +321,21 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             estraz.Add(this.LastResult.DataBlob);
 
             //Salva stato simulate per consentire ripristino senza sovrascrittura (es. gia' in simulate)
-            var oldSimulate = this.Slot.Simulate;
-            try
-            {
-                this.Slot.Simulate = true;
 
-                foreach (var id in ids)
-                {
-                    //Esegue altra estrazione
-                    var repBiz = this.Slot.BizNewWithLoadByPK<ReportEstrazioneBIZ>(id);
-                    //Tutte le estrazioni devono essere dello stesso tipo
+            foreach (var id in ids)
+            {
+                //Esegue altra estrazione
+                var repBiz = this.Slot.BizNewWithLoadByPK<ReportEstrazioneBIZ>(id);
+                //Tutte le estrazioni devono essere dello stesso tipo
                     
-                    //Solo excel si puo' accorpare
-                    if (repBiz.DataObj.TipoFileId != this.DataObj.TipoFileId)
-                        throw new ApplicationException(string.Format(@"L'estrazione {0} - {1} deve essere dello stesso tipo di quella principale {2}", 
-                            repBiz.DataObj.Id, repBiz.DataObj.Nome, this.DataObj.Id));
+                //Solo excel si puo' accorpare
+                if (repBiz.DataObj.TipoFileId != this.DataObj.TipoFileId)
+                    throw new ApplicationException(string.Format(@"L'estrazione {0} - {1} deve essere dello stesso tipo di quella principale {2}", 
+                        repBiz.DataObj.Id, repBiz.DataObj.Nome, this.DataObj.Id));
 
-                    repBiz.Run();
-                    //Aggiunge ad elenco
-                    estraz.Add(repBiz.LastResult.DataBlob);
-                }
-
-            }
-            finally
-            {
-                this.Slot.Simulate = oldSimulate;
+                repBiz.Run(false);
+                //Aggiunge ad elenco
+                estraz.Add(repBiz.LastResult.DataBlob);
             }
 
 
@@ -526,7 +565,8 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             using (var db = Bdo.Database.DataBaseFactory.CreaDataBase(this.DataObj.Connessione.BdoDbConnectioType, this.DataObj.Connessione.ConnectionString))
             {
                 db.ExecutionTimeout = 100000;
-                db.SQL = this.DataObj.SqlText.Replace('\n',' ');
+                //db.SQL = this.DataObj.SqlText.Replace('\n',' ');
+                db.SQL = this.DataObj.SqlText;
                 this.mTabResultSQL = db.Select();
             }
         }

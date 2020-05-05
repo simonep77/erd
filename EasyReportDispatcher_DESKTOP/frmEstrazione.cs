@@ -275,7 +275,7 @@ namespace EasyReportDispatcher_DESKTOP
                 this.mEstrazioneBiz.DataObj.Note = this.txtNote.Text;
                 this.mEstrazioneBiz.DataObj.CronString = this.txtCronString.Text;
                 this.mEstrazioneBiz.DataObj.SqlText = this.txtSQL.Text;
-                this.mEstrazioneBiz.DataObj.Titolo = this.txtExcelSheet.Text;
+                this.mEstrazioneBiz.DataObj.Titolo = this.txtExcelTitolo.Text;
                 this.mEstrazioneBiz.DataObj.SheetName = this.txtExcelSheet.Text;
                 
                 if (this.mEstrazioneBiz.DataObj.ObjectState == Bdo.Objects.EObjectState.New)

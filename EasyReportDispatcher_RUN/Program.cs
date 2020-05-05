@@ -175,7 +175,7 @@ namespace EasyReportDispacher_RUN
                 {
                     //Esegue
                     WriteLog("Esecuzione");
-                    repBiz.Run();
+                    repBiz.Run(true);
 
                     //Invia email
                     if (bSendEmail)

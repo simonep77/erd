@@ -52,6 +52,8 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         [AcceptNull()]
         public abstract string EstrazioniAccorpateIds { get; set; }
 
+        public abstract sbyte AccorpaSoloDati { get; set; }
+
         [AcceptNull]
         public abstract int TemplateId { get; set; }
 

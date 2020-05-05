@@ -43,6 +43,9 @@
             this.panMain = new System.Windows.Forms.Panel();
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.btnOpenTemplate = new System.Windows.Forms.ToolStripButton();
+            this.btnELiminaTplLocale = new System.Windows.Forms.ToolStripButton();
+            this.btnSalvaTemplate = new System.Windows.Forms.ToolStripButton();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.btnAddEstrazione = new System.Windows.Forms.ToolStripButton();
@@ -58,9 +61,7 @@
             this.colInvioEmail = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colTemplate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colTemplateLocale = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnOpenTemplate = new System.Windows.Forms.ToolStripButton();
-            this.btnELiminaTplLocale = new System.Windows.Forms.ToolStripButton();
-            this.btnSalvaTemplate = new System.Windows.Forms.ToolStripButton();
+            this.colAccorpamento = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -196,6 +197,33 @@
             this.toolStripLabel2.Size = new System.Drawing.Size(107, 22);
             this.toolStripLabel2.Text = "Gestione Template:";
             // 
+            // btnOpenTemplate
+            // 
+            this.btnOpenTemplate.Image = ((System.Drawing.Image)(resources.GetObject("btnOpenTemplate.Image")));
+            this.btnOpenTemplate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnOpenTemplate.Name = "btnOpenTemplate";
+            this.btnOpenTemplate.Size = new System.Drawing.Size(99, 22);
+            this.btnOpenTemplate.Text = "Apri template";
+            this.btnOpenTemplate.Click += new System.EventHandler(this.btnOpenTemplate_Click);
+            // 
+            // btnELiminaTplLocale
+            // 
+            this.btnELiminaTplLocale.Image = ((System.Drawing.Image)(resources.GetObject("btnELiminaTplLocale.Image")));
+            this.btnELiminaTplLocale.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnELiminaTplLocale.Name = "btnELiminaTplLocale";
+            this.btnELiminaTplLocale.Size = new System.Drawing.Size(154, 22);
+            this.btnELiminaTplLocale.Text = "Elimina Template Locale";
+            this.btnELiminaTplLocale.Click += new System.EventHandler(this.btnELiminaTplLocale_Click);
+            // 
+            // btnSalvaTemplate
+            // 
+            this.btnSalvaTemplate.Image = ((System.Drawing.Image)(resources.GetObject("btnSalvaTemplate.Image")));
+            this.btnSalvaTemplate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSalvaTemplate.Name = "btnSalvaTemplate";
+            this.btnSalvaTemplate.Size = new System.Drawing.Size(142, 22);
+            this.btnSalvaTemplate.Text = "Salva Template Locale";
+            this.btnSalvaTemplate.Click += new System.EventHandler(this.btnSalvaTemplate_Click);
+            // 
             // toolStrip2
             // 
             this.toolStrip2.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -273,6 +301,7 @@
             this.colConnessione,
             this.colAttivo,
             this.colInvioEmail,
+            this.colAccorpamento,
             this.colTemplate,
             this.colTemplateLocale});
             this.lvEstrazioni.Dock = System.Windows.Forms.DockStyle.Top;
@@ -284,7 +313,6 @@
             this.lvEstrazioni.MultiSelect = false;
             this.lvEstrazioni.Name = "lvEstrazioni";
             this.lvEstrazioni.Scrollable = false;
-            this.lvEstrazioni.ShowGroups = false;
             this.lvEstrazioni.Size = new System.Drawing.Size(1204, 302);
             this.lvEstrazioni.TabIndex = 0;
             this.lvEstrazioni.UseCompatibleStateImageBehavior = false;
@@ -325,32 +353,10 @@
             this.colTemplateLocale.Text = "Template Locale";
             this.colTemplateLocale.Width = 120;
             // 
-            // btnOpenTemplate
+            // colAccorpamento
             // 
-            this.btnOpenTemplate.Image = ((System.Drawing.Image)(resources.GetObject("btnOpenTemplate.Image")));
-            this.btnOpenTemplate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnOpenTemplate.Name = "btnOpenTemplate";
-            this.btnOpenTemplate.Size = new System.Drawing.Size(99, 22);
-            this.btnOpenTemplate.Text = "Apri template";
-            this.btnOpenTemplate.Click += new System.EventHandler(this.btnOpenTemplate_Click);
-            // 
-            // btnELiminaTplLocale
-            // 
-            this.btnELiminaTplLocale.Image = ((System.Drawing.Image)(resources.GetObject("btnELiminaTplLocale.Image")));
-            this.btnELiminaTplLocale.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnELiminaTplLocale.Name = "btnELiminaTplLocale";
-            this.btnELiminaTplLocale.Size = new System.Drawing.Size(154, 22);
-            this.btnELiminaTplLocale.Text = "Elimina Template Locale";
-            this.btnELiminaTplLocale.Click += new System.EventHandler(this.btnELiminaTplLocale_Click);
-            // 
-            // btnSalvaTemplate
-            // 
-            this.btnSalvaTemplate.Image = ((System.Drawing.Image)(resources.GetObject("btnSalvaTemplate.Image")));
-            this.btnSalvaTemplate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnSalvaTemplate.Name = "btnSalvaTemplate";
-            this.btnSalvaTemplate.Size = new System.Drawing.Size(142, 22);
-            this.btnSalvaTemplate.Text = "Salva Template Locale";
-            this.btnSalvaTemplate.Click += new System.EventHandler(this.btnSalvaTemplate_Click);
+            this.colAccorpamento.Text = "Accorpamento";
+            this.colAccorpamento.Width = 120;
             // 
             // frmMain
             // 
@@ -418,6 +424,7 @@
         private System.Windows.Forms.ToolStripButton btnOpenTemplate;
         private System.Windows.Forms.ToolStripButton btnELiminaTplLocale;
         private System.Windows.Forms.ToolStripButton btnSalvaTemplate;
+        private System.Windows.Forms.ColumnHeader colAccorpamento;
     }
 }
 

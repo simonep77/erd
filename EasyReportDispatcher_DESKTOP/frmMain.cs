@@ -105,6 +105,7 @@ namespace EasyReportDispatcher_DESKTOP
             item.SubItems.Add(est.Connessione.Nome);
             item.SubItems.Add(est.Attivo == 1 ? "SI" : "NO");
             item.SubItems.Add(est.InvioMailAttivo == 1 ? "SI" : "NO");
+            item.SubItems.Add(est.EstrazioniAccorpateIds.Length > 0 ? "SI: " + est.EstrazioniAccorpateIds : "");
             item.SubItems.Add(est.TemplateId > 0 ? "SI" : "NO");
             item.SubItems.Add(File.Exists(this.getLocalTemplate(est)) ? "SI" : "NO");
             
