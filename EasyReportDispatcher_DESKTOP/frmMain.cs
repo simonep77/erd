@@ -132,7 +132,7 @@ namespace EasyReportDispatcher_DESKTOP
                 }
             }
 
-            var gDef= new ListViewGroup("Default", "Non accorpate");
+            var gDef= new ListViewGroup("Default", "STANDARD");
             this.lvEstrazioni.Groups.Add(gDef);
 
             foreach (var est in lst)
