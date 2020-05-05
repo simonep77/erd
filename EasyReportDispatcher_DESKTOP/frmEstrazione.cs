@@ -42,6 +42,7 @@ namespace EasyReportDispatcher_DESKTOP
             this.txtNote.Text = this.mEstrazioneBiz.DataObj.Note;
             this.txtCronString.Text = this.mEstrazioneBiz.DataObj.CronString;
             this.txtEstrazioniAcc.Text = this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds;
+            this.chkAccorpaDati.Checked = (this.mEstrazioneBiz.DataObj.AccorpaSoloDati > 0);
             this.chkAttivo.Checked = (this.mEstrazioneBiz.DataObj.Attivo == 1);
             this.chbInvioEmail.Checked = (this.mEstrazioneBiz.DataObj.InvioMailAttivo == 1);
 
@@ -85,7 +86,8 @@ namespace EasyReportDispatcher_DESKTOP
             this.loadTipiFile();
             this.loadConnessioni();
 
-
+            //Lancia un po' di eventi
+            this.txtEstrazioniAcc_TextChanged(null, null);
             this.rbTemplateBase_CheckedChanged(null, null);
             this.rbTemplateCustom_CheckedChanged(null, null);
 
@@ -292,6 +294,9 @@ namespace EasyReportDispatcher_DESKTOP
                 this.mEstrazioneBiz.DataObj.NumOutputStorico = Convert.ToSByte(this.txtNumOutput.Value);
                 this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds = this.txtEstrazioniAcc.Text.Trim(',');
 
+                if (this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds.Length > 0)
+                    this.mEstrazioneBiz.DataObj.AccorpaSoloDati = (sbyte)(this.chkAccorpaDati.Checked ? 1 : 0);
+
                 AppContextERD.Slot.SaveObject(this.mEstrazioneBiz.DataObj);
 
                 this.addBindings();
@@ -317,6 +322,15 @@ namespace EasyReportDispatcher_DESKTOP
         private void frmEstrazione_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.DialogResult = this.mResult;
+        }
+
+        private void txtEstrazioniAcc_TextChanged(object sender, EventArgs e)
+        {
+
+            this.chkAccorpaDati.Enabled = (this.txtEstrazioniAcc.Text.Length > 0);
+
+            if (this.txtEstrazioniAcc.Text.Length == 0)
+                this.chkAccorpaDati.Checked = false;
         }
     }
 }

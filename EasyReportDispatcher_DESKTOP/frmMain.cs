@@ -67,7 +67,7 @@ namespace EasyReportDispatcher_DESKTOP
             
         }
 
-        private void loadEstrazioni()
+        private void loadEstrazioni2()
         {
             this.clearAll();
 
@@ -88,6 +88,79 @@ namespace EasyReportDispatcher_DESKTOP
         }
 
 
+
+        private void loadEstrazioni()
+        {
+            this.clearAll();
+
+            var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>()
+                .SearchByColumn(Filter.Gt(nameof(ReportEstrazione.Attivo), -1));
+
+            var gps = from est in lst
+                      where est.EstrazioniAccorpateIds.Length > 0
+                      select est;
+
+            foreach (var est in gps)
+            {
+                //Crea gruppo
+                var g = new ListViewGroup("Est_" + est.Id.ToString(), est.Nome);
+                g.Tag = est;
+                this.lvEstrazioni.Groups.Add(g);
+
+                var item = new ListViewItem();
+
+                this.setListItem(item, est);
+
+                g.Items.Add(item);
+                this.lvEstrazioni.Items.Add(item);
+
+
+                //Cerca tutte le estrazioni da includere
+                var subs = from id in est.EstrazioniAccorpateIds.Split(new char[] { ','}, StringSplitOptions.RemoveEmptyEntries)
+                           from e in lst
+                          where id == e.Id.ToString()
+                          select e;
+
+                foreach (var est2 in subs)
+                {
+                    var item2 = new ListViewItem();
+
+                    this.setListItem(item2, est2);
+
+                    g.Items.Add(item2);
+                    this.lvEstrazioni.Items.Add(item2);
+                }
+            }
+
+            var gDef= new ListViewGroup("Default", "Non accorpate");
+            this.lvEstrazioni.Groups.Add(gDef);
+
+            foreach (var est in lst)
+            {
+
+                foreach (var g in this.lvEstrazioni.Groups.Cast<ListViewGroup>())
+                {
+                    foreach (var it in g.Items.Cast<ListViewItem>())
+                    {
+                        if (it.Tag.Equals(est))
+                            goto endMainLoop; 
+                    }
+                }
+
+                var item = new ListViewItem();
+
+                this.setListItem(item, est);
+
+                gDef.Items.Add(item);
+
+                this.lvEstrazioni.Items.Add(item);
+
+                endMainLoop:;
+            }
+
+            this.updateEstCount();
+        }
+
         private void updateEstCount()
         {
             this.tsNumEstrazioni.Text = string.Format("N.Estrazioni: {0}", this.lvEstrazioni.Items.Count);
@@ -105,7 +178,7 @@ namespace EasyReportDispatcher_DESKTOP
             item.SubItems.Add(est.Connessione.Nome);
             item.SubItems.Add(est.Attivo == 1 ? "SI" : "NO");
             item.SubItems.Add(est.InvioMailAttivo == 1 ? "SI" : "NO");
-            item.SubItems.Add(est.EstrazioniAccorpateIds.Length > 0 ? "SI: " + est.EstrazioniAccorpateIds : "");
+            item.SubItems.Add(est.EstrazioniAccorpateIds.Length > 0 ? (est.AccorpaSoloDati > 0 ? "DATI: " : "FILE: ") + est.EstrazioniAccorpateIds : "");
             item.SubItems.Add(est.TemplateId > 0 ? "SI" : "NO");
             item.SubItems.Add(File.Exists(this.getLocalTemplate(est)) ? "SI" : "NO");
             
@@ -128,6 +201,7 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void clearAll()
         {
+            this.lvEstrazioni.Groups.Clear();
             this.lvEstrazioni.Items.Clear();
             this.handleSelezioneEstrazione();
             this.tsNumEstrazioni.Text = string.Format("N.Estrazioni: {0}", "ND");

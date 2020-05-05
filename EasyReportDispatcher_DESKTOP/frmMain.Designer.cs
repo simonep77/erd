@@ -59,9 +59,9 @@
             this.colConnessione = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colAttivo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colInvioEmail = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colAccorpamento = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colTemplate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colTemplateLocale = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colAccorpamento = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -326,7 +326,7 @@
             // colNome
             // 
             this.colNome.Text = "Nome";
-            this.colNome.Width = 150;
+            this.colNome.Width = 250;
             // 
             // colConnessione
             // 
@@ -342,6 +342,11 @@
             this.colInvioEmail.Text = "Invio Email";
             this.colInvioEmail.Width = 120;
             // 
+            // colAccorpamento
+            // 
+            this.colAccorpamento.Text = "Accorpamento";
+            this.colAccorpamento.Width = 120;
+            // 
             // colTemplate
             // 
             this.colTemplate.Text = "Template";
@@ -352,11 +357,6 @@
             // 
             this.colTemplateLocale.Text = "Template Locale";
             this.colTemplateLocale.Width = 120;
-            // 
-            // colAccorpamento
-            // 
-            this.colAccorpamento.Text = "Accorpamento";
-            this.colAccorpamento.Width = 120;
             // 
             // frmMain
             // 

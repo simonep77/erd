@@ -145,7 +145,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         {
             get
             {
-                return !string.IsNullOrEmpty(this.DataObj.EstrazioniAccorpateIds);
+                return !string.IsNullOrWhiteSpace(this.DataObj.EstrazioniAccorpateIds);
             }
         }
 
@@ -177,6 +177,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         {
             this.DataObj.Attivo = -1;
             this.Slot.SaveObject(this.DataObj);
+
         }
 
 
@@ -275,13 +276,30 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             foreach (var id in ids)
             {
                 this.Slot.LogDebug(DebugLevel.Debug_1, "Begin merge dati id {0}", id);
-                //Esegue altra estrazione
-                var repBiz = this.Slot.BizNewWithLoadByPK<ReportEstrazioneBIZ>(id);
-                //Lancia Query
-                repBiz.runSQL();
-                //Esegue merge
-                this.mTabResultSQL.Merge(repBiz.mTabResultSQL);
-                this.Slot.LogDebug(DebugLevel.Debug_1, "End merge dati id {0}", id);
+                try
+                {
+                    //Esegue altra estrazione
+                    var repBiz = this.Slot.BizNewWithLoadByPK<ReportEstrazioneBIZ>(id);
+                    //Se eliminato logicamente non lo considera
+                    if (repBiz.DataObj.Attivo == -1)
+                    {
+                        this.Slot.LogDebug(DebugLevel.Debug_1, "Estrazione eliminata logicamente. Skip.", id);
+                        return;
+                    }
+                    //Lancia Query
+                    repBiz.runSQL();
+                    //Esegue merge
+                    this.mTabResultSQL.Merge(repBiz.mTabResultSQL);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    this.Slot.LogDebug(DebugLevel.Debug_1, "End merge dati id {0}", id);
+                }
+
             }
 
 
@@ -324,18 +342,37 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
             foreach (var id in ids)
             {
-                //Esegue altra estrazione
-                var repBiz = this.Slot.BizNewWithLoadByPK<ReportEstrazioneBIZ>(id);
-                //Tutte le estrazioni devono essere dello stesso tipo
-                    
-                //Solo excel si puo' accorpare
-                if (repBiz.DataObj.TipoFileId != this.DataObj.TipoFileId)
-                    throw new ApplicationException(string.Format(@"L'estrazione {0} - {1} deve essere dello stesso tipo di quella principale {2}", 
-                        repBiz.DataObj.Id, repBiz.DataObj.Nome, this.DataObj.Id));
+                this.Slot.LogDebug(DebugLevel.Debug_1, "Begin merge excel id {0}", id);
+                try
+                {
+                    //Esegue altra estrazione
+                    var repBiz = this.Slot.BizNewWithLoadByPK<ReportEstrazioneBIZ>(id);
+                    //Verifica se eliminata
+                    if (repBiz.DataObj.Attivo == -1)
+                    {
+                        this.Slot.LogDebug(DebugLevel.Debug_1, "Estrazione eliminata logicamente. Skip.", id);
+                        return;
+                    }
+                    //Tutte le estrazioni devono essere dello stesso tipo
 
-                repBiz.Run(false);
-                //Aggiunge ad elenco
-                estraz.Add(repBiz.LastResult.DataBlob);
+                    //Solo excel si puo' accorpare
+                    if (repBiz.DataObj.TipoFileId != this.DataObj.TipoFileId)
+                        throw new ApplicationException(string.Format(@"L'estrazione {0} - {1} deve essere dello stesso tipo di quella principale {2}",
+                            repBiz.DataObj.Id, repBiz.DataObj.Nome, this.DataObj.Id));
+
+                    repBiz.Run(false);
+                    //Aggiunge ad elenco
+                    estraz.Add(repBiz.LastResult.DataBlob);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    this.Slot.LogDebug(DebugLevel.Debug_1, "Begin merge excel id {0}", id);
+                }
+
             }
 
 

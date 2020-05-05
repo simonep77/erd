@@ -65,6 +65,7 @@
             this.gbSql = new System.Windows.Forms.GroupBox();
             this.txtSQL = new ScintillaNET.Scintilla();
             this.btnSalva = new System.Windows.Forms.Button();
+            this.chkAccorpaDati = new System.Windows.Forms.CheckBox();
             this.gbGenerali.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtNumOutput)).BeginInit();
             this.gbExcel.SuspendLayout();
@@ -75,6 +76,7 @@
             // 
             // gbGenerali
             // 
+            this.gbGenerali.Controls.Add(this.chkAccorpaDati);
             this.gbGenerali.Controls.Add(this.label11);
             this.gbGenerali.Controls.Add(this.txtEstrazioniAcc);
             this.gbGenerali.Controls.Add(this.label10);
@@ -118,6 +120,7 @@
             this.txtEstrazioniAcc.Name = "txtEstrazioniAcc";
             this.txtEstrazioniAcc.Size = new System.Drawing.Size(201, 26);
             this.txtEstrazioniAcc.TabIndex = 18;
+            this.txtEstrazioniAcc.TextChanged += new System.EventHandler(this.txtEstrazioniAcc_TextChanged);
             // 
             // label10
             // 
@@ -447,6 +450,16 @@
             this.btnSalva.UseVisualStyleBackColor = true;
             this.btnSalva.Click += new System.EventHandler(this.btnSalva_Click);
             // 
+            // chkAccorpaDati
+            // 
+            this.chkAccorpaDati.AutoSize = true;
+            this.chkAccorpaDati.Location = new System.Drawing.Point(833, 165);
+            this.chkAccorpaDati.Name = "chkAccorpaDati";
+            this.chkAccorpaDati.Size = new System.Drawing.Size(81, 22);
+            this.chkAccorpaDati.TabIndex = 20;
+            this.chkAccorpaDati.Text = "Solo Dati";
+            this.chkAccorpaDati.UseVisualStyleBackColor = true;
+            // 
             // frmEstrazione
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
@@ -518,5 +531,6 @@
         private System.Windows.Forms.NumericUpDown txtNumOutput;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox txtEstrazioniAcc;
+        private System.Windows.Forms.CheckBox chkAccorpaDati;
     }
 }
