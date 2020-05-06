@@ -24,7 +24,7 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         [AcceptNull()]
         public abstract String Note { get; set; }
 
-        public abstract Int16 ConnessioneId { get; set; }
+        public abstract int ConnessioneId { get; set; }
 
         [PropertyMap(nameof(ConnessioneId))]
         public abstract ReportConnessione Connessione { get; }

@@ -1,4 +1,5 @@
-﻿using EasyReportDispatcher_DESKTOP.src;
+﻿using Bdo.Objects;
+using EasyReportDispatcher_DESKTOP.src;
 using EasyReportDispatcher_Lib_BIZ.src.report;
 using EasyReportDispatcher_Lib_Common.src.enums;
 using EasyReportDispatcher_Lib_DAL.src.report;
@@ -36,7 +37,7 @@ namespace EasyReportDispatcher_DESKTOP
         private void addBindings()
         {
 
-            this.lblID.Text = this.mEstrazioneBiz.DataObj.Id.ToString();
+            this.Text = string.Format(@"Estrazione: {0}", this.mEstrazioneBiz.DataObj.ObjectState == Bdo.Objects.EObjectState.New ? "<nuovo>" : this.mEstrazioneBiz.DataObj.Id.ToString());  this.mEstrazioneBiz.DataObj.Id.ToString();
 
             this.txtNome.Text = this.mEstrazioneBiz.DataObj.Nome;
             this.txtNote.Text = this.mEstrazioneBiz.DataObj.Note;
@@ -109,7 +110,7 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void loadConnessioni()
         {
-            var conn = AppContextERD.Slot.CreateList<ReportConnessioneLista>().CacheResult().SearchAllObjects();
+            var conn = AppContextERD.Slot.CreateList<ReportConnessioneLista>().SearchAllObjects();
 
             this.cmbConnessioni.DisplayMember = nameof(ReportTipoFile.Nome);
             this.cmbConnessioni.ValueMember = nameof(ReportTipoFile.Id);
@@ -331,6 +332,76 @@ namespace EasyReportDispatcher_DESKTOP
 
             if (this.txtEstrazioniAcc.Text.Length == 0)
                 this.chkAccorpaDati.Checked = false;
+        }
+
+        private void btnInsModConnessione_Click(object sender, EventArgs e)
+        {
+
+            ReportConnessione conn = this.cmbConnessioni.SelectedItem as ReportConnessione;
+
+            if ( object.ReferenceEquals(sender, this.btnInserisciConnessione) )
+            {
+                if (conn == null)
+                {
+                    conn = AppContextERD.Slot.CreateObject<ReportConnessione>();
+                    conn.Nome = @"<Nuovo>";
+                }
+                else
+                {
+                    conn = AppContextERD.Slot.CloneObjectForNew(conn);
+                    conn.Nome = "Copia di " + conn.Nome;
+                }
+            }
+            
+
+            using (var fc = new frmConnessione(conn))
+            {
+                if ( fc.ShowDialog() == DialogResult.OK )
+                {
+                    ((ReportConnessioneLista)this.cmbConnessioni.DataSource).Add(conn);
+                    this.cmbConnessioni.SelectedItem = conn;
+                }
+            }
+
+        }
+
+        private void btnElimina_Click(object sender, EventArgs e)
+        {
+            ReportConnessione conn = this.cmbConnessioni.SelectedItem as ReportConnessione;
+
+            if (conn == null)
+                return;
+
+            if (MessageBox.Show(string.Format("Confermi l'eliminazione della connessione '{0}' ", conn.Nome, conn.Id), "Conferma", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            try
+            {
+
+                var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>().SearchByColumn(Filter.Eq(nameof(ReportEstrazione.ConnessioneId), conn.Id));
+
+                if (lst.Count > 0)
+                {
+                    var ids = string.Join(",", lst.Select(est => est.Id.ToString()));
+
+                    UI_Utils.ShowError(@"Non e' possibile eliminare la connessione in quanto collegata alle seguenti estarzioni: {0}", ids);
+
+                    return;
+                }
+
+                AppContextERD.Slot.DeleteObject(conn);
+
+                //Rimuove da datasource
+                ((ReportConnessioneLista)this.cmbConnessioni.DataSource).Remove(conn);
+
+                UI_Utils.ShowInfo("Connessione eliminata.");
+
+            }
+            catch (Exception ex)
+            {
+                UI_Utils.ShowError(ex.Message);
+            }
+
         }
     }
 }

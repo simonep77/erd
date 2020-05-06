@@ -11,17 +11,17 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
     [Table("report_connessioni")]
     public abstract class ReportConnessione : DataObject<ReportConnessione>
     {
-        [PrimaryKey]
-        public abstract short Id { get; }
+        [PrimaryKey, AutoIncrement()]
+        public abstract int Id { get; }
 
         [MaxLength(100)]
-        public abstract string Nome { get; }
+        public abstract string Nome { get; set; }
 
         [MaxLength(300)]
-        public abstract String ConnectionString { get; }
+        public abstract String ConnectionString { get; set; }
 
         [MaxLength(150)]
-        public abstract String BdoDbConnectioType { get; }
+        public abstract String BdoDbConnectioType { get; set; }
 
     }
 }
