@@ -30,8 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.preferenzeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tsConnessione = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsNumEstrazioni = new System.Windows.Forms.ToolStripStatusLabel();
@@ -71,7 +69,6 @@
             this.txtFiltro = new System.Windows.Forms.TextBox();
             this.lbFiltroNum = new System.Windows.Forms.Label();
             this.panCenter = new System.Windows.Forms.Panel();
-            this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panMain.SuspendLayout();
@@ -80,22 +77,6 @@
             this.panSearch.SuspendLayout();
             this.panCenter.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.preferenzeToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1224, 24);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // preferenzeToolStripMenuItem
-            // 
-            this.preferenzeToolStripMenuItem.Name = "preferenzeToolStripMenuItem";
-            this.preferenzeToolStripMenuItem.Size = new System.Drawing.Size(74, 20);
-            this.preferenzeToolStripMenuItem.Text = "Preferenze";
             // 
             // statusStrip1
             // 
@@ -124,11 +105,10 @@
             // 
             // toolStrip1
             // 
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnConnetti,
             this.btnDisconnetti});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 611);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1224, 25);
             this.toolStrip1.TabIndex = 2;
@@ -156,10 +136,10 @@
             // 
             this.panMain.Controls.Add(this.groupBox1);
             this.panMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panMain.Location = new System.Drawing.Point(0, 24);
+            this.panMain.Location = new System.Drawing.Point(0, 25);
             this.panMain.Name = "panMain";
             this.panMain.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-            this.panMain.Size = new System.Drawing.Size(1224, 587);
+            this.panMain.Size = new System.Drawing.Size(1224, 611);
             this.panMain.TabIndex = 3;
             // 
             // groupBox1
@@ -170,7 +150,7 @@
             this.groupBox1.Location = new System.Drawing.Point(0, 10);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(10);
-            this.groupBox1.Size = new System.Drawing.Size(1224, 577);
+            this.groupBox1.Size = new System.Drawing.Size(1224, 601);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Elenco Estrazioni";
@@ -197,7 +177,7 @@
             this.lvEstrazioni.Name = "lvEstrazioni";
             this.lvEstrazioni.Scrollable = false;
             this.lvEstrazioni.ShowGroups = false;
-            this.lvEstrazioni.Size = new System.Drawing.Size(1194, 486);
+            this.lvEstrazioni.Size = new System.Drawing.Size(1194, 510);
             this.lvEstrazioni.TabIndex = 0;
             this.lvEstrazioni.UseCompatibleStateImageBehavior = false;
             this.lvEstrazioni.View = System.Windows.Forms.View.Details;
@@ -245,6 +225,7 @@
             // 
             // ctxMenuEst
             // 
+            this.ctxMenuEst.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.ctxMenuEst.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsTitolo,
             this.toolStripSeparator3,
@@ -263,7 +244,7 @@
             this.toolStripSeparator5,
             this.tsEstrazioneEsegui});
             this.ctxMenuEst.Name = "ctxMenuEst";
-            this.ctxMenuEst.Size = new System.Drawing.Size(222, 298);
+            this.ctxMenuEst.Size = new System.Drawing.Size(245, 320);
             this.ctxMenuEst.Text = "ESTRAZIONI";
             // 
             // tsEstrazioneNew
@@ -428,7 +409,7 @@
             this.panCenter.Location = new System.Drawing.Point(10, 71);
             this.panCenter.Name = "panCenter";
             this.panCenter.Padding = new System.Windows.Forms.Padding(5);
-            this.panCenter.Size = new System.Drawing.Size(1204, 496);
+            this.panCenter.Size = new System.Drawing.Size(1204, 520);
             this.panCenter.TabIndex = 2;
             // 
             // frmMain
@@ -439,14 +420,10 @@
             this.Controls.Add(this.panMain);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmMain";
             this.Text = "Easy Report Dispatcher - DESKTOP";
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -463,9 +440,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem preferenzeToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton btnConnetti;

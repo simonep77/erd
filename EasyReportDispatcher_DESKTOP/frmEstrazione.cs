@@ -403,5 +403,15 @@ namespace EasyReportDispatcher_DESKTOP
             }
 
         }
+
+        private void chkAttivo_CheckedChanged(object sender, EventArgs e)
+        {
+            this.txtCronString.Enabled = this.chkAttivo.Checked;
+        }
+
+        private void chbInvioEmail_CheckedChanged(object sender, EventArgs e)
+        {
+            this.cmbDestEmail.Enabled = this.chbInvioEmail.Checked;
+        }
     }
 }

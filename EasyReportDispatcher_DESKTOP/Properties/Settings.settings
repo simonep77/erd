@@ -3,7 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="StringaConnessione" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Server=remotemysql.com;UserId=ourKl13l8f;Password=IXehc1qbkZ;Database=ourKl13l8f;</Value>
+    </Setting>
+    <Setting Name="ClasseDataBase" Type="System.String" Scope="User">
+      <Value Profile="(Default)">MYSQLDataBase</Value>
     </Setting>
   </Settings>
 </SettingsFile>

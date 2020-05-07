@@ -46,7 +46,7 @@ namespace EasyReportDispatcher_DESKTOP
 
             if (AppContextERD.Slot == null)
             {
-                AppContextERD.Slot = new BusinessSlot(@"MYSQLDataBase", @"Server=remotemysql.com;UserId=ourKl13l8f;Password=IXehc1qbkZ;Database=ourKl13l8f;");
+                AppContextERD.Slot = new BusinessSlot(Properties.Settings.Default.ClasseDataBase, Properties.Settings.Default.StringaConnessione);
                 AppContextERD.Slot.DB.AutoCloseConnection = true;
             }
 
@@ -458,9 +458,12 @@ namespace EasyReportDispatcher_DESKTOP
 
                 return;
             }
-
+            //Esce se vuoto
+            if (this.lvEstrazioni.Items.Count == 0)
+                return;
+            //Svuota
             this.lvEstrazioni.Items.Clear();
-
+            //Carica
             foreach (var item in this.mLvItems)
             {
                 var searchText = this.txtFiltro.Text.ToUpper();
@@ -468,7 +471,7 @@ namespace EasyReportDispatcher_DESKTOP
                     ].Text.ToUpper().Contains(searchText))
                     this.lvEstrazioni.Items.Add(item);
             }
-
+            //Visualizza ris
             this.lbFiltroNum.Visible = true;
             this.lbFiltroNum.Text = string.Format("Visibili {0} su {1}", this.lvEstrazioni.Items.Count, this.mLvItems.Count);
         }

@@ -29,6 +29,13 @@
         private void InitializeComponent()
         {
             this.gbGenerali = new System.Windows.Forms.GroupBox();
+            this.btnEmailDestDel = new System.Windows.Forms.Button();
+            this.btnEmailDestEdit = new System.Windows.Forms.Button();
+            this.btnEmailDestAdd = new System.Windows.Forms.Button();
+            this.cmbDestEmail = new System.Windows.Forms.ComboBox();
+            this.btnElimina = new System.Windows.Forms.Button();
+            this.btnEditConn = new System.Windows.Forms.Button();
+            this.btnInserisciConnessione = new System.Windows.Forms.Button();
             this.chkAccorpaDati = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.txtEstrazioniAcc = new System.Windows.Forms.TextBox();
@@ -40,7 +47,6 @@
             this.chbInvioEmail = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
             this.cmbTipoFile = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.txtCronString = new System.Windows.Forms.TextBox();
             this.chkAttivo = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -64,9 +70,6 @@
             this.gbSql = new System.Windows.Forms.GroupBox();
             this.txtSQL = new ScintillaNET.Scintilla();
             this.btnSalva = new System.Windows.Forms.Button();
-            this.btnInserisciConnessione = new System.Windows.Forms.Button();
-            this.btnEditConn = new System.Windows.Forms.Button();
-            this.btnElimina = new System.Windows.Forms.Button();
             this.gbGenerali.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtNumOutput)).BeginInit();
             this.gbExcel.SuspendLayout();
@@ -77,6 +80,10 @@
             // 
             // gbGenerali
             // 
+            this.gbGenerali.Controls.Add(this.btnEmailDestDel);
+            this.gbGenerali.Controls.Add(this.btnEmailDestEdit);
+            this.gbGenerali.Controls.Add(this.btnEmailDestAdd);
+            this.gbGenerali.Controls.Add(this.cmbDestEmail);
             this.gbGenerali.Controls.Add(this.btnElimina);
             this.gbGenerali.Controls.Add(this.btnEditConn);
             this.gbGenerali.Controls.Add(this.btnInserisciConnessione);
@@ -91,7 +98,6 @@
             this.gbGenerali.Controls.Add(this.chbInvioEmail);
             this.gbGenerali.Controls.Add(this.label7);
             this.gbGenerali.Controls.Add(this.cmbTipoFile);
-            this.gbGenerali.Controls.Add(this.label5);
             this.gbGenerali.Controls.Add(this.txtCronString);
             this.gbGenerali.Controls.Add(this.chkAttivo);
             this.gbGenerali.Controls.Add(this.label3);
@@ -106,6 +112,72 @@
             this.gbGenerali.TabIndex = 0;
             this.gbGenerali.TabStop = false;
             this.gbGenerali.Text = "Generali";
+            // 
+            // btnEmailDestDel
+            // 
+            this.btnEmailDestDel.Location = new System.Drawing.Point(894, 105);
+            this.btnEmailDestDel.Name = "btnEmailDestDel";
+            this.btnEmailDestDel.Size = new System.Drawing.Size(27, 23);
+            this.btnEmailDestDel.TabIndex = 28;
+            this.btnEmailDestDel.Text = "E";
+            this.btnEmailDestDel.UseVisualStyleBackColor = true;
+            // 
+            // btnEmailDestEdit
+            // 
+            this.btnEmailDestEdit.Location = new System.Drawing.Point(864, 105);
+            this.btnEmailDestEdit.Name = "btnEmailDestEdit";
+            this.btnEmailDestEdit.Size = new System.Drawing.Size(27, 23);
+            this.btnEmailDestEdit.TabIndex = 27;
+            this.btnEmailDestEdit.Text = "M";
+            this.btnEmailDestEdit.UseVisualStyleBackColor = true;
+            // 
+            // btnEmailDestAdd
+            // 
+            this.btnEmailDestAdd.Location = new System.Drawing.Point(834, 105);
+            this.btnEmailDestAdd.Name = "btnEmailDestAdd";
+            this.btnEmailDestAdd.Size = new System.Drawing.Size(27, 23);
+            this.btnEmailDestAdd.TabIndex = 26;
+            this.btnEmailDestAdd.Text = "I";
+            this.btnEmailDestAdd.UseVisualStyleBackColor = true;
+            // 
+            // cmbDestEmail
+            // 
+            this.cmbDestEmail.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbDestEmail.FormattingEnabled = true;
+            this.cmbDestEmail.Location = new System.Drawing.Point(627, 103);
+            this.cmbDestEmail.Name = "cmbDestEmail";
+            this.cmbDestEmail.Size = new System.Drawing.Size(201, 26);
+            this.cmbDestEmail.TabIndex = 25;
+            // 
+            // btnElimina
+            // 
+            this.btnElimina.Location = new System.Drawing.Point(382, 27);
+            this.btnElimina.Name = "btnElimina";
+            this.btnElimina.Size = new System.Drawing.Size(27, 23);
+            this.btnElimina.TabIndex = 23;
+            this.btnElimina.Text = "E";
+            this.btnElimina.UseVisualStyleBackColor = true;
+            this.btnElimina.Click += new System.EventHandler(this.btnElimina_Click);
+            // 
+            // btnEditConn
+            // 
+            this.btnEditConn.Location = new System.Drawing.Point(352, 27);
+            this.btnEditConn.Name = "btnEditConn";
+            this.btnEditConn.Size = new System.Drawing.Size(27, 23);
+            this.btnEditConn.TabIndex = 22;
+            this.btnEditConn.Text = "M";
+            this.btnEditConn.UseVisualStyleBackColor = true;
+            this.btnEditConn.Click += new System.EventHandler(this.btnInsModConnessione_Click);
+            // 
+            // btnInserisciConnessione
+            // 
+            this.btnInserisciConnessione.Location = new System.Drawing.Point(322, 27);
+            this.btnInserisciConnessione.Name = "btnInserisciConnessione";
+            this.btnInserisciConnessione.Size = new System.Drawing.Size(27, 23);
+            this.btnInserisciConnessione.TabIndex = 21;
+            this.btnInserisciConnessione.Text = "I";
+            this.btnInserisciConnessione.UseVisualStyleBackColor = true;
+            this.btnInserisciConnessione.Click += new System.EventHandler(this.btnInsModConnessione_Click);
             // 
             // chkAccorpaDati
             // 
@@ -175,7 +247,7 @@
             // 
             // btnEmailDest
             // 
-            this.btnEmailDest.Location = new System.Drawing.Point(833, 107);
+            this.btnEmailDest.Location = new System.Drawing.Point(894, 23);
             this.btnEmailDest.Name = "btnEmailDest";
             this.btnEmailDest.Size = new System.Drawing.Size(87, 23);
             this.btnEmailDest.TabIndex = 13;
@@ -187,11 +259,12 @@
             this.chbInvioEmail.Location = new System.Drawing.Point(426, 105);
             this.chbInvioEmail.Name = "chbInvioEmail";
             this.chbInvioEmail.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.chbInvioEmail.Size = new System.Drawing.Size(215, 22);
+            this.chbInvioEmail.Size = new System.Drawing.Size(193, 22);
             this.chbInvioEmail.TabIndex = 11;
             this.chbInvioEmail.Text = "Invio Email";
             this.chbInvioEmail.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chbInvioEmail.UseVisualStyleBackColor = true;
+            this.chbInvioEmail.CheckedChanged += new System.EventHandler(this.chbInvioEmail_CheckedChanged);
             // 
             // label7
             // 
@@ -212,15 +285,6 @@
             this.cmbTipoFile.TabIndex = 9;
             this.cmbTipoFile.SelectedIndexChanged += new System.EventHandler(this.cmbTipoFile_SelectedIndexChanged);
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(425, 45);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(185, 18);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Schedulazione (CRON string)";
-            // 
             // txtCronString
             // 
             this.txtCronString.Location = new System.Drawing.Point(626, 41);
@@ -230,14 +294,15 @@
             // 
             // chkAttivo
             // 
-            this.chkAttivo.Location = new System.Drawing.Point(426, 14);
+            this.chkAttivo.Location = new System.Drawing.Point(426, 43);
             this.chkAttivo.Name = "chkAttivo";
             this.chkAttivo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.chkAttivo.Size = new System.Drawing.Size(215, 22);
+            this.chkAttivo.Size = new System.Drawing.Size(193, 22);
             this.chkAttivo.TabIndex = 6;
-            this.chkAttivo.Text = "Attivo (schedulazione)";
+            this.chkAttivo.Text = "Schedulazione (CRON)";
             this.chkAttivo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chkAttivo.UseVisualStyleBackColor = true;
+            this.chkAttivo.CheckedChanged += new System.EventHandler(this.chkAttivo_CheckedChanged);
             // 
             // label3
             // 
@@ -444,36 +509,6 @@
             this.btnSalva.UseVisualStyleBackColor = true;
             this.btnSalva.Click += new System.EventHandler(this.btnSalva_Click);
             // 
-            // btnConnessioni
-            // 
-            this.btnInserisciConnessione.Location = new System.Drawing.Point(322, 27);
-            this.btnInserisciConnessione.Name = "btnConnessioni";
-            this.btnInserisciConnessione.Size = new System.Drawing.Size(27, 23);
-            this.btnInserisciConnessione.TabIndex = 21;
-            this.btnInserisciConnessione.Text = "I";
-            this.btnInserisciConnessione.UseVisualStyleBackColor = true;
-            this.btnInserisciConnessione.Click += new System.EventHandler(this.btnInsModConnessione_Click);
-            // 
-            // btnEditConn
-            // 
-            this.btnEditConn.Location = new System.Drawing.Point(352, 27);
-            this.btnEditConn.Name = "btnEditConn";
-            this.btnEditConn.Size = new System.Drawing.Size(27, 23);
-            this.btnEditConn.TabIndex = 22;
-            this.btnEditConn.Text = "M";
-            this.btnEditConn.UseVisualStyleBackColor = true;
-            this.btnEditConn.Click += new System.EventHandler(this.btnInsModConnessione_Click);
-            // 
-            // btnElimina
-            // 
-            this.btnElimina.Location = new System.Drawing.Point(382, 28);
-            this.btnElimina.Name = "btnElimina";
-            this.btnElimina.Size = new System.Drawing.Size(27, 23);
-            this.btnElimina.TabIndex = 23;
-            this.btnElimina.Text = "E";
-            this.btnElimina.UseVisualStyleBackColor = true;
-            this.btnElimina.Click += new System.EventHandler(this.btnElimina_Click);
-            // 
             // frmEstrazione
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
@@ -510,7 +545,6 @@
 
         private System.Windows.Forms.GroupBox gbGenerali;
         private System.Windows.Forms.TextBox txtNome;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtCronString;
         private System.Windows.Forms.CheckBox chkAttivo;
         private System.Windows.Forms.Label label3;
@@ -547,5 +581,9 @@
         private System.Windows.Forms.Button btnInserisciConnessione;
         private System.Windows.Forms.Button btnEditConn;
         private System.Windows.Forms.Button btnElimina;
+        private System.Windows.Forms.Button btnEmailDestDel;
+        private System.Windows.Forms.Button btnEmailDestEdit;
+        private System.Windows.Forms.Button btnEmailDestAdd;
+        private System.Windows.Forms.ComboBox cmbDestEmail;
     }
 }
