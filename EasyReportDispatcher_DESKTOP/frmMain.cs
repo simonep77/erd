@@ -3,6 +3,7 @@ using EasyReportDispatcher_DESKTOP.src;
 using EasyReportDispatcher_Lib_BIZ.src.report;
 using EasyReportDispatcher_Lib_DAL.src.report;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,6 +11,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,6 +20,10 @@ namespace EasyReportDispatcher_DESKTOP
 {
     public partial class frmMain : Form
     {
+
+        private ReportEstrazione mCurrentEstrazione;
+        private List<ListViewItem> mLvItems = new List<ListViewItem>(100);
+
         public frmMain()
         {
             InitializeComponent();
@@ -52,7 +58,8 @@ namespace EasyReportDispatcher_DESKTOP
                 this.tsConnessione.Text = "Connesso";
                 this.btnConnetti.Enabled = false;
                 this.btnDisconnetti.Enabled = true;
-                this.btnAddEstrazione.Enabled = true;
+                
+                this.tsEstrazioneNew.Enabled = true;
 
                 this.handleSelezioneEstrazione();
             }
@@ -67,7 +74,7 @@ namespace EasyReportDispatcher_DESKTOP
             
         }
 
-        private void loadEstrazioni2()
+        private void loadEstrazioni()
         {
             this.clearAll();
 
@@ -81,6 +88,8 @@ namespace EasyReportDispatcher_DESKTOP
 
                 this.setListItem(item, est);
 
+                this.mLvItems.Add(item);
+
                 this.lvEstrazioni.Items.Add(item);
             }
 
@@ -89,7 +98,7 @@ namespace EasyReportDispatcher_DESKTOP
 
 
 
-        private void loadEstrazioni()
+        private void loadEstrazioni2()
         {
             this.clearAll();
 
@@ -191,7 +200,8 @@ namespace EasyReportDispatcher_DESKTOP
             this.clearAll();
             this.btnConnetti.Enabled = true;
             this.btnDisconnetti.Enabled = false;
-            this.btnAddEstrazione.Enabled = false;
+
+            this.tsEstrazioneNew.Enabled = false;
 
             if (AppContextERD.Slot != null)
                 AppContextERD.Slot.Dispose();
@@ -201,45 +211,37 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void clearAll()
         {
-            this.lvEstrazioni.Groups.Clear();
+            this.mLvItems.Clear();
+            //this.lvEstrazioni.Groups.Clear();
             this.lvEstrazioni.Items.Clear();
             this.handleSelezioneEstrazione();
             this.tsNumEstrazioni.Text = string.Format("N.Estrazioni: {0}", "ND");
+            this.txtFiltro.Text = string.Empty;
+            //this.lbFiltroNum.Visible = false;
+            //this.lbFiltroNum.Text = string.Empty;
 
         }
 
         private ReportEstrazione getSelectedEstrazione()
         {
-            if (this.lvEstrazioni.SelectedItems.Count == 0)
-                return null;
 
-            return this.lvEstrazioni.SelectedItems[0].Tag as ReportEstrazione;
+            return this.mCurrentEstrazione;
 
         }
 
         private void handleSelezioneEstrazione()
         {
-            if (this.lvEstrazioni.SelectedItems.Count == 0)
-            {
-                this.btnOpenTemplate.Enabled = false;
-                this.btnEsegui.Enabled = false;
-                this.btnELiminaTplLocale.Enabled = false;
-                this.btnSalvaTemplate.Enabled = false;
-                this.btnEditEstrazione.Enabled = false;
-                this.btnClonaEstrazione.Enabled = false;
-                this.btnDelEstrazione.Enabled = false;
-            }
-            else
-            {
-                ReportEstrazione est = this.getSelectedEstrazione();
-                this.btnOpenTemplate.Enabled = (est.TemplateId > 0);
-                this.btnEsegui.Enabled = true;
-                this.btnELiminaTplLocale.Enabled = File.Exists(this.getLocalTemplate(est));
-                this.btnSalvaTemplate.Enabled = File.Exists(this.getLocalTemplate(est));
-                this.btnEditEstrazione.Enabled = true;
-                this.btnClonaEstrazione.Enabled = true;
-                this.btnDelEstrazione.Enabled = true;
-            }
+            var selected = (this.mCurrentEstrazione != null);
+
+
+            this.tsTemplateLocOpen.Enabled = selected && (this.mCurrentEstrazione.TemplateId > 0);
+            this.tsTemplateLocElimina.Enabled = selected && File.Exists(this.getLocalTemplate(this.mCurrentEstrazione));
+            this.tsTemplateLocSave.Enabled = selected && File.Exists(this.getLocalTemplate(this.mCurrentEstrazione));
+            
+            this.tsEstrazioneEdit.Enabled = selected;
+            this.tsEstrazioneClona.Enabled = selected;
+            this.tsEstrazioneDel.Enabled = selected;
+            this.tsEstrazioneEsegui.Enabled = selected;
 
         }
 
@@ -292,6 +294,8 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void lvEstrazioni_SelectedIndexChanged(object sender, EventArgs e)
         {
+            this.mCurrentEstrazione = (this.lvEstrazioni.SelectedItems.Count == 0) ? null : (ReportEstrazione)this.lvEstrazioni.SelectedItems[0].Tag;
+
             this.handleSelezioneEstrazione();
         }
 
@@ -440,6 +444,39 @@ namespace EasyReportDispatcher_DESKTOP
             this.updateEstCount();
         }
 
+        private void txtFiltro_TextChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(this.txtFiltro.Text))
+            {
+                this.lbFiltroNum.Visible = false;
 
+                if (this.lvEstrazioni.Items.Count != this.mLvItems.Count)
+                {
+                    this.lvEstrazioni.Items.Clear();
+                    this.lvEstrazioni.Items.AddRange(this.mLvItems.ToArray());
+                }
+
+                return;
+            }
+
+            this.lvEstrazioni.Items.Clear();
+
+            foreach (var item in this.mLvItems)
+            {
+                var searchText = this.txtFiltro.Text.ToUpper();
+                if (item.SubItems[colNome.DisplayIndex
+                    ].Text.ToUpper().Contains(searchText))
+                    this.lvEstrazioni.Items.Add(item);
+            }
+
+            this.lbFiltroNum.Visible = true;
+            this.lbFiltroNum.Text = string.Format("Visibili {0} su {1}", this.lvEstrazioni.Items.Count, this.mLvItems.Count);
+        }
+
+        private void lvEstrazioni_DoubleClick(object sender, EventArgs e)
+        {
+            if (this.mCurrentEstrazione != null)
+                this.btnEsegui_Click(sender, e);
+        }
     }
 }
