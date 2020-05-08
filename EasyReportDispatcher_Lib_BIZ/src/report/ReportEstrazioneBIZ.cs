@@ -149,6 +149,17 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             }
         }
 
+        /// <summary>
+        /// indica se ha un template custom
+        /// </summary>
+        public bool IsTemplateCustom
+        {
+            get
+            {
+                return (this.DataObj.TemplateId > 0);
+            }
+        }
+
 
         private byte[] mForcedTemplate;
         
@@ -171,6 +182,55 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
        #endregion
 
         #region PUBLIC
+
+
+        /// <summary>
+        /// Clona una estrazione e tutti gli elementi dipendenti salvando tutto su db
+        /// </summary>
+        /// <returns></returns>
+        public ReportEstrazioneBIZ ClonaEstrazione(bool salvaIncludi)
+        {
+            var estBiz = this.Slot.CloneObjectForNew(this.DataObj).ToBizObject<ReportEstrazioneBIZ>();
+            estBiz.DataObj.Nome = string.Concat("Clone di ", this.DataObj.Nome);
+
+            if (!salvaIncludi)
+                return estBiz;
+
+            //Salva
+            this.Slot.SaveObject(estBiz.DataObj);
+
+            //Clona destinatari email
+            estBiz.mListaDesinatariEmail = this.Slot.CreateList<ReportEstrazioneDestinatarioEmailLista>();
+            foreach (var item in this.ListaDesinatariEmail)
+            {
+                var dest = this.Slot.CloneObjectForNew(item);
+                this.Slot.SaveObject(dest);
+
+                estBiz.mListaDesinatariEmail.Add(item);
+            }
+
+            //Clona copy to
+            estBiz.mListaCopyTo = this.Slot.CreateList<ReportEstrazioneCopyToLista>();
+            foreach (var item in this.ListaCopyTo)
+            {
+                var dest = this.Slot.CloneObjectForNew(item);
+                this.Slot.SaveObject(dest);
+
+                estBiz.mListaCopyTo.Add(item);
+            }
+
+            //Clona template
+            if (this.DataObj.TemplateId > 0)
+            {
+                var tpl = this.Slot.CloneObjectForNew(this.DataObj.Template);
+                this.Slot.SaveObject(tpl);
+
+                estBiz.DataObj.TemplateId = tpl.Id;
+            }
+
+            return estBiz;
+        }
+
 
 
         public void EliminaLogicamente()

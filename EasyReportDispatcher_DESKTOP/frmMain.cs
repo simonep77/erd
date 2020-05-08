@@ -21,7 +21,7 @@ namespace EasyReportDispatcher_DESKTOP
     public partial class frmMain : Form
     {
 
-        private ReportEstrazione mCurrentEstrazione;
+        private ReportEstrazioneBIZ mCurrentEstrazione;
         private List<ListViewItem> mLvItems = new List<ListViewItem>(100);
 
         public frmMain()
@@ -84,16 +84,25 @@ namespace EasyReportDispatcher_DESKTOP
 
             foreach (var est in lst)
             {
-                var item = new ListViewItem();
-
-                this.setListItem(item, est);
-
-                this.mLvItems.Add(item);
-
-                this.lvEstrazioni.Items.Add(item);
+                this.addEstrazioneToList(est.ToBizObject<ReportEstrazioneBIZ>(), false);
             }
 
             this.updateEstCount();
+        }
+
+        private void addEstrazioneToList(ReportEstrazioneBIZ est, bool select)
+        {
+            var item = new ListViewItem();
+            this.setListItem(item, est);
+            this.mLvItems.Add(item);
+            this.lvEstrazioni.Items.Add(item);
+            this.updateEstCount();
+
+            if (select)
+            {
+                item.Selected = true;
+                item.EnsureVisible();
+            }
         }
 
 
@@ -118,7 +127,7 @@ namespace EasyReportDispatcher_DESKTOP
 
                 var item = new ListViewItem();
 
-                this.setListItem(item, est);
+                this.setListItem(item, est.ToBizObject<ReportEstrazioneBIZ>());
 
                 g.Items.Add(item);
                 this.lvEstrazioni.Items.Add(item);
@@ -134,7 +143,7 @@ namespace EasyReportDispatcher_DESKTOP
                 {
                     var item2 = new ListViewItem();
 
-                    this.setListItem(item2, est2);
+                    this.setListItem(item2, est2.ToBizObject<ReportEstrazioneBIZ>());
 
                     g.Items.Add(item2);
                     this.lvEstrazioni.Items.Add(item2);
@@ -158,7 +167,7 @@ namespace EasyReportDispatcher_DESKTOP
 
                 var item = new ListViewItem();
 
-                this.setListItem(item, est);
+                this.setListItem(item, est.ToBizObject<ReportEstrazioneBIZ>());
 
                 gDef.Items.Add(item);
 
@@ -177,18 +186,18 @@ namespace EasyReportDispatcher_DESKTOP
         }
 
 
-        private void setListItem(ListViewItem item, ReportEstrazione est)
+        private void setListItem(ListViewItem item, ReportEstrazioneBIZ est)
         {
             item.SubItems.Clear();
 
             item.Tag = est;
-            item.Text = est.Id.ToString();
-            item.SubItems.Add(est.Nome);
-            item.SubItems.Add(est.Connessione.Nome);
-            item.SubItems.Add(est.Attivo == 1 ? "SI" : "NO");
-            item.SubItems.Add(est.InvioMailAttivo == 1 ? "SI" : "NO");
-            item.SubItems.Add(est.EstrazioniAccorpateIds.Length > 0 ? (est.AccorpaSoloDati > 0 ? "DATI: " : "FILE: ") + est.EstrazioniAccorpateIds : "");
-            item.SubItems.Add(est.TemplateId > 0 ? "SI" : "NO");
+            item.Text = est.DataObj.Id.ToString();
+            item.SubItems.Add(est.DataObj.Nome);
+            item.SubItems.Add(est.DataObj.Connessione.Nome);
+            item.SubItems.Add(est.DataObj.Attivo == 1 ? "SI" : "NO");
+            item.SubItems.Add(est.DataObj.InvioMailAttivo == 1 ? "SI" : "NO");
+            item.SubItems.Add(est.DataObj.EstrazioniAccorpateIds.Length > 0 ? (est.DataObj.AccorpaSoloDati > 0 ? "DATI: " : "FILE: ") + est.DataObj.EstrazioniAccorpateIds : "");
+            item.SubItems.Add(est.DataObj.TemplateId > 0 ? "SI" : "NO");
             item.SubItems.Add(File.Exists(this.getLocalTemplate(est)) ? "SI" : "NO");
             
         }
@@ -222,8 +231,10 @@ namespace EasyReportDispatcher_DESKTOP
 
         }
 
-        private ReportEstrazione getSelectedEstrazione()
+        private ReportEstrazioneBIZ getSelectedEstrazioneBiz()
         {
+            if (this.mCurrentEstrazione == null)
+                return null;
 
             return this.mCurrentEstrazione;
 
@@ -234,7 +245,7 @@ namespace EasyReportDispatcher_DESKTOP
             var selected = (this.mCurrentEstrazione != null);
 
 
-            this.tsTemplateLocOpen.Enabled = selected && (this.mCurrentEstrazione.TemplateId > 0);
+            this.tsTemplateLocOpen.Enabled = selected && (this.mCurrentEstrazione.IsTemplateCustom);
             this.tsTemplateLocElimina.Enabled = selected && File.Exists(this.getLocalTemplate(this.mCurrentEstrazione));
             this.tsTemplateLocSave.Enabled = selected && File.Exists(this.getLocalTemplate(this.mCurrentEstrazione));
             
@@ -247,7 +258,7 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void handleOpenTemplate()
         {
-            ReportEstrazione est = this.getSelectedEstrazione();
+            var est = this.getSelectedEstrazioneBiz();
 
             var localtemplate = this.getLocalTemplate(est);
             var useLocal = false;
@@ -261,7 +272,7 @@ namespace EasyReportDispatcher_DESKTOP
             {
                 if (!useLocal)
                 {
-                    File.WriteAllBytes(localtemplate, est.Template.TemplateBlob);
+                    File.WriteAllBytes(localtemplate, est.DataObj.Template.TemplateBlob);
 
                     this.setListItem(this.lvEstrazioni.SelectedItems[0], est);
                 }
@@ -286,15 +297,15 @@ namespace EasyReportDispatcher_DESKTOP
 
 
 
-        private string getLocalTemplate(ReportEstrazione est)
+        private string getLocalTemplate(ReportEstrazioneBIZ est)
         {
-            return Path.Combine(AppContextERD.UserDataDir, string.Format(@"ReportEstrazione_{0}.xlsx", est.Id));
+            return Path.Combine(AppContextERD.UserDataDir, string.Format(@"ReportEstrazione_{0}.xlsx", est.DataObj.Id));
         }
 
 
         private void lvEstrazioni_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.mCurrentEstrazione = (this.lvEstrazioni.SelectedItems.Count == 0) ? null : (ReportEstrazione)this.lvEstrazioni.SelectedItems[0].Tag;
+            this.mCurrentEstrazione = (this.lvEstrazioni.SelectedItems.Count == 0) ? null : (ReportEstrazioneBIZ)this.lvEstrazioni.SelectedItems[0].Tag;
 
             this.handleSelezioneEstrazione();
         }
@@ -306,7 +317,7 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void btnEsegui_Click(object sender, EventArgs e)
         {
-            var est = this.getSelectedEstrazione();
+            var est = this.getSelectedEstrazioneBiz();
             using (var frm = new frmEsegui(est, getLocalTemplate(est)))
             {
                 frm.ShowDialog();
@@ -318,7 +329,7 @@ namespace EasyReportDispatcher_DESKTOP
             if (MessageBox.Show(@"Vuoi eliminare la copia locale del template?", "Conferma", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
 
-            var est = this.getSelectedEstrazione();
+            var est = this.getSelectedEstrazioneBiz();
             var localTemplate = this.getLocalTemplate(est);
             File.Delete(localTemplate);
 
@@ -338,13 +349,13 @@ namespace EasyReportDispatcher_DESKTOP
             this.Cursor = Cursors.WaitCursor;
             try
             {
-                var est = this.getSelectedEstrazione();
+                var est = this.getSelectedEstrazioneBiz();
 
 
 
 
                 //Verifica se il template e' collegato a diverse estra
-                var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>().SearchByColumn(Filter.Eq(nameof(ReportEstrazione.TemplateId), est.TemplateId));
+                var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>().SearchByColumn(Filter.Eq(nameof(ReportEstrazione.TemplateId), est.DataObj.TemplateId));
 
                 if (lst.Count > 1 )
                 {
@@ -354,10 +365,10 @@ namespace EasyReportDispatcher_DESKTOP
 
                 var localTemplate = this.getLocalTemplate(est);
 
-                est.Template.TemplateBlob = File.ReadAllBytes(localTemplate);
+                est.DataObj.Template.TemplateBlob = File.ReadAllBytes(localTemplate);
 
                 //Salva template
-                AppContextERD.Slot.SaveObject(est.Template);
+                AppContextERD.Slot.SaveObject(est.DataObj.Template);
 
                 MessageBox.Show("Salvataggio effettuato.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -376,7 +387,8 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void btnEditEstrazione_Click(object sender, EventArgs e)
         {
-            var est = this.getSelectedEstrazione();
+            var est = this.getSelectedEstrazioneBiz();
+
             using (var frm = new frmEstrazione(est))
             {
                 if (frm.ShowDialog() == DialogResult.OK)
@@ -384,20 +396,20 @@ namespace EasyReportDispatcher_DESKTOP
                     this.setListItem(this.lvEstrazioni.SelectedItems[0], est);
                 }
                 else
-                    AppContextERD.Slot.RefreshObject(est, true);
+                    AppContextERD.Slot.RefreshObject(est.DataObj, true);
             }
         }
 
         private void btnAddEstrazione_Click(object sender, EventArgs e)
         {
-            var est = AppContextERD.Slot.CreateObject<ReportEstrazione>();
+            var est = AppContextERD.Slot.CreateObject<ReportEstrazione>().ToBizObject<ReportEstrazioneBIZ>();
 
             using (var frm = new frmEstrazione(est))
             {
                 if (frm.ShowDialog() != DialogResult.OK)
                     return;
 
-                this.addEstrazioneToList(est);
+                this.addEstrazioneToList(est, true);
 
 
             }
@@ -405,40 +417,36 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void btnClonaEstrazione_Click(object sender, EventArgs e)
         {
-            var est = this.getSelectedEstrazione();
-            var estNew = AppContextERD.Slot.CloneObjectForNew<ReportEstrazione>(est);
+            var estBiz = this.getSelectedEstrazioneBiz();
 
-            estNew.Nome = "Clone di " + estNew.Nome;
+            ReportEstrazioneBIZ estNew;
+
+            var cloneSave = MessageBox.Show(@"Vuoi clonare anche anche tutti gli oggetti dipendenti (destinatari email, copia dei file, ..) è necessario salvare immediatamente la versione clonata. Confermi?\n\n Premendo [NO] verrà creata una copia non salvata e senza entità dipendenti", @"Conferma", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+
+            estNew = estBiz.ClonaEstrazione(cloneSave == DialogResult.Yes);
+
+
 
             using (var frm = new frmEstrazione(estNew))
             {
-                if (frm.ShowDialog() != DialogResult.OK)
-                    return;
+                if (estNew.DataObj.ObjectState != EObjectState.New)
+                    this.addEstrazioneToList(estNew, true);
 
-                this.addEstrazioneToList(estNew);
             }
         }
 
-        private void addEstrazioneToList(ReportEstrazione est)
-        {
-            var item = new ListViewItem();
-            this.setListItem(item, est);
-            this.lvEstrazioni.Items.Insert(0, item);
-            this.updateEstCount();
-            item.Selected = true;
-        }
 
         private void btnDelEstrazione_Click(object sender, EventArgs e)
         {
-            var est = this.getSelectedEstrazione();
+            var est = this.getSelectedEstrazioneBiz();
 
-            if (MessageBox.Show(string.Format($"Vuoi eliminare l'estrazione {est.Id}?"), "Conferma", MessageBoxButtons.YesNo) != DialogResult.Yes)
+            if (MessageBox.Show(string.Format($"Vuoi eliminare (logicamente) l'estrazione {est.DataObj.Id}?"), "Conferma", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
 
-            var estBiz = est.ToBizObject<ReportEstrazioneBIZ>();
-            estBiz.EliminaLogicamente();
+            est.EliminaLogicamente();
 
-            MessageBox.Show("ELiminazione (logica) effettuata.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Eliminazione (logica) effettuata.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             this.lvEstrazioni.Items.Remove(this.lvEstrazioni.SelectedItems[0]);
             this.updateEstCount();

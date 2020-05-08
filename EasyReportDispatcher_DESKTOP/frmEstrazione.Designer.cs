@@ -139,6 +139,7 @@
             this.btnEmailDestAdd.TabIndex = 26;
             this.btnEmailDestAdd.Text = "I";
             this.btnEmailDestAdd.UseVisualStyleBackColor = true;
+            this.btnEmailDestAdd.Click += new System.EventHandler(this.btnEmailDestAdd_Click);
             // 
             // cmbDestEmail
             // 

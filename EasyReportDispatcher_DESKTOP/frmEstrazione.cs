@@ -1,4 +1,5 @@
 ﻿using Bdo.Objects;
+using Bdo.Objects.Base;
 using EasyReportDispatcher_DESKTOP.src;
 using EasyReportDispatcher_Lib_BIZ.src.report;
 using EasyReportDispatcher_Lib_Common.src.enums;
@@ -24,11 +25,11 @@ namespace EasyReportDispatcher_DESKTOP
         private ReportEstrazioneBIZ mEstrazioneBiz;
         private DialogResult mResult = DialogResult.Cancel;
 
-        public frmEstrazione(ReportEstrazione est)
+        public frmEstrazione(ReportEstrazioneBIZ est)
         {
             InitializeComponent();
 
-            this.mEstrazioneBiz = est.ToBizObject<ReportEstrazioneBIZ>();
+            this.mEstrazioneBiz = est;
 
             this.addBindings();
         }
@@ -84,8 +85,16 @@ namespace EasyReportDispatcher_DESKTOP
 
 
             //Load
-            this.loadTipiFile();
-            this.loadConnessioni();
+
+            //Tipi file
+            this.loadCombo(this.cmbTipoFile, AppContextERD.Slot.CreateList<ReportTipoFileLista>().CacheResult().SearchAllObjects(), 
+                nameof(ReportTipoFile.Nome), nameof(ReportTipoFile.Id), this.mEstrazioneBiz.DataObj.TipoFile);
+            //Connessioni
+            this.loadCombo(this.cmbConnessioni, AppContextERD.Slot.CreateList<ReportConnessioneLista>().SearchAllObjects(),
+                nameof(ReportConnessione.Nome), nameof(ReportConnessione.Id), this.mEstrazioneBiz.DataObj.Connessione);
+            //Destinatari email
+            this.loadCombo(this.cmbDestEmail, this.mEstrazioneBiz.ListaDesinatariEmail,
+                nameof(ReportEstrazioneDestinatarioEmail.MailTO), nameof(ReportEstrazioneDestinatarioEmail.Id), this.mEstrazioneBiz.ListaDesinatariEmail.GetFirst());
 
             //Lancia un po' di eventi
             this.txtEstrazioniAcc_TextChanged(null, null);
@@ -96,29 +105,24 @@ namespace EasyReportDispatcher_DESKTOP
 
         #region LOADING
 
-        private void loadTipiFile()
+        private void loadDestinatariEmail()
         {
-            var tipi = AppContextERD.Slot.CreateList<ReportTipoFileLista>().CacheResult().SearchAllObjects();
 
-            this.cmbTipoFile.DisplayMember = nameof(ReportTipoFile.Nome);
-            this.cmbTipoFile.ValueMember = nameof(ReportTipoFile.Id);
-            this.cmbTipoFile.DataSource = tipi;
-
-            if (this.mEstrazioneBiz.DataObj.TipoFileId > 0)
-                this.cmbTipoFile.SelectedItem = this.mEstrazioneBiz.DataObj.TipoFile;
         }
 
-        private void loadConnessioni()
+
+        private void loadCombo(ComboBox combo, DataListBase list, string dMember, string vMember, DataObjectBase item)
         {
             var conn = AppContextERD.Slot.CreateList<ReportConnessioneLista>().SearchAllObjects();
 
-            this.cmbConnessioni.DisplayMember = nameof(ReportTipoFile.Nome);
-            this.cmbConnessioni.ValueMember = nameof(ReportTipoFile.Id);
-            this.cmbConnessioni.DataSource = conn;
+            combo.DisplayMember = dMember;
+            combo.ValueMember = vMember;
+            combo.DataSource = list;
 
-            if (this.mEstrazioneBiz.DataObj.ConnessioneId > 0)
-                this.cmbConnessioni.SelectedItem = this.mEstrazioneBiz.DataObj.Connessione;
+            if (item != null)
+                combo.SelectedItem = item;
         }
+
 
         #endregion
 
@@ -412,6 +416,22 @@ namespace EasyReportDispatcher_DESKTOP
         private void chbInvioEmail_CheckedChanged(object sender, EventArgs e)
         {
             this.cmbDestEmail.Enabled = this.chbInvioEmail.Checked;
+        }
+
+        private void btnEmailDestAdd_Click(object sender, EventArgs e)
+        {
+            var dest = AppContextERD.Slot.CreateObject<ReportEstrazioneDestinatarioEmail>();
+
+            using(var frm = new frmDestMail(dest))
+            {
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    var lst = this.cmbDestEmail.DataSource as ReportEstrazioneDestinatarioEmailLista;
+                    lst.AddOrUpdate(dest);
+
+                    this.cmbDestEmail.SelectedItem = dest;
+                }
+            }
         }
     }
 }

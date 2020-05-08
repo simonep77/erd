@@ -61,6 +61,12 @@
     <Compile Include="frmConnessione.Designer.cs">
       <DependentUpon>frmConnessione.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmDestMail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDestMail.Designer.cs">
+      <DependentUpon>frmDestMail.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmEstrazione.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,6 +91,9 @@
     <Compile Include="src\UI_Utils.cs" />
     <EmbeddedResource Include="frmConnessione.resx">
       <DependentUpon>frmConnessione.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmDestMail.resx">
+      <DependentUpon>frmDestMail.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmEstrazione.resx">
       <DependentUpon>frmEstrazione.cs</DependentUpon>

@@ -17,11 +17,11 @@ namespace EasyReportDispatcher_DESKTOP
 {
     public partial class frmEsegui : Form
     {
-        private ReportEstrazione mEstrazione;
+        private ReportEstrazioneBIZ mEstrazioneBiz;
         private string mLocalTemplatePath;
-        public frmEsegui(ReportEstrazione est, string localTplPath)
+        public frmEsegui(ReportEstrazioneBIZ est, string localTplPath)
         {
-            this.mEstrazione = est;
+            this.mEstrazioneBiz = est;
             this.mLocalTemplatePath = localTplPath;
 
             InitializeComponent();
@@ -31,21 +31,19 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void btnEsegui_Click(object sender, EventArgs e)
         {
-            var estBiz = this.mEstrazione.ToBizObject<ReportEstrazioneBIZ>();
-
             this.Cursor = Cursors.WaitCursor;
 
             try
             {
                 if (this.chkUsaTemplateLocale.Checked)
-                    estBiz.ForcedTemplate = File.ReadAllBytes(this.mLocalTemplatePath);
+                    this.mEstrazioneBiz.ForcedTemplate = File.ReadAllBytes(this.mLocalTemplatePath);
 
-                estBiz.Run(this.chkSaveOutput.Checked);
+                this.mEstrazioneBiz.Run(this.chkSaveOutput.Checked);
 
                 Directory.CreateDirectory(AppContextERD.UserDataDirOutput);
 
-                var outFilePath = Path.Combine(AppContextERD.UserDataDirOutput, estBiz.LastResult.NomeFile);
-                File.WriteAllBytes(outFilePath, estBiz.LastResult.DataBlob);
+                var outFilePath = Path.Combine(AppContextERD.UserDataDirOutput, this.mEstrazioneBiz.LastResult.NomeFile);
+                File.WriteAllBytes(outFilePath, this.mEstrazioneBiz.LastResult.DataBlob);
 
                 Process.Start(outFilePath);
 
