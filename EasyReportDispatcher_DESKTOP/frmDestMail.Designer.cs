@@ -51,9 +51,9 @@
             this.panIndirizzi = new System.Windows.Forms.Panel();
             this.panContenuto = new System.Windows.Forms.Panel();
             this.panTop = new System.Windows.Forms.Panel();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnSmtpDel = new System.Windows.Forms.Button();
+            this.btnSmtpEdit = new System.Windows.Forms.Button();
+            this.btnSmtpAdd = new System.Windows.Forms.Button();
             this.cmbSmtp = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
@@ -281,9 +281,9 @@
             // 
             // panTop
             // 
-            this.panTop.Controls.Add(this.button3);
-            this.panTop.Controls.Add(this.button2);
-            this.panTop.Controls.Add(this.button1);
+            this.panTop.Controls.Add(this.btnSmtpDel);
+            this.panTop.Controls.Add(this.btnSmtpEdit);
+            this.panTop.Controls.Add(this.btnSmtpAdd);
             this.panTop.Controls.Add(this.cmbSmtp);
             this.panTop.Controls.Add(this.label9);
             this.panTop.Dock = System.Windows.Forms.DockStyle.Top;
@@ -293,32 +293,35 @@
             this.panTop.Size = new System.Drawing.Size(695, 68);
             this.panTop.TabIndex = 0;
             // 
-            // button3
+            // btnSmtpDel
             // 
-            this.button3.Location = new System.Drawing.Point(548, 23);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(29, 26);
-            this.button3.TabIndex = 9;
-            this.button3.Text = "E";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btnSmtpDel.Location = new System.Drawing.Point(548, 23);
+            this.btnSmtpDel.Name = "btnSmtpDel";
+            this.btnSmtpDel.Size = new System.Drawing.Size(29, 26);
+            this.btnSmtpDel.TabIndex = 9;
+            this.btnSmtpDel.Text = "E";
+            this.btnSmtpDel.UseVisualStyleBackColor = true;
+            this.btnSmtpDel.Click += new System.EventHandler(this.btnSmtpDel_Click);
             // 
-            // button2
+            // btnSmtpEdit
             // 
-            this.button2.Location = new System.Drawing.Point(516, 23);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(29, 26);
-            this.button2.TabIndex = 8;
-            this.button2.Text = "M";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnSmtpEdit.Location = new System.Drawing.Point(516, 23);
+            this.btnSmtpEdit.Name = "btnSmtpEdit";
+            this.btnSmtpEdit.Size = new System.Drawing.Size(29, 26);
+            this.btnSmtpEdit.TabIndex = 8;
+            this.btnSmtpEdit.Text = "M";
+            this.btnSmtpEdit.UseVisualStyleBackColor = true;
+            this.btnSmtpEdit.Click += new System.EventHandler(this.actAddEditSmtp);
             // 
-            // button1
+            // btnSmtpAdd
             // 
-            this.button1.Location = new System.Drawing.Point(485, 23);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(29, 26);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "I";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnSmtpAdd.Location = new System.Drawing.Point(485, 23);
+            this.btnSmtpAdd.Name = "btnSmtpAdd";
+            this.btnSmtpAdd.Size = new System.Drawing.Size(29, 26);
+            this.btnSmtpAdd.TabIndex = 7;
+            this.btnSmtpAdd.Text = "I";
+            this.btnSmtpAdd.UseVisualStyleBackColor = true;
+            this.btnSmtpAdd.Click += new System.EventHandler(this.actAddEditSmtp);
             // 
             // cmbSmtp
             // 
@@ -393,8 +396,8 @@
         private System.Windows.Forms.Panel panTop;
         private System.Windows.Forms.ComboBox cmbSmtp;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnSmtpDel;
+        private System.Windows.Forms.Button btnSmtpEdit;
+        private System.Windows.Forms.Button btnSmtpAdd;
     }
 }

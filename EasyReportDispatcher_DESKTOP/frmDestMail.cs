@@ -1,4 +1,5 @@
-﻿using EasyReportDispatcher_DESKTOP.src;
+﻿using Bdo.Objects;
+using EasyReportDispatcher_DESKTOP.src;
 using EasyReportDispatcher_Lib_DAL.src.report;
 using System;
 using System.Collections.Generic;
@@ -66,10 +67,72 @@ namespace EasyReportDispatcher_DESKTOP
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UI_Utils.ShowError(ex.Message);
             }
             
         }
 
+        private void actAddEditSmtp(object sender, EventArgs e)
+        {
+            bool isNew = (object.ReferenceEquals(sender, this.btnSmtpAdd));
+
+            ReportSmtpConfig dest = AppContextERD.Slot.CreateObject<ReportSmtpConfig>();
+
+            if (isNew)
+                dest = AppContextERD.Slot.CreateObject<ReportSmtpConfig>();
+            else
+                dest = this.cmbSmtp.SelectedItem as ReportSmtpConfig;
+
+
+            using (var frm = new frmSmtp(dest))
+            {
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+
+                    var lst = this.cmbSmtp.DataSource as ReportSmtpConfigLista;
+                    lst.AddOrUpdate(dest);
+
+                    UI_Utils.Combo_Load(this.cmbSmtp, lst,
+                        nameof(ReportSmtpConfig.Nome), nameof(ReportSmtpConfig.Id), dest);
+                }
+            }
+        }
+
+        private void btnSmtpDel_Click(object sender, EventArgs e)
+        {
+            if (this.cmbSmtp.SelectedItem == null)
+                return;
+
+            ReportSmtpConfig dest = this.cmbSmtp.SelectedItem as ReportSmtpConfig;
+
+            if (MessageBox.Show(string.Format("Confermi l'eliminazione della configurazione SMTP '{0}' ", dest.Nome, dest.Id), "Conferma", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            try
+            {
+                //Se la config e' utilizzata anche da altri destinatari 
+                var lstdest = AppContextERD.Slot.CreateList<ReportEstrazioneDestinatarioEmailLista>().SearchByColumn(Filter.Eq(nameof(ReportEstrazioneDestinatarioEmail.SmtpConfigId), dest.Id));
+
+                if (lstdest.Count != 0)
+                    throw new ApplicationException("Attenzione: la configurazione e' in uso. Cambiarla prima dove viene utilizzata.");
+
+                AppContextERD.Slot.DeleteObject(dest);
+
+                ReportSmtpConfigLista lst = this.cmbSmtp.DataSource as ReportSmtpConfigLista;
+
+                lst.Remove(dest);
+
+                UI_Utils.Combo_Load(this.cmbSmtp, lst,
+                        nameof(ReportSmtpConfig.Nome), nameof(ReportSmtpConfig.Id), null);
+
+                UI_Utils.ShowInfo("Configurazione SMTP eliminata.");
+
+            }
+            catch (Exception ex)
+            {
+                UI_Utils.ShowError(ex.Message);
+
+            }
+        }
     }
 }

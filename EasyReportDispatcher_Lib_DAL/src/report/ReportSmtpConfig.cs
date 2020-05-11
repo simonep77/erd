@@ -8,26 +8,26 @@ using Bdo.Objects;
 
 namespace EasyReportDispatcher_Lib_DAL.src.report
 {
-    [Table("report_smtp_configs"), GlobalCache()]
+    [Table("report_smtp_configs")]
     public abstract class ReportSmtpConfig : DataObject<ReportSmtpConfig>
     {
-        [PrimaryKey]
+        [PrimaryKey, AutoIncrement]
         public abstract long Id { get; }
 
-        public abstract String Nome { get;}
+        public abstract String Nome { get; set; }
 
         [MaxLength(255)]
-        public abstract String Smtp { get;  }
+        public abstract String Smtp { get; set; }
 
-        public abstract int Port { get;  }
+        public abstract int Port { get; set; }
 
-        public abstract SByte UseSSL { get;  }
+        public abstract SByte UseSSL { get; set; }
 
-        public abstract SByte Auth { get; }
+        public abstract SByte Auth { get; set; }
 
-        public abstract String UserName { get; }
+        public abstract String UserName { get; set; }
 
-        public abstract String Password { get; }
+        public abstract String Password { get; set; }
 
     }
 }

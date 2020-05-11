@@ -85,6 +85,12 @@
     <Compile Include="frmEsegui.Designer.cs">
       <DependentUpon>frmEsegui.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmSmtp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSmtp.Designer.cs">
+      <DependentUpon>frmSmtp.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\AppContext.cs" />
@@ -103,6 +109,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmEsegui.resx">
       <DependentUpon>frmEsegui.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSmtp.resx">
+      <DependentUpon>frmSmtp.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

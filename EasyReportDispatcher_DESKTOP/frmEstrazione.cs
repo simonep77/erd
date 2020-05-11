@@ -300,7 +300,7 @@ namespace EasyReportDispatcher_DESKTOP
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UI_Utils.ShowError(ex.Message);
 
             }
 
@@ -454,10 +454,11 @@ namespace EasyReportDispatcher_DESKTOP
                 UI_Utils.ShowInfo("Destinatario eliminato.");
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                UI_Utils.ShowError(ex.Message);
+
             }
 
         }
