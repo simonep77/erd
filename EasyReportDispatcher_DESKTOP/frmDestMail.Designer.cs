@@ -47,8 +47,21 @@
             this.txtMailFROM = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.btnSalva = new System.Windows.Forms.Button();
+            this.panSalva = new System.Windows.Forms.Panel();
+            this.panIndirizzi = new System.Windows.Forms.Panel();
+            this.panContenuto = new System.Windows.Forms.Panel();
+            this.panTop = new System.Windows.Forms.Panel();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.cmbSmtp = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.panSalva.SuspendLayout();
+            this.panIndirizzi.SuspendLayout();
+            this.panContenuto.SuspendLayout();
+            this.panTop.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -94,10 +107,10 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.txtMailSubj);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(10, 10);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(695, 255);
+            this.groupBox1.Size = new System.Drawing.Size(675, 242);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Contenuto Mail";
@@ -141,10 +154,10 @@
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.txtMailFROM);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(10, 265);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox2.Location = new System.Drawing.Point(10, 10);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(695, 258);
+            this.groupBox2.Size = new System.Drawing.Size(675, 262);
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Indirizzi";
@@ -228,21 +241,112 @@
             // 
             // btnSalva
             // 
-            this.btnSalva.Location = new System.Drawing.Point(312, 544);
+            this.btnSalva.Location = new System.Drawing.Point(296, 13);
             this.btnSalva.Name = "btnSalva";
             this.btnSalva.Size = new System.Drawing.Size(83, 32);
             this.btnSalva.TabIndex = 6;
             this.btnSalva.Text = "Salva";
             this.btnSalva.UseVisualStyleBackColor = true;
+            this.btnSalva.Click += new System.EventHandler(this.btnSalva_Click);
+            // 
+            // panSalva
+            // 
+            this.panSalva.Controls.Add(this.btnSalva);
+            this.panSalva.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panSalva.Location = new System.Drawing.Point(10, 674);
+            this.panSalva.Name = "panSalva";
+            this.panSalva.Padding = new System.Windows.Forms.Padding(10);
+            this.panSalva.Size = new System.Drawing.Size(695, 56);
+            this.panSalva.TabIndex = 6;
+            // 
+            // panIndirizzi
+            // 
+            this.panIndirizzi.Controls.Add(this.groupBox2);
+            this.panIndirizzi.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panIndirizzi.Location = new System.Drawing.Point(10, 392);
+            this.panIndirizzi.Name = "panIndirizzi";
+            this.panIndirizzi.Padding = new System.Windows.Forms.Padding(10);
+            this.panIndirizzi.Size = new System.Drawing.Size(695, 282);
+            this.panIndirizzi.TabIndex = 7;
+            // 
+            // panContenuto
+            // 
+            this.panContenuto.Controls.Add(this.groupBox1);
+            this.panContenuto.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panContenuto.Location = new System.Drawing.Point(10, 130);
+            this.panContenuto.Name = "panContenuto";
+            this.panContenuto.Padding = new System.Windows.Forms.Padding(10);
+            this.panContenuto.Size = new System.Drawing.Size(695, 262);
+            this.panContenuto.TabIndex = 8;
+            // 
+            // panTop
+            // 
+            this.panTop.Controls.Add(this.button3);
+            this.panTop.Controls.Add(this.button2);
+            this.panTop.Controls.Add(this.button1);
+            this.panTop.Controls.Add(this.cmbSmtp);
+            this.panTop.Controls.Add(this.label9);
+            this.panTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panTop.Location = new System.Drawing.Point(10, 10);
+            this.panTop.Name = "panTop";
+            this.panTop.Padding = new System.Windows.Forms.Padding(10);
+            this.panTop.Size = new System.Drawing.Size(695, 68);
+            this.panTop.TabIndex = 0;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(548, 23);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(29, 26);
+            this.button3.TabIndex = 9;
+            this.button3.Text = "E";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(516, 23);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(29, 26);
+            this.button2.TabIndex = 8;
+            this.button2.Text = "M";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(485, 23);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(29, 26);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "I";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // cmbSmtp
+            // 
+            this.cmbSmtp.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSmtp.FormattingEnabled = true;
+            this.cmbSmtp.Location = new System.Drawing.Point(157, 24);
+            this.cmbSmtp.Name = "cmbSmtp";
+            this.cmbSmtp.Size = new System.Drawing.Size(322, 26);
+            this.cmbSmtp.TabIndex = 2;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(43, 27);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(42, 18);
+            this.label9.TabIndex = 1;
+            this.label9.Text = "SMTP";
             // 
             // frmDestMail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(715, 589);
-            this.Controls.Add(this.btnSalva);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.ClientSize = new System.Drawing.Size(715, 740);
+            this.Controls.Add(this.panTop);
+            this.Controls.Add(this.panContenuto);
+            this.Controls.Add(this.panIndirizzi);
+            this.Controls.Add(this.panSalva);
             this.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -253,6 +357,11 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.panSalva.ResumeLayout(false);
+            this.panIndirizzi.ResumeLayout(false);
+            this.panContenuto.ResumeLayout(false);
+            this.panTop.ResumeLayout(false);
+            this.panTop.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -278,5 +387,14 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtMailFROM;
         private System.Windows.Forms.Button btnSalva;
+        private System.Windows.Forms.Panel panSalva;
+        private System.Windows.Forms.Panel panIndirizzi;
+        private System.Windows.Forms.Panel panContenuto;
+        private System.Windows.Forms.Panel panTop;
+        private System.Windows.Forms.ComboBox cmbSmtp;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button1;
     }
 }

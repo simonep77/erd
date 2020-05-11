@@ -121,6 +121,7 @@
             this.btnEmailDestDel.TabIndex = 28;
             this.btnEmailDestDel.Text = "E";
             this.btnEmailDestDel.UseVisualStyleBackColor = true;
+            this.btnEmailDestDel.Click += new System.EventHandler(this.btnEmailDestDel_Click);
             // 
             // btnEmailDestEdit
             // 
@@ -130,6 +131,7 @@
             this.btnEmailDestEdit.TabIndex = 27;
             this.btnEmailDestEdit.Text = "M";
             this.btnEmailDestEdit.UseVisualStyleBackColor = true;
+            this.btnEmailDestEdit.Click += new System.EventHandler(this.btnEmailDestAdd_Click);
             // 
             // btnEmailDestAdd
             // 
@@ -480,8 +482,10 @@
             // 
             // gbSql
             // 
+            this.gbSql.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gbSql.Controls.Add(this.txtSQL);
-            this.gbSql.Dock = System.Windows.Forms.DockStyle.Top;
             this.gbSql.Location = new System.Drawing.Point(20, 354);
             this.gbSql.Name = "gbSql";
             this.gbSql.Padding = new System.Windows.Forms.Padding(10);
@@ -502,7 +506,7 @@
             // 
             // btnSalva
             // 
-            this.btnSalva.Location = new System.Drawing.Point(413, 566);
+            this.btnSalva.Location = new System.Drawing.Point(470, 573);
             this.btnSalva.Name = "btnSalva";
             this.btnSalva.Size = new System.Drawing.Size(93, 34);
             this.btnSalva.TabIndex = 14;

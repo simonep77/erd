@@ -1,4 +1,5 @@
-﻿using EasyReportDispatcher_Lib_DAL.src.report;
+﻿using EasyReportDispatcher_DESKTOP.src;
+using EasyReportDispatcher_Lib_DAL.src.report;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,6 +20,11 @@ namespace EasyReportDispatcher_DESKTOP
             InitializeComponent();
 
             this.mDest = dest;
+
+            this.loadData();
+
+            UI_Utils.Combo_Load(this.cmbSmtp, AppContextERD.Slot.CreateList<ReportSmtpConfigLista>().SearchAllObjects(),
+                nameof(ReportSmtpConfig.Nome), nameof(ReportTipoFile.Id), (this.mDest.SmtpConfigId > 0 ? this.mDest.SmtpConfig : null));
         }
 
 
@@ -38,5 +44,32 @@ namespace EasyReportDispatcher_DESKTOP
         {
             this.txtPassword.PasswordChar = this.chkMostra.Checked ? '\0' : '*';
         }
+
+        private void btnSalva_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //Verifiche
+
+                //Salvataggio
+                this.mDest.MailSUBJ = this.txtMailSubj.Text;
+                this.mDest.MailBODY = this.txtMailCorpo.Text;
+                this.mDest.Password = this.txtPassword.Text;
+                this.mDest.MailFROM = this.txtMailFROM.Text;
+                this.mDest.MailTO = this.txtMailTO.Text;
+                this.mDest.MailCC = this.txtMailCC.Text;
+                this.mDest.MailBCC = this.txtMailBCC.Text;
+
+                AppContextERD.Slot.SaveObject(this.mDest);
+
+                this.DialogResult = DialogResult.OK;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
+        }
+
     }
 }

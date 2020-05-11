@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Bdo.Objects.Base;
 
 namespace EasyReportDispatcher_DESKTOP.src
 {
@@ -30,6 +31,26 @@ namespace EasyReportDispatcher_DESKTOP.src
         {
             MessageBox.Show(string.Format(msgFmt, args), "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+        }
+
+
+        /// <summary>
+        /// Caricamento basico combo
+        /// </summary>
+        /// <param name="combo"></param>
+        /// <param name="list"></param>
+        /// <param name="dMember"></param>
+        /// <param name="vMember"></param>
+        /// <param name="item"></param>
+        public static void Combo_Load(ComboBox combo, DataListBase list, string dMember, string vMember, DataObjectBase item)
+        {
+            combo.DataSource = null;
+            combo.DisplayMember = dMember;
+            combo.ValueMember = vMember;
+            combo.DataSource = list;
+
+            if (item != null)
+                combo.SelectedItem = item;
         }
 
     }

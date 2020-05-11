@@ -73,11 +73,15 @@ namespace EasyReportDispatcher_DESKTOP
             {
                 this.txtNomeTemplate.Text = @"<Nuovo>";
                 this.lbTemplatePath.Text = string.Empty;
+
+                //
             }
 
+            this.btnEmailDestAdd.Enabled = (this.mEstrazioneBiz.DataObj.ObjectState != EObjectState.New);
+            this.btnEmailDestEdit.Enabled = (this.mEstrazioneBiz.DataObj.ObjectState != EObjectState.New);
+            this.btnEmailDestDel.Enabled = (this.mEstrazioneBiz.DataObj.ObjectState != EObjectState.New);
+            this.chbInvioEmail.Enabled = (this.mEstrazioneBiz.DataObj.ObjectState != EObjectState.New);
   
-
-           
 
             this.btnEmailDest.Enabled = (this.mEstrazioneBiz.DataObj.ObjectState == Bdo.Objects.EObjectState.Loaded);
 
@@ -87,13 +91,13 @@ namespace EasyReportDispatcher_DESKTOP
             //Load
 
             //Tipi file
-            this.loadCombo(this.cmbTipoFile, AppContextERD.Slot.CreateList<ReportTipoFileLista>().CacheResult().SearchAllObjects(), 
-                nameof(ReportTipoFile.Nome), nameof(ReportTipoFile.Id), this.mEstrazioneBiz.DataObj.TipoFile);
+            UI_Utils.Combo_Load(this.cmbTipoFile, AppContextERD.Slot.CreateList<ReportTipoFileLista>().CacheResult().SearchAllObjects(), 
+                nameof(ReportTipoFile.Nome), nameof(ReportTipoFile.Id), this.mEstrazioneBiz.DataObj.TipoFileId > 0? this.mEstrazioneBiz.DataObj.TipoFile : null);
             //Connessioni
-            this.loadCombo(this.cmbConnessioni, AppContextERD.Slot.CreateList<ReportConnessioneLista>().SearchAllObjects(),
-                nameof(ReportConnessione.Nome), nameof(ReportConnessione.Id), this.mEstrazioneBiz.DataObj.Connessione);
+            UI_Utils.Combo_Load(this.cmbConnessioni, AppContextERD.Slot.CreateList<ReportConnessioneLista>().SearchAllObjects(),
+                nameof(ReportConnessione.Nome), nameof(ReportConnessione.Id), this.mEstrazioneBiz.DataObj.ConnessioneId > 0 ? this.mEstrazioneBiz.DataObj.Connessione : null);
             //Destinatari email
-            this.loadCombo(this.cmbDestEmail, this.mEstrazioneBiz.ListaDesinatariEmail,
+            UI_Utils.Combo_Load(this.cmbDestEmail, this.mEstrazioneBiz.ListaDesinatariEmail,
                 nameof(ReportEstrazioneDestinatarioEmail.MailTO), nameof(ReportEstrazioneDestinatarioEmail.Id), this.mEstrazioneBiz.ListaDesinatariEmail.GetFirst());
 
             //Lancia un po' di eventi
@@ -104,24 +108,6 @@ namespace EasyReportDispatcher_DESKTOP
         }
 
         #region LOADING
-
-        private void loadDestinatariEmail()
-        {
-
-        }
-
-
-        private void loadCombo(ComboBox combo, DataListBase list, string dMember, string vMember, DataObjectBase item)
-        {
-            var conn = AppContextERD.Slot.CreateList<ReportConnessioneLista>().SearchAllObjects();
-
-            combo.DisplayMember = dMember;
-            combo.ValueMember = vMember;
-            combo.DataSource = list;
-
-            if (item != null)
-                combo.SelectedItem = item;
-        }
 
 
         #endregion
@@ -420,18 +406,60 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void btnEmailDestAdd_Click(object sender, EventArgs e)
         {
-            var dest = AppContextERD.Slot.CreateObject<ReportEstrazioneDestinatarioEmail>();
+            bool isNew = (object.ReferenceEquals(sender, this.btnEmailDestAdd));
 
-            using(var frm = new frmDestMail(dest))
+            ReportEstrazioneDestinatarioEmail dest = AppContextERD.Slot.CreateObject<ReportEstrazioneDestinatarioEmail>();
+
+            if (isNew)
+                dest = AppContextERD.Slot.CreateObject<ReportEstrazioneDestinatarioEmail>();
+            else
+                dest = this.cmbDestEmail.SelectedItem as ReportEstrazioneDestinatarioEmail;
+
+
+            using (var frm = new frmDestMail(dest))
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
+                    
                     var lst = this.cmbDestEmail.DataSource as ReportEstrazioneDestinatarioEmailLista;
                     lst.AddOrUpdate(dest);
 
-                    this.cmbDestEmail.SelectedItem = dest;
+                    UI_Utils.Combo_Load(this.cmbDestEmail, lst,
+                        nameof(ReportEstrazioneDestinatarioEmail.MailTO), nameof(ReportEstrazioneDestinatarioEmail.Id), dest);
                 }
             }
+        }
+
+        private void btnEmailDestDel_Click(object sender, EventArgs e)
+        {
+            if (this.cmbDestEmail.SelectedItem == null)
+                return;
+
+            ReportEstrazioneDestinatarioEmail dest = this.cmbDestEmail.SelectedItem as ReportEstrazioneDestinatarioEmail;
+
+            if (MessageBox.Show(string.Format("Confermi l'eliminazione del destinatario '{0}' ", dest.MailTO, dest.Id), "Conferma", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            try
+            {
+                AppContextERD.Slot.DeleteObject(dest);
+
+                ReportEstrazioneDestinatarioEmailLista lst = this.cmbDestEmail.DataSource as ReportEstrazioneDestinatarioEmailLista;
+
+                lst.Remove(dest);
+
+                UI_Utils.Combo_Load(this.cmbDestEmail, lst,
+                        nameof(ReportEstrazioneDestinatarioEmail.MailTO), nameof(ReportEstrazioneDestinatarioEmail.Id), null);
+
+                UI_Utils.ShowInfo("Destinatario eliminato.");
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
     }
 }
