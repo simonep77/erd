@@ -502,5 +502,22 @@ namespace EasyReportDispatcher_DESKTOP
         {
             this.loadEstrazioni();
         }
+
+        private void btnConfig_Click(object sender, EventArgs e)
+        {
+            using (var frm = new frmConfig())
+            {
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    UI_Utils.ShowInfo("Configurazione salvata. Verrà riavviato il caricamento delle estrazioni.");
+
+                    this.btnDisconnetti_Click(null, null);
+
+                    AppContextERD.Slot = null;
+
+                    this.btnConnetti_Click(null, null);
+                }
+            }
+        }
     }
 }

@@ -55,6 +55,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frmConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmConfig.Designer.cs">
+      <DependentUpon>frmConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmConnessione.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +106,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\AppContext.cs" />
     <Compile Include="src\UI_Utils.cs" />
+    <EmbeddedResource Include="frmConfig.resx">
+      <DependentUpon>frmConfig.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmConnessione.resx">
       <DependentUpon>frmConnessione.cs</DependentUpon>
     </EmbeddedResource>
