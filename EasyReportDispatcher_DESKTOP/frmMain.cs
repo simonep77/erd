@@ -78,6 +78,8 @@ namespace EasyReportDispatcher_DESKTOP
         {
             this.clearAll();
 
+            Application.DoEvents();
+
             var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>()
                 .OrderBy(nameof(ReportEstrazione.Id), OrderVersus.Desc)
                 .SearchByColumn(Filter.Gt(nameof(ReportEstrazione.Attivo), -1));
@@ -85,6 +87,7 @@ namespace EasyReportDispatcher_DESKTOP
             foreach (var est in lst)
             {
                 this.addEstrazioneToList(est.ToBizObject<ReportEstrazioneBIZ>(), false);
+                Application.DoEvents();
             }
 
             this.updateEstCount();
@@ -488,6 +491,16 @@ namespace EasyReportDispatcher_DESKTOP
         {
             if (this.mCurrentEstrazione != null)
                 this.btnEsegui_Click(sender, e);
+        }
+
+        private void btnOutputDir_Click(object sender, EventArgs e)
+        {
+            Process.Start(AppContextERD.UserDataDirOutput);
+        }
+
+        private void btnReload_Click(object sender, EventArgs e)
+        {
+            this.loadEstrazioni();
         }
     }
 }
