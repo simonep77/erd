@@ -29,15 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tsConnessione = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsNumEstrazioni = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.btnConnetti = new System.Windows.Forms.ToolStripButton();
-            this.btnDisconnetti = new System.Windows.Forms.ToolStripButton();
             this.panMain = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panCenter = new System.Windows.Forms.Panel();
             this.lvEstrazioni = new System.Windows.Forms.ListView();
             this.colID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colNome = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -48,34 +46,36 @@
             this.colTemplate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colTemplateLocale = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ctxMenuEst = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsEstrazioneNew = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsEstrazioneClona = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsEstrazioneEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsEstrazioneDel = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsTitolo = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tsTemplateLocOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.tsTemplateLocElimina = new System.Windows.Forms.ToolStripMenuItem();
             this.tsTemplateLocSave = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsEstrazioneEsegui = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsTitolo = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsEstrazioneEsegui = new System.Windows.Forms.ToolStripMenuItem();
             this.panSearch = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtFiltro = new System.Windows.Forms.TextBox();
             this.lbFiltroNum = new System.Windows.Forms.Label();
-            this.panCenter = new System.Windows.Forms.Panel();
+            this.txtFiltro = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tsEstrazioneNew = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsEstrazioneClona = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsEstrazioneEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsEstrazioneDel = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnConnetti = new System.Windows.Forms.ToolStripButton();
+            this.btnDisconnetti = new System.Windows.Forms.ToolStripButton();
+            this.btnConfig = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panMain.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.panCenter.SuspendLayout();
             this.ctxMenuEst.SuspendLayout();
             this.panSearch.SuspendLayout();
-            this.panCenter.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -107,30 +107,13 @@
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnConnetti,
-            this.btnDisconnetti});
+            this.btnDisconnetti,
+            this.btnConfig});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1224, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // btnConnetti
-            // 
-            this.btnConnetti.Image = ((System.Drawing.Image)(resources.GetObject("btnConnetti.Image")));
-            this.btnConnetti.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnConnetti.Name = "btnConnetti";
-            this.btnConnetti.Size = new System.Drawing.Size(73, 22);
-            this.btnConnetti.Text = "Connetti";
-            this.btnConnetti.Click += new System.EventHandler(this.btnConnetti_Click);
-            // 
-            // btnDisconnetti
-            // 
-            this.btnDisconnetti.Image = ((System.Drawing.Image)(resources.GetObject("btnDisconnetti.Image")));
-            this.btnDisconnetti.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnDisconnetti.Name = "btnDisconnetti";
-            this.btnDisconnetti.Size = new System.Drawing.Size(87, 22);
-            this.btnDisconnetti.Text = "Disconnetti";
-            this.btnDisconnetti.Click += new System.EventHandler(this.btnDisconnetti_Click);
             // 
             // panMain
             // 
@@ -154,6 +137,16 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Elenco Estrazioni";
+            // 
+            // panCenter
+            // 
+            this.panCenter.Controls.Add(this.lvEstrazioni);
+            this.panCenter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panCenter.Location = new System.Drawing.Point(10, 71);
+            this.panCenter.Name = "panCenter";
+            this.panCenter.Padding = new System.Windows.Forms.Padding(5);
+            this.panCenter.Size = new System.Drawing.Size(1204, 520);
+            this.panCenter.TabIndex = 2;
             // 
             // lvEstrazioni
             // 
@@ -244,82 +237,8 @@
             this.toolStripSeparator5,
             this.tsEstrazioneEsegui});
             this.ctxMenuEst.Name = "ctxMenuEst";
-            this.ctxMenuEst.Size = new System.Drawing.Size(245, 320);
+            this.ctxMenuEst.Size = new System.Drawing.Size(245, 298);
             this.ctxMenuEst.Text = "ESTRAZIONI";
-            // 
-            // tsEstrazioneNew
-            // 
-            this.tsEstrazioneNew.Name = "tsEstrazioneNew";
-            this.tsEstrazioneNew.Size = new System.Drawing.Size(221, 24);
-            this.tsEstrazioneNew.Text = "Nuova";
-            this.tsEstrazioneNew.ToolTipText = "Inserisce una nuova estrazione";
-            this.tsEstrazioneNew.Click += new System.EventHandler(this.btnAddEstrazione_Click);
-            // 
-            // tsEstrazioneClona
-            // 
-            this.tsEstrazioneClona.Name = "tsEstrazioneClona";
-            this.tsEstrazioneClona.Size = new System.Drawing.Size(221, 24);
-            this.tsEstrazioneClona.Text = "Clona";
-            this.tsEstrazioneClona.ToolTipText = "Crea una nuova estrazione copiando il contenuto di una esistente";
-            this.tsEstrazioneClona.Click += new System.EventHandler(this.btnClonaEstrazione_Click);
-            // 
-            // tsEstrazioneEdit
-            // 
-            this.tsEstrazioneEdit.Name = "tsEstrazioneEdit";
-            this.tsEstrazioneEdit.Size = new System.Drawing.Size(221, 24);
-            this.tsEstrazioneEdit.Text = "Modifica";
-            this.tsEstrazioneEdit.ToolTipText = "Modifica un\'estrazione";
-            this.tsEstrazioneEdit.Click += new System.EventHandler(this.btnEditEstrazione_Click);
-            // 
-            // tsEstrazioneDel
-            // 
-            this.tsEstrazioneDel.Name = "tsEstrazioneDel";
-            this.tsEstrazioneDel.Size = new System.Drawing.Size(221, 24);
-            this.tsEstrazioneDel.Text = "Elimina";
-            this.tsEstrazioneDel.ToolTipText = "Elimina logicamente un\'estrazione. Nessuna azione distruttiva.";
-            this.tsEstrazioneDel.Click += new System.EventHandler(this.btnDelEstrazione_Click);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(218, 6);
-            // 
-            // tsTemplateLocOpen
-            // 
-            this.tsTemplateLocOpen.Name = "tsTemplateLocOpen";
-            this.tsTemplateLocOpen.Size = new System.Drawing.Size(221, 24);
-            this.tsTemplateLocOpen.Text = "Apri Template (copia locale)";
-            this.tsTemplateLocOpen.ToolTipText = "Scarica in locale il custom template per poterlo visualizzare e/o modifcare";
-            this.tsTemplateLocOpen.Click += new System.EventHandler(this.btnOpenTemplate_Click);
-            // 
-            // tsTemplateLocElimina
-            // 
-            this.tsTemplateLocElimina.Name = "tsTemplateLocElimina";
-            this.tsTemplateLocElimina.Size = new System.Drawing.Size(221, 24);
-            this.tsTemplateLocElimina.Text = "EliminaTemplate Locale";
-            this.tsTemplateLocElimina.ToolTipText = "Elimina la copia locale del template";
-            this.tsTemplateLocElimina.Click += new System.EventHandler(this.btnELiminaTplLocale_Click);
-            // 
-            // tsTemplateLocSave
-            // 
-            this.tsTemplateLocSave.Name = "tsTemplateLocSave";
-            this.tsTemplateLocSave.Size = new System.Drawing.Size(221, 24);
-            this.tsTemplateLocSave.Text = "Salva Template Locale";
-            this.tsTemplateLocSave.ToolTipText = "Salva la copia locale del template sul DB allineandolo";
-            this.tsTemplateLocSave.Click += new System.EventHandler(this.btnSalvaTemplate_Click);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(218, 6);
-            // 
-            // tsEstrazioneEsegui
-            // 
-            this.tsEstrazioneEsegui.Name = "tsEstrazioneEsegui";
-            this.tsEstrazioneEsegui.Size = new System.Drawing.Size(221, 24);
-            this.tsEstrazioneEsegui.Text = "Esegui";
-            this.tsEstrazioneEsegui.ToolTipText = "Esegue l\'estrazione";
-            this.tsEstrazioneEsegui.Click += new System.EventHandler(this.btnEsegui_Click);
             // 
             // tsTitolo
             // 
@@ -328,13 +247,18 @@
             this.tsTitolo.Enabled = false;
             this.tsTitolo.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tsTitolo.Name = "tsTitolo";
-            this.tsTitolo.Size = new System.Drawing.Size(221, 24);
+            this.tsTitolo.Size = new System.Drawing.Size(244, 24);
             this.tsTitolo.Text = "Gestione Estrazioni";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(218, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(241, 6);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(241, 6);
             // 
             // toolStripMenuItem3
             // 
@@ -342,13 +266,42 @@
             this.toolStripMenuItem3.Enabled = false;
             this.toolStripMenuItem3.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(221, 24);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(244, 24);
             this.toolStripMenuItem3.Text = "Gestione Template";
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(218, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(241, 6);
+            // 
+            // tsTemplateLocOpen
+            // 
+            this.tsTemplateLocOpen.Name = "tsTemplateLocOpen";
+            this.tsTemplateLocOpen.Size = new System.Drawing.Size(244, 24);
+            this.tsTemplateLocOpen.Text = "Apri Template (copia locale)";
+            this.tsTemplateLocOpen.ToolTipText = "Scarica in locale il custom template per poterlo visualizzare e/o modifcare";
+            this.tsTemplateLocOpen.Click += new System.EventHandler(this.btnOpenTemplate_Click);
+            // 
+            // tsTemplateLocElimina
+            // 
+            this.tsTemplateLocElimina.Name = "tsTemplateLocElimina";
+            this.tsTemplateLocElimina.Size = new System.Drawing.Size(244, 24);
+            this.tsTemplateLocElimina.Text = "EliminaTemplate Locale";
+            this.tsTemplateLocElimina.ToolTipText = "Elimina la copia locale del template";
+            this.tsTemplateLocElimina.Click += new System.EventHandler(this.btnELiminaTplLocale_Click);
+            // 
+            // tsTemplateLocSave
+            // 
+            this.tsTemplateLocSave.Name = "tsTemplateLocSave";
+            this.tsTemplateLocSave.Size = new System.Drawing.Size(244, 24);
+            this.tsTemplateLocSave.Text = "Salva Template Locale";
+            this.tsTemplateLocSave.ToolTipText = "Salva la copia locale del template sul DB allineandolo";
+            this.tsTemplateLocSave.Click += new System.EventHandler(this.btnSalvaTemplate_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(241, 6);
             // 
             // toolStripMenuItem4
             // 
@@ -356,13 +309,21 @@
             this.toolStripMenuItem4.Enabled = false;
             this.toolStripMenuItem4.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(221, 24);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(244, 24);
             this.toolStripMenuItem4.Text = "Gestione Operativa";
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(218, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(241, 6);
+            // 
+            // tsEstrazioneEsegui
+            // 
+            this.tsEstrazioneEsegui.Name = "tsEstrazioneEsegui";
+            this.tsEstrazioneEsegui.Size = new System.Drawing.Size(244, 24);
+            this.tsEstrazioneEsegui.Text = "Esegui";
+            this.tsEstrazioneEsegui.ToolTipText = "Esegue l\'estrazione";
+            this.tsEstrazioneEsegui.Click += new System.EventHandler(this.btnEsegui_Click);
             // 
             // panSearch
             // 
@@ -375,23 +336,6 @@
             this.panSearch.Size = new System.Drawing.Size(1204, 41);
             this.panSearch.TabIndex = 1;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(42, 19);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Filtra";
-            // 
-            // txtFiltro
-            // 
-            this.txtFiltro.Location = new System.Drawing.Point(69, 6);
-            this.txtFiltro.Name = "txtFiltro";
-            this.txtFiltro.Size = new System.Drawing.Size(301, 27);
-            this.txtFiltro.TabIndex = 1;
-            this.txtFiltro.TextChanged += new System.EventHandler(this.txtFiltro_TextChanged);
-            // 
             // lbFiltroNum
             // 
             this.lbFiltroNum.AutoSize = true;
@@ -402,15 +346,85 @@
             this.lbFiltroNum.Text = "Visibili x su y";
             this.lbFiltroNum.Visible = false;
             // 
-            // panCenter
+            // txtFiltro
             // 
-            this.panCenter.Controls.Add(this.lvEstrazioni);
-            this.panCenter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panCenter.Location = new System.Drawing.Point(10, 71);
-            this.panCenter.Name = "panCenter";
-            this.panCenter.Padding = new System.Windows.Forms.Padding(5);
-            this.panCenter.Size = new System.Drawing.Size(1204, 520);
-            this.panCenter.TabIndex = 2;
+            this.txtFiltro.Location = new System.Drawing.Point(69, 6);
+            this.txtFiltro.Name = "txtFiltro";
+            this.txtFiltro.Size = new System.Drawing.Size(301, 27);
+            this.txtFiltro.TabIndex = 1;
+            this.txtFiltro.TextChanged += new System.EventHandler(this.txtFiltro_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(21, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(42, 19);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Filtra";
+            // 
+            // tsEstrazioneNew
+            // 
+            this.tsEstrazioneNew.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.add;
+            this.tsEstrazioneNew.Name = "tsEstrazioneNew";
+            this.tsEstrazioneNew.Size = new System.Drawing.Size(244, 24);
+            this.tsEstrazioneNew.Text = "Nuova";
+            this.tsEstrazioneNew.ToolTipText = "Inserisce una nuova estrazione";
+            this.tsEstrazioneNew.Click += new System.EventHandler(this.btnAddEstrazione_Click);
+            // 
+            // tsEstrazioneClona
+            // 
+            this.tsEstrazioneClona.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.table_multiple;
+            this.tsEstrazioneClona.Name = "tsEstrazioneClona";
+            this.tsEstrazioneClona.Size = new System.Drawing.Size(244, 24);
+            this.tsEstrazioneClona.Text = "Clona";
+            this.tsEstrazioneClona.ToolTipText = "Crea una nuova estrazione copiando il contenuto di una esistente";
+            this.tsEstrazioneClona.Click += new System.EventHandler(this.btnClonaEstrazione_Click);
+            // 
+            // tsEstrazioneEdit
+            // 
+            this.tsEstrazioneEdit.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.table_edit;
+            this.tsEstrazioneEdit.Name = "tsEstrazioneEdit";
+            this.tsEstrazioneEdit.Size = new System.Drawing.Size(244, 24);
+            this.tsEstrazioneEdit.Text = "Modifica";
+            this.tsEstrazioneEdit.ToolTipText = "Modifica un\'estrazione";
+            this.tsEstrazioneEdit.Click += new System.EventHandler(this.btnEditEstrazione_Click);
+            // 
+            // tsEstrazioneDel
+            // 
+            this.tsEstrazioneDel.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.delete;
+            this.tsEstrazioneDel.Name = "tsEstrazioneDel";
+            this.tsEstrazioneDel.Size = new System.Drawing.Size(244, 24);
+            this.tsEstrazioneDel.Text = "Elimina";
+            this.tsEstrazioneDel.ToolTipText = "Elimina logicamente un\'estrazione. Nessuna azione distruttiva.";
+            this.tsEstrazioneDel.Click += new System.EventHandler(this.btnDelEstrazione_Click);
+            // 
+            // btnConnetti
+            // 
+            this.btnConnetti.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.login;
+            this.btnConnetti.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnConnetti.Name = "btnConnetti";
+            this.btnConnetti.Size = new System.Drawing.Size(73, 22);
+            this.btnConnetti.Text = "Connetti";
+            this.btnConnetti.Click += new System.EventHandler(this.btnConnetti_Click);
+            // 
+            // btnDisconnetti
+            // 
+            this.btnDisconnetti.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.logout;
+            this.btnDisconnetti.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDisconnetti.Name = "btnDisconnetti";
+            this.btnDisconnetti.Size = new System.Drawing.Size(87, 22);
+            this.btnDisconnetti.Text = "Disconnetti";
+            this.btnDisconnetti.Click += new System.EventHandler(this.btnDisconnetti_Click);
+            // 
+            // btnConfig
+            // 
+            this.btnConfig.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnConfig.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.wrench_orange;
+            this.btnConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnConfig.Name = "btnConfig";
+            this.btnConfig.Size = new System.Drawing.Size(108, 22);
+            this.btnConfig.Text = "Configurazione";
             // 
             // frmMain
             // 
@@ -430,10 +444,10 @@
             this.toolStrip1.PerformLayout();
             this.panMain.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
+            this.panCenter.ResumeLayout(false);
             this.ctxMenuEst.ResumeLayout(false);
             this.panSearch.ResumeLayout(false);
             this.panSearch.PerformLayout();
-            this.panCenter.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -479,6 +493,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lbFiltroNum;
         private System.Windows.Forms.Panel panCenter;
+        private System.Windows.Forms.ToolStripButton btnConfig;
     }
 }
 

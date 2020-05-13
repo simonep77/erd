@@ -295,31 +295,31 @@
             // 
             // btnSmtpDel
             // 
+            this.btnSmtpDel.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.delete;
             this.btnSmtpDel.Location = new System.Drawing.Point(548, 23);
             this.btnSmtpDel.Name = "btnSmtpDel";
             this.btnSmtpDel.Size = new System.Drawing.Size(29, 26);
             this.btnSmtpDel.TabIndex = 9;
-            this.btnSmtpDel.Text = "E";
             this.btnSmtpDel.UseVisualStyleBackColor = true;
             this.btnSmtpDel.Click += new System.EventHandler(this.btnSmtpDel_Click);
             // 
             // btnSmtpEdit
             // 
+            this.btnSmtpEdit.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.table_edit;
             this.btnSmtpEdit.Location = new System.Drawing.Point(516, 23);
             this.btnSmtpEdit.Name = "btnSmtpEdit";
             this.btnSmtpEdit.Size = new System.Drawing.Size(29, 26);
             this.btnSmtpEdit.TabIndex = 8;
-            this.btnSmtpEdit.Text = "M";
             this.btnSmtpEdit.UseVisualStyleBackColor = true;
             this.btnSmtpEdit.Click += new System.EventHandler(this.actAddEditSmtp);
             // 
             // btnSmtpAdd
             // 
+            this.btnSmtpAdd.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.add;
             this.btnSmtpAdd.Location = new System.Drawing.Point(485, 23);
             this.btnSmtpAdd.Name = "btnSmtpAdd";
             this.btnSmtpAdd.Size = new System.Drawing.Size(29, 26);
             this.btnSmtpAdd.TabIndex = 7;
-            this.btnSmtpAdd.Text = "I";
             this.btnSmtpAdd.UseVisualStyleBackColor = true;
             this.btnSmtpAdd.Click += new System.EventHandler(this.actAddEditSmtp);
             // 

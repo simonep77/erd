@@ -715,6 +715,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             }
 
             //Imposta Output
+            this.mLastResult.NomeFile = string.Format(@"{0}_{1:yyyy_MM_dd}.csv", this.DataObj.Nome.Replace(' ', '_'), this.LastResult.DataOraInizio.Date);
             this.mLastResult.DataLen = sb.Length;
             this.mLastResult.DataBlob = Encoding.UTF8.GetBytes(sb.ToString());
             this.Slot.LogDebug(DebugLevel.Debug_1, "End render csv");

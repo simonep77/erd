@@ -83,8 +83,6 @@ namespace EasyReportDispatcher_DESKTOP
             this.chbInvioEmail.Enabled = (this.mEstrazioneBiz.DataObj.ObjectState != EObjectState.New);
   
 
-            this.btnEmailDest.Enabled = (this.mEstrazioneBiz.DataObj.ObjectState == Bdo.Objects.EObjectState.Loaded);
-
             this.txtNumOutput.Value = this.mEstrazioneBiz.DataObj.NumOutputStorico;
 
 
