@@ -28,7 +28,7 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void fillData()
         {
-            this.Text = string.Format(@"Connessione: {0}", (this.mConn.ObjectState == Bdo.Objects.EObjectState.New) ? "<nuovo>" : this.mConn.Id.ToString());
+            this.Text = string.Format(@"Connessione ID: {0}", (this.mConn.ObjectState == Bdo.Objects.EObjectState.New) ? "<nuovo>" : this.mConn.Id.ToString());
             this.txtNome.Text = this.mConn.Nome;
             this.txtConnStr.Text = this.mConn.ConnectionString;
 

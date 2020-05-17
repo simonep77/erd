@@ -99,17 +99,15 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 //Valuta lanciabilita'
                 try
                 {
-                    var cronExp = NCrontab.CrontabSchedule.Parse(this.DataObj.CronString);
-                    var dtInit = DateTime.Today;
-                    var dtEnd = DateTime.Today.AddYears(5);
-                    var nextRun = cronExp.GetNextOccurrence(dtInit, dtEnd);
+
+                    var nextRun = this.GetNextSchedule(DateTime.Today);
 
                     if (DateTime.Now >= nextRun)
                     {
                         //Verifica se oggi ha gia' girato schedulato
                         var lastRun = this.Slot.CreateList<ReportEstrazioneOutputLista>()
                             .SearchByColumn(new FilterEQUAL(nameof(ReportEstrazioneOutput.EstrazioneId), this.DataObj.Id)
-                            .And(new FilterBETWEEN(nameof(ReportEstrazioneOutput.DataOraInizio), DateTime.Today, DateTime.Today.AddDays(1).AddSeconds(-1)))
+                            .And(new FilterBETWEEN(nameof(ReportEstrazioneOutput.DataOraInizio), nextRun.Date, nextRun.Date.AddDays(1).AddSeconds(-1)))
                             .And(new FilterIN(nameof(ReportEstrazioneOutput.StatoId), eReport.StatoEstrazione.Avviata, eReport.StatoEstrazione.TerminataConSuccesso)));
 
                         return !lastRun.Any();
@@ -125,6 +123,8 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 return false;
             }
         }
+
+        
 
         /// <summary>
         /// Indica se previsto invio email
@@ -182,6 +182,21 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
        #endregion
 
         #region PUBLIC
+
+        /// <summary>
+        /// Ritorna la prossima schedulazione determnata sulla base della data di riferimento
+        /// </summary>
+        /// <param name="dtRif"></param>
+        /// <returns></returns>
+        public DateTime GetNextSchedule(DateTime dtRif)
+        {
+            var cronExp = NCrontab.CrontabSchedule.Parse(this.DataObj.CronString);
+            var dtInit = dtRif;
+            var dtEnd = dtRif.AddYears(5);
+            var nextRun = cronExp.GetNextOccurrence(dtInit, dtEnd);
+
+            return nextRun;
+        }
 
 
         /// <summary>

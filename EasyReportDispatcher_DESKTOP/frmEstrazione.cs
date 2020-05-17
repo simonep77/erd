@@ -38,7 +38,7 @@ namespace EasyReportDispatcher_DESKTOP
         private void addBindings()
         {
 
-            this.Text = string.Format(@"Estrazione: {0}", this.mEstrazioneBiz.DataObj.ObjectState == Bdo.Objects.EObjectState.New ? "<nuovo>" : this.mEstrazioneBiz.DataObj.Id.ToString());  this.mEstrazioneBiz.DataObj.Id.ToString();
+            this.Text = string.Format(@"Estrazione ID: {0}", this.mEstrazioneBiz.DataObj.ObjectState == Bdo.Objects.EObjectState.New ? "<new>" : this.mEstrazioneBiz.DataObj.Id.ToString());  this.mEstrazioneBiz.DataObj.Id.ToString();
 
             this.txtNome.Text = this.mEstrazioneBiz.DataObj.Nome;
             this.txtNote.Text = this.mEstrazioneBiz.DataObj.Note;

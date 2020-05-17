@@ -252,8 +252,8 @@
             // panSalva
             // 
             this.panSalva.Controls.Add(this.btnSalva);
-            this.panSalva.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panSalva.Location = new System.Drawing.Point(10, 674);
+            this.panSalva.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panSalva.Location = new System.Drawing.Point(10, 622);
             this.panSalva.Name = "panSalva";
             this.panSalva.Padding = new System.Windows.Forms.Padding(10);
             this.panSalva.Size = new System.Drawing.Size(695, 56);
@@ -262,8 +262,8 @@
             // panIndirizzi
             // 
             this.panIndirizzi.Controls.Add(this.groupBox2);
-            this.panIndirizzi.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panIndirizzi.Location = new System.Drawing.Point(10, 392);
+            this.panIndirizzi.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panIndirizzi.Location = new System.Drawing.Point(10, 340);
             this.panIndirizzi.Name = "panIndirizzi";
             this.panIndirizzi.Padding = new System.Windows.Forms.Padding(10);
             this.panIndirizzi.Size = new System.Drawing.Size(695, 282);
@@ -272,8 +272,8 @@
             // panContenuto
             // 
             this.panContenuto.Controls.Add(this.groupBox1);
-            this.panContenuto.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panContenuto.Location = new System.Drawing.Point(10, 130);
+            this.panContenuto.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panContenuto.Location = new System.Drawing.Point(10, 78);
             this.panContenuto.Name = "panContenuto";
             this.panContenuto.Padding = new System.Windows.Forms.Padding(10);
             this.panContenuto.Size = new System.Drawing.Size(695, 262);
@@ -345,16 +345,17 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(715, 740);
-            this.Controls.Add(this.panTop);
-            this.Controls.Add(this.panContenuto);
-            this.Controls.Add(this.panIndirizzi);
+            this.ClientSize = new System.Drawing.Size(715, 688);
             this.Controls.Add(this.panSalva);
+            this.Controls.Add(this.panIndirizzi);
+            this.Controls.Add(this.panContenuto);
+            this.Controls.Add(this.panTop);
             this.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmDestMail";
             this.Padding = new System.Windows.Forms.Padding(10);
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Destinatari Email <new>";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

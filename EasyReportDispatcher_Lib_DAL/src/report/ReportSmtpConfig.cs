@@ -19,6 +19,7 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         [MaxLength(255)]
         public abstract String Smtp { get; set; }
 
+        [DefaultValue(@"25")]
         public abstract int Port { get; set; }
 
         public abstract SByte UseSSL { get; set; }

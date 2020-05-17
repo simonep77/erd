@@ -41,7 +41,8 @@
             this.colID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colNome = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colConnessione = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colAttivo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colSchedulato = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colNextSched = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colInvioEmail = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colAccorpamento = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colTemplate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -67,8 +68,6 @@
             this.tsEstrazioneClona = new System.Windows.Forms.ToolStripMenuItem();
             this.tsEstrazioneEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.tsEstrazioneDel = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnConnetti = new System.Windows.Forms.ToolStripButton();
-            this.btnDisconnetti = new System.Windows.Forms.ToolStripButton();
             this.btnConfig = new System.Windows.Forms.ToolStripButton();
             this.btnReload = new System.Windows.Forms.ToolStripButton();
             this.btnOutputDir = new System.Windows.Forms.ToolStripButton();
@@ -103,14 +102,13 @@
             // tsNumEstrazioni
             // 
             this.tsNumEstrazioni.Name = "tsNumEstrazioni";
-            this.tsNumEstrazioni.Size = new System.Drawing.Size(92, 17);
-            this.tsNumEstrazioni.Text = "N.Estrazioni: ND";
+            this.tsNumEstrazioni.Size = new System.Drawing.Size(68, 17);
+            this.tsNumEstrazioni.Text = "Estrazioni: -";
+            this.tsNumEstrazioni.Visible = false;
             // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnConnetti,
-            this.btnDisconnetti,
             this.btnConfig,
             this.btnReload,
             this.btnOutputDir});
@@ -159,7 +157,8 @@
             this.colID,
             this.colNome,
             this.colConnessione,
-            this.colAttivo,
+            this.colSchedulato,
+            this.colNextSched,
             this.colInvioEmail,
             this.colAccorpamento,
             this.colTemplate,
@@ -196,13 +195,21 @@
             this.colConnessione.Text = "Connessione";
             this.colConnessione.Width = 200;
             // 
-            // colAttivo
+            // colSchedulato
             // 
-            this.colAttivo.Text = "Attivo";
+            this.colSchedulato.Text = "Schedulato";
+            this.colSchedulato.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.colSchedulato.Width = 100;
+            // 
+            // colNextSched
+            // 
+            this.colNextSched.Text = "Prossima Esecuzione";
+            this.colNextSched.Width = 150;
             // 
             // colInvioEmail
             // 
             this.colInvioEmail.Text = "Invio Email";
+            this.colInvioEmail.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.colInvioEmail.Width = 120;
             // 
             // colAccorpamento
@@ -219,6 +226,7 @@
             // colTemplateLocale
             // 
             this.colTemplateLocale.Text = "Template Locale";
+            this.colTemplateLocale.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.colTemplateLocale.Width = 120;
             // 
             // ctxMenuEst
@@ -404,24 +412,6 @@
             this.tsEstrazioneDel.ToolTipText = "Elimina logicamente un\'estrazione. Nessuna azione distruttiva.";
             this.tsEstrazioneDel.Click += new System.EventHandler(this.btnDelEstrazione_Click);
             // 
-            // btnConnetti
-            // 
-            this.btnConnetti.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.login;
-            this.btnConnetti.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnConnetti.Name = "btnConnetti";
-            this.btnConnetti.Size = new System.Drawing.Size(73, 22);
-            this.btnConnetti.Text = "Connetti";
-            this.btnConnetti.Click += new System.EventHandler(this.btnConnetti_Click);
-            // 
-            // btnDisconnetti
-            // 
-            this.btnDisconnetti.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.logout;
-            this.btnDisconnetti.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnDisconnetti.Name = "btnDisconnetti";
-            this.btnDisconnetti.Size = new System.Drawing.Size(87, 22);
-            this.btnDisconnetti.Text = "Disconnetti";
-            this.btnDisconnetti.Click += new System.EventHandler(this.btnDisconnetti_Click);
-            // 
             // btnConfig
             // 
             this.btnConfig.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -439,7 +429,7 @@
             this.btnReload.Name = "btnReload";
             this.btnReload.Size = new System.Drawing.Size(76, 22);
             this.btnReload.Text = "Aggiorna";
-            this.btnReload.Click += new System.EventHandler(this.btnReload_Click);
+            this.btnReload.Click += new System.EventHandler(this.actRicarica);
             // 
             // btnOutputDir
             // 
@@ -448,7 +438,7 @@
             this.btnOutputDir.Name = "btnOutputDir";
             this.btnOutputDir.Size = new System.Drawing.Size(86, 22);
             this.btnOutputDir.Text = "Output Dir.";
-            this.btnOutputDir.Click += new System.EventHandler(this.btnOutputDir_Click);
+            this.btnOutputDir.Click += new System.EventHandler(this.actOutputDir);
             // 
             // frmMain
             // 
@@ -461,7 +451,9 @@
             this.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Easy Report Dispatcher - DESKTOP";
+            this.Shown += new System.EventHandler(this.frmMain_Shown);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -480,15 +472,13 @@
         #endregion
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton btnConnetti;
-        private System.Windows.Forms.ToolStripButton btnDisconnetti;
         private System.Windows.Forms.Panel panMain;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ListView lvEstrazioni;
         private System.Windows.Forms.ColumnHeader colID;
         private System.Windows.Forms.ColumnHeader colNome;
         private System.Windows.Forms.ColumnHeader colConnessione;
-        private System.Windows.Forms.ColumnHeader colAttivo;
+        private System.Windows.Forms.ColumnHeader colSchedulato;
         private System.Windows.Forms.ToolStripStatusLabel tsConnessione;
         private System.Windows.Forms.ToolStripStatusLabel tsNumEstrazioni;
         private System.Windows.Forms.ColumnHeader colTemplate;
@@ -520,6 +510,7 @@
         private System.Windows.Forms.ToolStripButton btnConfig;
         private System.Windows.Forms.ToolStripButton btnOutputDir;
         private System.Windows.Forms.ToolStripButton btnReload;
+        private System.Windows.Forms.ColumnHeader colNextSched;
     }
 }
 

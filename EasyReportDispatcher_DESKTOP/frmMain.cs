@@ -28,7 +28,7 @@ namespace EasyReportDispatcher_DESKTOP
         {
             InitializeComponent();
 
-            this.btnDisconnetti_Click(this.btnDisconnetti, null);
+            this.actDisconnetti(this, null);
 
             try
             {
@@ -41,8 +41,10 @@ namespace EasyReportDispatcher_DESKTOP
             }
         }
 
-        private void btnConnetti_Click(object sender, EventArgs e)
+        private void actConnetti(object sender, EventArgs e)
         {
+            this.tsConnessione.Text = "Connessione in corso...";
+            Application.DoEvents();
 
             if (AppContextERD.Slot == null)
             {
@@ -56,9 +58,9 @@ namespace EasyReportDispatcher_DESKTOP
                 this.loadEstrazioni();
 
                 this.tsConnessione.Text = "Connesso";
-                this.btnConnetti.Enabled = false;
-                this.btnDisconnetti.Enabled = true;
-                
+
+                this.tsNumEstrazioni.Visible = true;
+
                 this.tsEstrazioneNew.Enabled = true;
 
                 this.handleSelezioneEstrazione();
@@ -78,7 +80,7 @@ namespace EasyReportDispatcher_DESKTOP
         {
             this.clearAll();
 
-            Application.DoEvents();
+            //Application.DoEvents();
 
             var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>()
                 .OrderBy(nameof(ReportEstrazione.Id), OrderVersus.Desc)
@@ -87,7 +89,7 @@ namespace EasyReportDispatcher_DESKTOP
             foreach (var est in lst)
             {
                 this.addEstrazioneToList(est.ToBizObject<ReportEstrazioneBIZ>(), false);
-                Application.DoEvents();
+                //Application.DoEvents();
             }
 
             this.updateEstCount();
@@ -184,7 +186,7 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void updateEstCount()
         {
-            this.tsNumEstrazioni.Text = string.Format("N.Estrazioni: {0}", this.lvEstrazioni.Items.Count);
+            this.tsNumEstrazioni.Text = string.Format("Estrazioni: {0}", this.lvEstrazioni.Items.Count);
 
         }
 
@@ -198,6 +200,15 @@ namespace EasyReportDispatcher_DESKTOP
             item.SubItems.Add(est.DataObj.Nome);
             item.SubItems.Add(est.DataObj.Connessione.Nome);
             item.SubItems.Add(est.DataObj.Attivo == 1 ? "SI" : "NO");
+
+            if (est.DataObj.Attivo > 0 && est.DataObj.CronString != null)
+            {
+                var nextRun = est.GetNextSchedule(DateTime.Now);
+                item.SubItems.Add(nextRun.ToString($"{nextRun:dd/MM/yyyy HH:mm:ss}"));
+            }
+            else
+                item.SubItems.Add(string.Empty);
+
             item.SubItems.Add(est.DataObj.InvioMailAttivo == 1 ? "SI" : "NO");
             item.SubItems.Add(est.DataObj.EstrazioniAccorpateIds.Length > 0 ? (est.DataObj.AccorpaSoloDati > 0 ? "DATI: " : "FILE: ") + est.DataObj.EstrazioniAccorpateIds : "");
             item.SubItems.Add(est.DataObj.TemplateId > 0 ? "SI" : "NO");
@@ -206,12 +217,10 @@ namespace EasyReportDispatcher_DESKTOP
         }
 
 
-        private void btnDisconnetti_Click(object sender, EventArgs e)
+        private void actDisconnetti(object sender, EventArgs e)
         {
             this.tsConnessione.Text = "Non connesso";
             this.clearAll();
-            this.btnConnetti.Enabled = true;
-            this.btnDisconnetti.Enabled = false;
 
             this.tsEstrazioneNew.Enabled = false;
 
@@ -227,7 +236,8 @@ namespace EasyReportDispatcher_DESKTOP
             //this.lvEstrazioni.Groups.Clear();
             this.lvEstrazioni.Items.Clear();
             this.handleSelezioneEstrazione();
-            this.tsNumEstrazioni.Text = string.Format("N.Estrazioni: {0}", "ND");
+            this.tsNumEstrazioni.Visible = false;
+            this.tsNumEstrazioni.Text = @"Estrazioni: -";
             this.txtFiltro.Text = string.Empty;
             //this.lbFiltroNum.Visible = false;
             //this.lbFiltroNum.Text = string.Empty;
@@ -493,14 +503,15 @@ namespace EasyReportDispatcher_DESKTOP
                 this.btnEsegui_Click(sender, e);
         }
 
-        private void btnOutputDir_Click(object sender, EventArgs e)
+        private void actOutputDir(object sender, EventArgs e)
         {
             Process.Start(AppContextERD.UserDataDirOutput);
         }
 
-        private void btnReload_Click(object sender, EventArgs e)
+        private void actRicarica(object sender, EventArgs e)
         {
-            this.loadEstrazioni();
+            this.actDisconnetti(sender, e);
+            this.actConnetti(sender, e);
         }
 
         private void btnConfig_Click(object sender, EventArgs e)
@@ -509,15 +520,24 @@ namespace EasyReportDispatcher_DESKTOP
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    UI_Utils.ShowInfo("Configurazione salvata. Verrà riavviato il caricamento delle estrazioni.");
+                    if (Properties.Settings.Default.StringaConnessione != AppContextERD.Slot.DB.ConnectionString)
+                    {
+                        UI_Utils.ShowInfo("Puntamento DB modificato. Verrà riavviato il caricamento delle estrazioni.");
 
-                    this.btnDisconnetti_Click(null, null);
+                        this.actDisconnetti(null, null);
 
-                    AppContextERD.Slot = null;
+                        AppContextERD.Slot = null;
 
-                    this.btnConnetti_Click(null, null);
+                        this.actConnetti(null, null);
+                    }
+
                 }
             }
+        }
+
+        private void frmMain_Shown(object sender, EventArgs e)
+        {
+            this.actConnetti(sender, e);
         }
     }
 }

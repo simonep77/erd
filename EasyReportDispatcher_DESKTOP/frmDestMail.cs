@@ -31,7 +31,7 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void loadData()
         {
-            this.Text = string.Format("Destinatari Mail {0}", this.mDest.ObjectState == Bdo.Objects.EObjectState.New ? @"<new>" : this.mDest.Id.ToString());
+            this.Text = string.Format("Destinatari Mail ID: {0}", this.mDest.ObjectState == Bdo.Objects.EObjectState.New ? @"<new>" : this.mDest.Id.ToString());
             this.txtMailSubj.Text =  this.mDest.MailSUBJ;
             this.txtMailCorpo.Text =  this.mDest.MailBODY;
             this.txtPassword.Text =  this.mDest.Password;

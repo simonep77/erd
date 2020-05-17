@@ -37,7 +37,7 @@
             // 
             this.chkSaveOutput.AutoSize = true;
             this.chkSaveOutput.Location = new System.Drawing.Point(40, 41);
-            this.chkSaveOutput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkSaveOutput.Margin = new System.Windows.Forms.Padding(4);
             this.chkSaveOutput.Name = "chkSaveOutput";
             this.chkSaveOutput.Size = new System.Drawing.Size(166, 23);
             this.chkSaveOutput.TabIndex = 0;
@@ -47,7 +47,7 @@
             // btnEsegui
             // 
             this.btnEsegui.Location = new System.Drawing.Point(103, 144);
-            this.btnEsegui.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnEsegui.Margin = new System.Windows.Forms.Padding(4);
             this.btnEsegui.Name = "btnEsegui";
             this.btnEsegui.Size = new System.Drawing.Size(100, 34);
             this.btnEsegui.TabIndex = 1;
@@ -75,8 +75,10 @@
             this.Controls.Add(this.btnEsegui);
             this.Controls.Add(this.chkSaveOutput);
             this.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(4);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmEsegui";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Esegui Estrazione";

@@ -28,7 +28,7 @@ namespace EasyReportDispatcher_DESKTOP
         private void loadData()
         {
 
-            this.Text = string.Format(@"Configuraziuone SMTP: {0}", this.mConf.ObjectState == Bdo.Objects.EObjectState.New ? "<new>" : this.mConf.Id.ToString());
+            this.Text = string.Format(@"Configuraziuone SMTP ID: {0}", this.mConf.ObjectState == Bdo.Objects.EObjectState.New ? "<new>" : this.mConf.Id.ToString());
 
             this.txtNome.Text = this.mConf.Nome;
             this.txtHost.Text = this.mConf.Smtp;
