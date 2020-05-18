@@ -206,5 +206,8 @@
   <ItemGroup>
     <None Include="Resources\application_double.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\spinner.gif" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

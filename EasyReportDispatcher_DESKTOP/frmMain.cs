@@ -83,24 +83,33 @@ namespace EasyReportDispatcher_DESKTOP
             this.clearAll();
 
             //Application.DoEvents();
-
-            var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>()
-                .OrderBy(nameof(ReportEstrazione.Id), OrderVersus.Desc)
-                .SearchByColumn(Filter.Gt(nameof(ReportEstrazione.Attivo), -1));
-
-            foreach (var est in lst)
+            UI_Utils.ShowSpinner(this.lvEstrazioni);
+            try
             {
-                this.addEstrazioneToList(est.ToBizObject<ReportEstrazioneBIZ>(), false);
-                //Application.DoEvents();
+                var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>()
+                        .OrderBy(nameof(ReportEstrazione.Id), OrderVersus.Desc)
+                        .SearchByColumn(Filter.Gt(nameof(ReportEstrazione.Attivo), -1));
+
+                foreach (var est in lst)
+                {
+                    this.addEstrazioneToList(est.ToBizObject<ReportEstrazioneBIZ>(), false);
+                    //Application.DoEvents();
+                }
+
+                //Indenta le dipendenti
+                //foreach (var item in this.mLvItems)
+                //{
+                //    var est = item.Tag as ReportEstrazioneBIZ;
+                //}
+
+                this.updateEstCount();
+            }
+            finally
+            {
+                UI_Utils.HideSpinner(this.lvEstrazioni);
             }
 
-            //Indenta le dipendenti
-            //foreach (var item in this.mLvItems)
-            //{
-            //    var est = item.Tag as ReportEstrazioneBIZ;
-            //}
 
-            this.updateEstCount();
         }
 
         private void addEstrazioneToList(ReportEstrazioneBIZ est, bool select)
@@ -562,7 +571,14 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void tsStoricoEsecuzioni_Click(object sender, EventArgs e)
         {
+            var estBiz = this.getSelectedEstrazioneBiz();
 
+
+            using (var frm = new frmStorico(estBiz))
+            {
+                frm.ShowDialog();
+
+            }
         }
     }
 }

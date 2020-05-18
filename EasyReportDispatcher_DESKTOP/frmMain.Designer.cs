@@ -67,12 +67,12 @@
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.tsEstrazioneEsegui = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsStoricoEsecuzioni = new System.Windows.Forms.ToolStripMenuItem();
             this.imgList = new System.Windows.Forms.ImageList(this.components);
             this.panSearch = new System.Windows.Forms.Panel();
             this.lbFiltroNum = new System.Windows.Forms.Label();
             this.txtFiltro = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.tsStoricoEsecuzioni = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panMain.SuspendLayout();
@@ -282,7 +282,7 @@
             this.tsEstrazioneEsegui,
             this.tsStoricoEsecuzioni});
             this.ctxMenuEst.Name = "ctxMenuEst";
-            this.ctxMenuEst.Size = new System.Drawing.Size(245, 344);
+            this.ctxMenuEst.Size = new System.Drawing.Size(245, 322);
             this.ctxMenuEst.Text = "ESTRAZIONI";
             // 
             // tsTitolo
@@ -411,6 +411,14 @@
             this.tsEstrazioneEsegui.ToolTipText = "Esegue l\'estrazione";
             this.tsEstrazioneEsegui.Click += new System.EventHandler(this.btnEsegui_Click);
             // 
+            // tsStoricoEsecuzioni
+            // 
+            this.tsStoricoEsecuzioni.Name = "tsStoricoEsecuzioni";
+            this.tsStoricoEsecuzioni.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.tsStoricoEsecuzioni.Size = new System.Drawing.Size(244, 24);
+            this.tsStoricoEsecuzioni.Text = "&Storico";
+            this.tsStoricoEsecuzioni.Click += new System.EventHandler(this.tsStoricoEsecuzioni_Click);
+            // 
             // imgList
             // 
             this.imgList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgList.ImageStream")));
@@ -465,13 +473,6 @@
             this.label1.Size = new System.Drawing.Size(42, 19);
             this.label1.TabIndex = 0;
             this.label1.Text = "Filtra";
-            // 
-            // tsStoricoEsecuzioni
-            // 
-            this.tsStoricoEsecuzioni.Name = "tsStoricoEsecuzioni";
-            this.tsStoricoEsecuzioni.Size = new System.Drawing.Size(244, 24);
-            this.tsStoricoEsecuzioni.Text = "&Storico";
-            this.tsStoricoEsecuzioni.Click += new System.EventHandler(this.tsStoricoEsecuzioni_Click);
             // 
             // frmMain
             // 

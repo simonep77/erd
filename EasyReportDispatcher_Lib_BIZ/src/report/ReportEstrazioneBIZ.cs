@@ -312,7 +312,9 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             
             if (saveResult)
                 this.Slot.SaveObject(this.mLastResult);
-            
+
+            this.ListaOutput.AddOrUpdate(this.mLastResult);
+
             this.Slot.LogDebug(DebugLevel.Debug_1, "End aggiornamento output");
 
             //Se errori esce
@@ -320,7 +322,6 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 throw new ApplicationException(@"L'esecuzione e' terminata con errori: " + this.mLastResult.EstrazioneEsito);
 
             //Serve?
-            this.ListaOutput.AddOrUpdate(this.mLastResult);
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin pulizia output");
             this.cleanOutput();
