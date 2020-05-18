@@ -92,6 +92,12 @@ namespace EasyReportDispatcher_DESKTOP
                 //Application.DoEvents();
             }
 
+            //Indenta le dipendenti
+            //foreach (var item in this.mLvItems)
+            //{
+            //    var est = item.Tag as ReportEstrazioneBIZ;
+            //}
+
             this.updateEstCount();
         }
 
@@ -213,7 +219,16 @@ namespace EasyReportDispatcher_DESKTOP
             item.SubItems.Add(est.DataObj.EstrazioniAccorpateIds.Length > 0 ? (est.DataObj.AccorpaSoloDati > 0 ? "DATI: " : "FILE: ") + est.DataObj.EstrazioniAccorpateIds : "");
             item.SubItems.Add(est.DataObj.TemplateId > 0 ? "SI" : "NO");
             item.SubItems.Add(File.Exists(this.getLocalTemplate(est)) ? "SI" : "NO");
-            
+
+            if (est.DataObj.EstrazioniAccorpateIds.Length > 0)
+            {
+                item.ImageKey = @"application_double.png";
+            }
+            else
+            {
+                item.ImageKey = @"table.png";
+            }
+
         }
 
 
@@ -434,7 +449,7 @@ namespace EasyReportDispatcher_DESKTOP
 
             ReportEstrazioneBIZ estNew;
 
-            var cloneSave = MessageBox.Show(@"Vuoi clonare anche anche tutti gli oggetti dipendenti (destinatari email, copia dei file, ..) è necessario salvare immediatamente la versione clonata. Confermi?\n\n Premendo [NO] verrà creata una copia non salvata e senza entità dipendenti", @"Conferma", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var cloneSave = MessageBox.Show("Vuoi clonare anche anche tutti gli oggetti dipendenti (destinatari email, copia dei file, ..) è necessario salvare immediatamente la versione clonata. Confermi?\n\n Premendo [NO] verrà creata una copia non salvata e senza entità dipendenti", @"Conferma", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
 
             estNew = estBiz.ClonaEstrazione(cloneSave == DialogResult.Yes);
@@ -443,6 +458,8 @@ namespace EasyReportDispatcher_DESKTOP
 
             using (var frm = new frmEstrazione(estNew))
             {
+                frm.ShowDialog();
+
                 if (estNew.DataObj.ObjectState != EObjectState.New)
                     this.addEstrazioneToList(estNew, true);
 
