@@ -256,7 +256,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         }
 
 
-        public void Run(bool saveOutput)
+        public void Run(bool saveResult)
        {
             this.Slot.LogDebug(DebugLevel.Debug_1, "Avvio Run()");
 
@@ -267,7 +267,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             this.mLastResult.StatoId = eReport.StatoEstrazione.Avviata;
             this.mLastResult.TipoFileId = this.DataObj.TipoFileId;
 
-            if (saveOutput)
+            if (saveResult)
                 this.Slot.SaveObject(this.mLastResult);
             this.Slot.LogDebug(DebugLevel.Debug_1, "End salvataggio output");
 
@@ -310,7 +310,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin aggiornamento output");
             this.mLastResult.DataOraFine = DateTime.Now;
             
-            if (saveOutput)
+            if (saveResult)
                 this.Slot.SaveObject(this.mLastResult);
             
             this.Slot.LogDebug(DebugLevel.Debug_1, "End aggiornamento output");
@@ -557,7 +557,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             return new { NomeFile= filenameMail, Stream = ms};
         }
 
-        public List<ReportEstrazioneDestinatarioEmail> SendEmail()
+        public List<ReportEstrazioneDestinatarioEmail> SendEmail(bool saveResult)
         {
             var retList = new List<ReportEstrazioneDestinatarioEmail>();
             //Se non impostata email esce
@@ -640,7 +640,8 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
 
             //Salva esito mail
-            this.Slot.SaveObject(this.mLastResult);
+            if (saveResult)
+                this.Slot.SaveObject(this.mLastResult);
 
             //Ripropaga email
             if (!string.IsNullOrEmpty(this.mLastResult.MailEsito))

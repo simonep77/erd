@@ -35,9 +35,9 @@ namespace EasyReportDispatcher_RUN.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string TaskLogMailFrom {
+        public string TaskLogMailCC {
             get {
-                return ((string)(this["TaskLogMailFrom"]));
+                return ((string)(this["TaskLogMailCC"]));
             }
         }
         
@@ -52,19 +52,19 @@ namespace EasyReportDispatcher_RUN.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int TaskLogSmtpConfigId {
+        [global::System.Configuration.DefaultSettingValueAttribute("90")]
+        public int TaskLogKeepNum {
             get {
-                return ((int)(this["TaskLogSmtpConfigId"]));
+                return ((int)(this["TaskLogKeepNum"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("90")]
-        public int TaskLogKeepNum {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TaskLogMail {
             get {
-                return ((int)(this["TaskLogKeepNum"]));
+                return ((bool)(this["TaskLogMail"]));
             }
         }
     }

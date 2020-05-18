@@ -32,6 +32,8 @@ namespace EasyReportDispatcher_DESKTOP
 
             try
             {
+                LvSort.registerLV(this.lvEstrazioni);
+
                 Directory.CreateDirectory(AppContextERD.UserDataDir);
                 Directory.CreateDirectory(AppContextERD.UserDataDirOutput);
             }

@@ -10,6 +10,7 @@ using System.IO;
 using Bdo.Logging;
 using Amib.Threading;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace EasyReportDispacher_RUN
 {
@@ -21,6 +22,7 @@ namespace EasyReportDispacher_RUN
         private static int[] _ReportForzati = { };
 
         private static string _TaskLogDir;
+        private static string _TaskLogFile;
         private static FileStreamLogger _TaskLogger;
 
         static void Main(string[] args)
@@ -57,12 +59,15 @@ namespace EasyReportDispacher_RUN
             //Assicura creazione directory
             Directory.CreateDirectory(_TaskLogDir);
 
+            //Nome file di log 
+            _TaskLogFile = Path.Combine(_TaskLogDir, string.Format(@"erd_{0:yyyy_MM_dd}.log", DateTime.Now));
+
             //Pulizia log
             if (EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogKeepNum > 0)
                 keepLogFiles();
 
             //Avvia logger
-            _TaskLogger = new FileStreamLogger(Path.Combine(_TaskLogDir, string.Format(@"erd_{0:yyyy_MM_dd}.log", DateTime.Now)));
+            _TaskLogger = new FileStreamLogger(_TaskLogFile);
         }
 
         private static void keepLogFiles()
@@ -152,11 +157,32 @@ namespace EasyReportDispacher_RUN
             smPool.Start();
             smPool.WaitForIdle();
 
-                //end new
+            if (EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogMail)
+                sendRunLog(esito);
 
             return esito;
         }
 
+
+        private static void sendRunLog(int esito)
+        {
+            if (string.IsNullOrWhiteSpace(EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogMailTO))
+                return;
+
+            using (var smtp = new System.Net.Mail.SmtpClient())
+            {
+                var msg = new System.Net.Mail.MailMessage();
+                msg.To.Add(EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogMailTO);
+                msg.CC.Add(EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogMailCC);
+                msg.Subject = esito == 0 ? "OK - Report Dispatcher" : "ERR - Report Dispatcher";
+                msg.IsBodyHtml = true;
+                msg.Body = "In allegato il log dell'esecuzione.";
+                msg.Attachments.Add(new System.Net.Mail.Attachment(_TaskLogFile));
+
+                smtp.Send(msg);
+            }
+
+        }
 
         private static object execSingleReport(dynamic state)
         {
@@ -185,7 +211,7 @@ namespace EasyReportDispacher_RUN
 
                         if (repBiz.IsPrevistoInvioMail)
                         {
-                            var mails = repBiz.SendEmail();
+                            var mails = repBiz.SendEmail(true);
 
                             foreach (var item in mails)
                             {
@@ -220,7 +246,7 @@ namespace EasyReportDispacher_RUN
             WriteLog("*****************************************");
             WriteLog("*                                       *");
             WriteLog("*        EASY REPORT DISPATCHER         *");
-            WriteLog("*               v1.0                    *");
+            WriteLog("*            SCHEDULE RUN v1.0          *");
             WriteLog("*                                       *");
             WriteLog("*                                       *");
             WriteLog("*****************************************");
