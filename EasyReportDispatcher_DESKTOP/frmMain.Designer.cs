@@ -34,6 +34,9 @@
             this.tsConnessione = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsNumEstrazioni = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.btnConfig = new System.Windows.Forms.ToolStripButton();
+            this.btnReload = new System.Windows.Forms.ToolStripButton();
+            this.btnOutputDir = new System.Windows.Forms.ToolStripButton();
             this.panMain = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panCenter = new System.Windows.Forms.Panel();
@@ -50,6 +53,10 @@
             this.ctxMenuEst = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsTitolo = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsEstrazioneNew = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsEstrazioneClona = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsEstrazioneEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsEstrazioneDel = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -59,19 +66,13 @@
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsEstrazioneEsegui = new System.Windows.Forms.ToolStripMenuItem();
+            this.imgList = new System.Windows.Forms.ImageList(this.components);
             this.panSearch = new System.Windows.Forms.Panel();
             this.lbFiltroNum = new System.Windows.Forms.Label();
             this.txtFiltro = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.imgList = new System.Windows.Forms.ImageList(this.components);
-            this.tsEstrazioneNew = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsEstrazioneClona = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsEstrazioneEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsEstrazioneDel = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsEstrazioneEsegui = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnConfig = new System.Windows.Forms.ToolStripButton();
-            this.btnReload = new System.Windows.Forms.ToolStripButton();
-            this.btnOutputDir = new System.Windows.Forms.ToolStripButton();
+            this.tsStoricoEsecuzioni = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panMain.SuspendLayout();
@@ -118,6 +119,34 @@
             this.toolStrip1.Size = new System.Drawing.Size(1224, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // btnConfig
+            // 
+            this.btnConfig.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnConfig.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.wrench_orange;
+            this.btnConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnConfig.Name = "btnConfig";
+            this.btnConfig.Size = new System.Drawing.Size(108, 22);
+            this.btnConfig.Text = "Configurazione";
+            this.btnConfig.Click += new System.EventHandler(this.btnConfig_Click);
+            // 
+            // btnReload
+            // 
+            this.btnReload.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.database_refresh;
+            this.btnReload.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnReload.Name = "btnReload";
+            this.btnReload.Size = new System.Drawing.Size(76, 22);
+            this.btnReload.Text = "Aggiorna";
+            this.btnReload.Click += new System.EventHandler(this.actRicarica);
+            // 
+            // btnOutputDir
+            // 
+            this.btnOutputDir.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.folder_explore;
+            this.btnOutputDir.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnOutputDir.Name = "btnOutputDir";
+            this.btnOutputDir.Size = new System.Drawing.Size(86, 22);
+            this.btnOutputDir.Text = "Output Dir.";
+            this.btnOutputDir.Click += new System.EventHandler(this.actOutputDir);
             // 
             // panMain
             // 
@@ -250,9 +279,10 @@
             this.toolStripMenuItem2,
             this.toolStripMenuItem4,
             this.toolStripSeparator5,
-            this.tsEstrazioneEsegui});
+            this.tsEstrazioneEsegui,
+            this.tsStoricoEsecuzioni});
             this.ctxMenuEst.Name = "ctxMenuEst";
-            this.ctxMenuEst.Size = new System.Drawing.Size(245, 320);
+            this.ctxMenuEst.Size = new System.Drawing.Size(245, 344);
             this.ctxMenuEst.Text = "ESTRAZIONI";
             // 
             // tsTitolo
@@ -269,6 +299,45 @@
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(241, 6);
+            // 
+            // tsEstrazioneNew
+            // 
+            this.tsEstrazioneNew.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.add;
+            this.tsEstrazioneNew.Name = "tsEstrazioneNew";
+            this.tsEstrazioneNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.tsEstrazioneNew.Size = new System.Drawing.Size(244, 24);
+            this.tsEstrazioneNew.Text = "&Nuova";
+            this.tsEstrazioneNew.ToolTipText = "Inserisce una nuova estrazione";
+            this.tsEstrazioneNew.Click += new System.EventHandler(this.btnAddEstrazione_Click);
+            // 
+            // tsEstrazioneClona
+            // 
+            this.tsEstrazioneClona.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.table_multiple;
+            this.tsEstrazioneClona.Name = "tsEstrazioneClona";
+            this.tsEstrazioneClona.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.tsEstrazioneClona.Size = new System.Drawing.Size(244, 24);
+            this.tsEstrazioneClona.Text = "&Clona";
+            this.tsEstrazioneClona.ToolTipText = "Crea una nuova estrazione copiando il contenuto di una esistente";
+            this.tsEstrazioneClona.Click += new System.EventHandler(this.btnClonaEstrazione_Click);
+            // 
+            // tsEstrazioneEdit
+            // 
+            this.tsEstrazioneEdit.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.table_edit;
+            this.tsEstrazioneEdit.Name = "tsEstrazioneEdit";
+            this.tsEstrazioneEdit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
+            this.tsEstrazioneEdit.Size = new System.Drawing.Size(244, 24);
+            this.tsEstrazioneEdit.Text = "&Modifica";
+            this.tsEstrazioneEdit.ToolTipText = "Modifica un\'estrazione";
+            this.tsEstrazioneEdit.Click += new System.EventHandler(this.btnEditEstrazione_Click);
+            // 
+            // tsEstrazioneDel
+            // 
+            this.tsEstrazioneDel.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.delete;
+            this.tsEstrazioneDel.Name = "tsEstrazioneDel";
+            this.tsEstrazioneDel.Size = new System.Drawing.Size(244, 24);
+            this.tsEstrazioneDel.Text = "Elimina";
+            this.tsEstrazioneDel.ToolTipText = "Elimina logicamente un\'estrazione. Nessuna azione distruttiva.";
+            this.tsEstrazioneDel.Click += new System.EventHandler(this.btnDelEstrazione_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -332,6 +401,33 @@
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(241, 6);
             // 
+            // tsEstrazioneEsegui
+            // 
+            this.tsEstrazioneEsegui.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.database_go;
+            this.tsEstrazioneEsegui.Name = "tsEstrazioneEsegui";
+            this.tsEstrazioneEsegui.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
+            this.tsEstrazioneEsegui.Size = new System.Drawing.Size(244, 24);
+            this.tsEstrazioneEsegui.Text = "&Esegui";
+            this.tsEstrazioneEsegui.ToolTipText = "Esegue l\'estrazione";
+            this.tsEstrazioneEsegui.Click += new System.EventHandler(this.btnEsegui_Click);
+            // 
+            // imgList
+            // 
+            this.imgList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgList.ImageStream")));
+            this.imgList.TransparentColor = System.Drawing.Color.Transparent;
+            this.imgList.Images.SetKeyName(0, "add2.png");
+            this.imgList.Images.SetKeyName(1, "attach.png");
+            this.imgList.Images.SetKeyName(2, "cancel.png");
+            this.imgList.Images.SetKeyName(3, "database_go.png");
+            this.imgList.Images.SetKeyName(4, "database_refresh.png");
+            this.imgList.Images.SetKeyName(5, "delete1.png");
+            this.imgList.Images.SetKeyName(6, "folder_explore.png");
+            this.imgList.Images.SetKeyName(7, "table.png");
+            this.imgList.Images.SetKeyName(8, "table_edit.png");
+            this.imgList.Images.SetKeyName(9, "table_multiple.png");
+            this.imgList.Images.SetKeyName(10, "wrench_orange.png");
+            this.imgList.Images.SetKeyName(11, "application_double.png");
+            // 
             // panSearch
             // 
             this.panSearch.Controls.Add(this.lbFiltroNum);
@@ -370,99 +466,12 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Filtra";
             // 
-            // imgList
+            // tsStoricoEsecuzioni
             // 
-            this.imgList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgList.ImageStream")));
-            this.imgList.TransparentColor = System.Drawing.Color.Transparent;
-            this.imgList.Images.SetKeyName(0, "add2.png");
-            this.imgList.Images.SetKeyName(1, "attach.png");
-            this.imgList.Images.SetKeyName(2, "cancel.png");
-            this.imgList.Images.SetKeyName(3, "database_go.png");
-            this.imgList.Images.SetKeyName(4, "database_refresh.png");
-            this.imgList.Images.SetKeyName(5, "delete1.png");
-            this.imgList.Images.SetKeyName(6, "folder_explore.png");
-            this.imgList.Images.SetKeyName(7, "table.png");
-            this.imgList.Images.SetKeyName(8, "table_edit.png");
-            this.imgList.Images.SetKeyName(9, "table_multiple.png");
-            this.imgList.Images.SetKeyName(10, "wrench_orange.png");
-            this.imgList.Images.SetKeyName(11, "application_double.png");
-            // 
-            // tsEstrazioneNew
-            // 
-            this.tsEstrazioneNew.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.add;
-            this.tsEstrazioneNew.Name = "tsEstrazioneNew";
-            this.tsEstrazioneNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.tsEstrazioneNew.Size = new System.Drawing.Size(244, 24);
-            this.tsEstrazioneNew.Text = "&Nuova";
-            this.tsEstrazioneNew.ToolTipText = "Inserisce una nuova estrazione";
-            this.tsEstrazioneNew.Click += new System.EventHandler(this.btnAddEstrazione_Click);
-            // 
-            // tsEstrazioneClona
-            // 
-            this.tsEstrazioneClona.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.table_multiple;
-            this.tsEstrazioneClona.Name = "tsEstrazioneClona";
-            this.tsEstrazioneClona.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.tsEstrazioneClona.Size = new System.Drawing.Size(244, 24);
-            this.tsEstrazioneClona.Text = "&Clona";
-            this.tsEstrazioneClona.ToolTipText = "Crea una nuova estrazione copiando il contenuto di una esistente";
-            this.tsEstrazioneClona.Click += new System.EventHandler(this.btnClonaEstrazione_Click);
-            // 
-            // tsEstrazioneEdit
-            // 
-            this.tsEstrazioneEdit.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.table_edit;
-            this.tsEstrazioneEdit.Name = "tsEstrazioneEdit";
-            this.tsEstrazioneEdit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-            this.tsEstrazioneEdit.Size = new System.Drawing.Size(244, 24);
-            this.tsEstrazioneEdit.Text = "&Modifica";
-            this.tsEstrazioneEdit.ToolTipText = "Modifica un\'estrazione";
-            this.tsEstrazioneEdit.Click += new System.EventHandler(this.btnEditEstrazione_Click);
-            // 
-            // tsEstrazioneDel
-            // 
-            this.tsEstrazioneDel.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.delete;
-            this.tsEstrazioneDel.Name = "tsEstrazioneDel";
-            this.tsEstrazioneDel.Size = new System.Drawing.Size(244, 24);
-            this.tsEstrazioneDel.Text = "Elimina";
-            this.tsEstrazioneDel.ToolTipText = "Elimina logicamente un\'estrazione. Nessuna azione distruttiva.";
-            this.tsEstrazioneDel.Click += new System.EventHandler(this.btnDelEstrazione_Click);
-            // 
-            // tsEstrazioneEsegui
-            // 
-            this.tsEstrazioneEsegui.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.database_go;
-            this.tsEstrazioneEsegui.Name = "tsEstrazioneEsegui";
-            this.tsEstrazioneEsegui.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
-            this.tsEstrazioneEsegui.Size = new System.Drawing.Size(244, 24);
-            this.tsEstrazioneEsegui.Text = "&Esegui";
-            this.tsEstrazioneEsegui.ToolTipText = "Esegue l\'estrazione";
-            this.tsEstrazioneEsegui.Click += new System.EventHandler(this.btnEsegui_Click);
-            // 
-            // btnConfig
-            // 
-            this.btnConfig.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.btnConfig.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.wrench_orange;
-            this.btnConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnConfig.Name = "btnConfig";
-            this.btnConfig.Size = new System.Drawing.Size(108, 22);
-            this.btnConfig.Text = "Configurazione";
-            this.btnConfig.Click += new System.EventHandler(this.btnConfig_Click);
-            // 
-            // btnReload
-            // 
-            this.btnReload.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.database_refresh;
-            this.btnReload.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnReload.Name = "btnReload";
-            this.btnReload.Size = new System.Drawing.Size(76, 22);
-            this.btnReload.Text = "Aggiorna";
-            this.btnReload.Click += new System.EventHandler(this.actRicarica);
-            // 
-            // btnOutputDir
-            // 
-            this.btnOutputDir.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.folder_explore;
-            this.btnOutputDir.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnOutputDir.Name = "btnOutputDir";
-            this.btnOutputDir.Size = new System.Drawing.Size(86, 22);
-            this.btnOutputDir.Text = "Output Dir.";
-            this.btnOutputDir.Click += new System.EventHandler(this.actOutputDir);
+            this.tsStoricoEsecuzioni.Name = "tsStoricoEsecuzioni";
+            this.tsStoricoEsecuzioni.Size = new System.Drawing.Size(244, 24);
+            this.tsStoricoEsecuzioni.Text = "&Storico";
+            this.tsStoricoEsecuzioni.Click += new System.EventHandler(this.tsStoricoEsecuzioni_Click);
             // 
             // frmMain
             // 
@@ -537,6 +546,7 @@
         private System.Windows.Forms.ToolStripButton btnReload;
         private System.Windows.Forms.ColumnHeader colNextSched;
         private System.Windows.Forms.ImageList imgList;
+        private System.Windows.Forms.ToolStripMenuItem tsStoricoEsecuzioni;
     }
 }
 

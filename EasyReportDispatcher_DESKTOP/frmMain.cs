@@ -283,6 +283,7 @@ namespace EasyReportDispatcher_DESKTOP
             this.tsEstrazioneClona.Enabled = selected;
             this.tsEstrazioneDel.Enabled = selected;
             this.tsEstrazioneEsegui.Enabled = selected;
+            this.tsStoricoEsecuzioni.Enabled = selected;
 
         }
 
@@ -557,6 +558,11 @@ namespace EasyReportDispatcher_DESKTOP
         private void frmMain_Shown(object sender, EventArgs e)
         {
             this.actConnetti(sender, e);
+        }
+
+        private void tsStoricoEsecuzioni_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
