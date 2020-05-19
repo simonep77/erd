@@ -134,6 +134,7 @@
             this.tsElimina.Name = "tsElimina";
             this.tsElimina.Size = new System.Drawing.Size(66, 22);
             this.tsElimina.Text = "Elimina";
+            this.tsElimina.Click += new System.EventHandler(this.actDeleteOne);
             // 
             // btnEliminaTutti
             // 
@@ -142,6 +143,7 @@
             this.btnEliminaTutti.Name = "btnEliminaTutti";
             this.btnEliminaTutti.Size = new System.Drawing.Size(93, 22);
             this.btnEliminaTutti.Text = "Elimina Tutti";
+            this.btnEliminaTutti.Click += new System.EventHandler(this.actDeleteAll);
             // 
             // frmStorico
             // 

@@ -135,8 +135,8 @@
             this.btnReload.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.database_refresh;
             this.btnReload.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnReload.Name = "btnReload";
-            this.btnReload.Size = new System.Drawing.Size(76, 22);
-            this.btnReload.Text = "Aggiorna";
+            this.btnReload.Size = new System.Drawing.Size(135, 22);
+            this.btnReload.Text = "Aggiorna/Riconnetti";
             this.btnReload.Click += new System.EventHandler(this.actRicarica);
             // 
             // btnOutputDir

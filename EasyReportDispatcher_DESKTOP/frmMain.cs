@@ -69,6 +69,7 @@ namespace EasyReportDispatcher_DESKTOP
             }
             catch (Exception ex)
             {
+                this.tsConnessione.Text = "Errore connessione";
                 MessageBox.Show(ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -416,7 +417,7 @@ namespace EasyReportDispatcher_DESKTOP
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UI_Utils.ShowError(ex.Message);
             }
             finally
             {
@@ -488,7 +489,7 @@ namespace EasyReportDispatcher_DESKTOP
 
             est.EliminaLogicamente();
 
-            MessageBox.Show("Eliminazione (logica) effettuata.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UI_Utils.ShowInfo("Eliminazione (logica) effettuata.");
 
             this.lvEstrazioni.Items.Remove(this.lvEstrazioni.SelectedItems[0]);
             this.updateEstCount();
@@ -580,5 +581,7 @@ namespace EasyReportDispatcher_DESKTOP
 
             }
         }
+
+       
     }
 }

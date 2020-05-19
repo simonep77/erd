@@ -311,9 +311,11 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             this.mLastResult.DataOraFine = DateTime.Now;
             
             if (saveResult)
+            {
                 this.Slot.SaveObject(this.mLastResult);
+                this.ListaOutput.AddOrUpdate(this.mLastResult);
+            }
 
-            this.ListaOutput.AddOrUpdate(this.mLastResult);
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "End aggiornamento output");
 

@@ -1,5 +1,7 @@
-﻿using EasyReportDispatcher_Lib_BIZ.src.report;
+﻿using EasyReportDispatcher_DESKTOP.src;
+using EasyReportDispatcher_Lib_BIZ.src.report;
 using EasyReportDispatcher_Lib_Common.src.enums;
+using EasyReportDispatcher_Lib_DAL.src.report;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,6 +35,8 @@ namespace EasyReportDispatcher_DESKTOP
             {
                 var item = new ListViewItem(output.Id.ToString());
                 item.Name = output.Id.ToString();
+                item.Tag = output;
+
                 item.SubItems.Add(output.DataOraInizio.ToString(@"dd/MM/yyyy HH:mm:ss"));
                 item.SubItems.Add(output.DataOraFine.Subtract(output.DataOraInizio).ToString());
                 
@@ -66,6 +70,49 @@ namespace EasyReportDispatcher_DESKTOP
 
             this.tsElimina.Enabled = sel;
             this.btnEliminaTutti.Enabled = this.mEstBiz.ListaOutput.Count > 0;
+        }
+
+        private void actDeleteOne(object sender, EventArgs e)
+        {
+            var selItem = this.lvStorico.SelectedItems[0];
+            var output = selItem.Tag as ReportEstrazioneOutput;
+
+            if (MessageBox.Show(string.Format($"Confermi l'eleminazione dell'esecuzione con id {output.Id}?"), "Conferma", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            try
+            {
+                this.mEstBiz.GetSlot().DeleteObject(output);
+                this.mEstBiz.ListaOutput.Remove(output);
+                this.lvStorico.Items.Remove(selItem);
+            }
+            catch (Exception ex)
+            {
+                UI_Utils.ShowError(ex.Message);
+            }
+        }
+
+
+        private void actDeleteAll(object sender, EventArgs e)
+        {
+            if (this.lvStorico.Items.Count == 0)
+                return;
+
+            if (MessageBox.Show("Confermi l'eleminazione di tutti i dati di esecuzione?", "Conferma", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            try
+            {
+                this.mEstBiz.GetSlot().DeleteAll(this.mEstBiz.ListaOutput);
+                this.mEstBiz.ListaOutput.Clear();
+
+                this.loadData();
+
+            }
+            catch (Exception ex)
+            {
+                UI_Utils.ShowError(ex.Message);
+            }
         }
     }
 }
