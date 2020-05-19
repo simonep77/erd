@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace EasyReportDispatcher_DESKTOP
 {
-    public partial class frmStorico : Form
+    public partial class frmStorico : ErdForm
     {
         private ReportEstrazioneBIZ mEstBiz;
         public frmStorico(ReportEstrazioneBIZ est)

@@ -12,7 +12,7 @@ using EasyReportDispatcher_Lib_DAL.src.report;
 
 namespace EasyReportDispatcher_DESKTOP
 {
-    public partial class frmSmtp : Form
+    public partial class frmSmtp : ErdForm
     {
         private ReportSmtpConfig mConf;
 

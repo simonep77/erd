@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyReportDispatcher_DESKTOP.src;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,7 +11,7 @@ using System.Windows.Forms;
 
 namespace EasyReportDispatcher_DESKTOP
 {
-    public partial class frmConfig : Form
+    public partial class frmConfig : ErdForm
     {
         public frmConfig()
         {

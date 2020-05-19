@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,6 +52,7 @@ namespace EasyReportDispatcher_DESKTOP.src
 
             if (item != null)
                 combo.SelectedItem = item;
+
         }
 
 
@@ -86,6 +88,20 @@ namespace EasyReportDispatcher_DESKTOP.src
             }
             //ctrl.Enabled = true;
             Application.DoEvents();
+        }
+
+
+        /// <summary>
+        /// Registra il form per la chiusura tramite ESC
+        /// </summary>
+        /// <param name="frm"></param>
+        public static void registerExitESC(Form frm)
+        {
+            Button cancelBTN = new Button();
+            cancelBTN.Size = new Size(0, 0);
+            cancelBTN.TabStop = false;
+            frm.Controls.Add(cancelBTN);
+            frm.CancelButton = cancelBTN;
         }
 
 

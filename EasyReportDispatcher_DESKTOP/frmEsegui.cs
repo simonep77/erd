@@ -15,7 +15,7 @@ using System.Windows.Forms;
 
 namespace EasyReportDispatcher_DESKTOP
 {
-    public partial class frmEsegui : Form
+    public partial class frmEsegui : ErdForm
     {
         private ReportEstrazioneBIZ mEstrazioneBiz;
         private string mLocalTemplatePath;

@@ -1,25 +1,19 @@
 ﻿using Bdo.Objects;
-using Bdo.Objects.Base;
 using EasyReportDispatcher_DESKTOP.src;
 using EasyReportDispatcher_Lib_BIZ.src.report;
 using EasyReportDispatcher_Lib_Common.src.enums;
 using EasyReportDispatcher_Lib_DAL.src.report;
 using ScintillaNET;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EasyReportDispatcher_DESKTOP
 {
-    public partial class frmEstrazione : Form
+    public partial class frmEstrazione : ErdForm
     {
 
         private ReportEstrazioneBIZ mEstrazioneBiz;
@@ -31,11 +25,11 @@ namespace EasyReportDispatcher_DESKTOP
 
             this.mEstrazioneBiz = est;
 
-            this.addBindings();
+            this.loadData();
         }
 
 
-        private void addBindings()
+        private void loadData()
         {
 
             this.Text = string.Format(@"Estrazione ID: {0}", this.mEstrazioneBiz.DataObj.ObjectState == Bdo.Objects.EObjectState.New ? "<new>" : this.mEstrazioneBiz.DataObj.Id.ToString());  this.mEstrazioneBiz.DataObj.Id.ToString();
@@ -102,6 +96,8 @@ namespace EasyReportDispatcher_DESKTOP
             this.txtEstrazioniAcc_TextChanged(null, null);
             this.rbTemplateBase_CheckedChanged(null, null);
             this.rbTemplateCustom_CheckedChanged(null, null);
+            this.cmbTipoFile_SelectedIndexChanged(null, null);
+            this.cmbDestEmail_SelectedIndexChanged(null, null);
 
         }
 
@@ -288,7 +284,7 @@ namespace EasyReportDispatcher_DESKTOP
 
                 AppContextERD.Slot.SaveObject(this.mEstrazioneBiz.DataObj);
 
-                this.addBindings();
+                this.loadData();
 
                 this.mResult = DialogResult.OK;
 
@@ -459,6 +455,13 @@ namespace EasyReportDispatcher_DESKTOP
 
             }
 
+        }
+
+        private void cmbDestEmail_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selected = this.cmbDestEmail.SelectedItem != null;
+            this.btnEmailDestEdit.Enabled = selected;
+            this.btnEmailDestDel.Enabled = selected;
         }
     }
 }

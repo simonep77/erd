@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace EasyReportDispatcher_DESKTOP
 {
-    public partial class frmDestMail : Form
+    public partial class frmDestMail : ErdForm
     {
         private ReportEstrazioneDestinatarioEmail mDest;
         public frmDestMail(ReportEstrazioneDestinatarioEmail dest)

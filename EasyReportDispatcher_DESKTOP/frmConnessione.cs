@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace EasyReportDispatcher_DESKTOP
 {
-    public partial class frmConnessione : Form
+    public partial class frmConnessione : ErdForm
     {
         private ReportConnessione mConn;
         public frmConnessione(ReportConnessione conn)
