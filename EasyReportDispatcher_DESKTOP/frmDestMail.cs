@@ -53,6 +53,8 @@ namespace EasyReportDispatcher_DESKTOP
                 //Verifiche
 
                 //Salvataggio
+                this.mDest.SmtpConfigId = (this.cmbSmtp.SelectedItem as ReportSmtpConfig).Id;
+                this.mDest.Attivo = 1;
                 this.mDest.MailSUBJ = this.txtMailSubj.Text;
                 this.mDest.MailBODY = this.txtMailCorpo.Text;
                 this.mDest.Password = this.txtPassword.Text;

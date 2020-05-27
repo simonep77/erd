@@ -12,7 +12,7 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
     public abstract class ReportSmtpConfig : DataObject<ReportSmtpConfig>
     {
         [PrimaryKey, AutoIncrement]
-        public abstract long Id { get; }
+        public abstract int Id { get; }
 
         public abstract String Nome { get; set; }
 

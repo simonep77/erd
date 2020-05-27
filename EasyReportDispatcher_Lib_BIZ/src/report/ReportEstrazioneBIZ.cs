@@ -133,7 +133,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         {
             get
             {
-                return (this.DataObj.InvioMailAttivo > 0);
+                return (this.DataObj.InvioMailAttivo > 0 && this.ListaDesinatariEmail.Where(d => d.Attivo > 0).Any());
             }
         }
 

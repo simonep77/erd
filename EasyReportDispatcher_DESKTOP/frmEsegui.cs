@@ -26,7 +26,15 @@ namespace EasyReportDispatcher_DESKTOP
 
             InitializeComponent();
 
-            this.chkUsaTemplateLocale.Enabled = File.Exists(localTplPath);
+            this.loadData();
+        }
+
+
+        private void loadData()
+        {
+            this.chkUsaTemplateLocale.Enabled = File.Exists(this.mLocalTemplatePath);
+            this.chbInvioEmail.Enabled = this.mEstrazioneBiz.IsPrevistoInvioMail;
+
         }
 
         private void btnEsegui_Click(object sender, EventArgs e)
@@ -40,6 +48,10 @@ namespace EasyReportDispatcher_DESKTOP
 
                 this.mEstrazioneBiz.Run(this.chkSaveOutput.Checked);
 
+                if (this.chbInvioEmail.Checked)
+                    this.mEstrazioneBiz.SendEmail(this.chkSaveOutput.Checked);
+
+                //Apre
                 Directory.CreateDirectory(AppContextERD.UserDataDirOutput);
 
                 var outFilePath = Path.Combine(AppContextERD.UserDataDirOutput, this.mEstrazioneBiz.LastResult.NomeFile);

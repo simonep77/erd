@@ -31,6 +31,7 @@
             this.chkSaveOutput = new System.Windows.Forms.CheckBox();
             this.btnEsegui = new System.Windows.Forms.Button();
             this.chkUsaTemplateLocale = new System.Windows.Forms.CheckBox();
+            this.chbInvioEmail = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // chkSaveOutput
@@ -66,11 +67,23 @@
             this.chkUsaTemplateLocale.Text = "Usa Template Locale";
             this.chkUsaTemplateLocale.UseVisualStyleBackColor = true;
             // 
+            // chbInvioEmail
+            // 
+            this.chbInvioEmail.AutoSize = true;
+            this.chbInvioEmail.Location = new System.Drawing.Point(40, 103);
+            this.chbInvioEmail.Margin = new System.Windows.Forms.Padding(4);
+            this.chbInvioEmail.Name = "chbInvioEmail";
+            this.chbInvioEmail.Size = new System.Drawing.Size(99, 23);
+            this.chbInvioEmail.TabIndex = 4;
+            this.chbInvioEmail.Text = "Invia Email";
+            this.chbInvioEmail.UseVisualStyleBackColor = true;
+            // 
             // frmEsegui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(321, 212);
+            this.Controls.Add(this.chbInvioEmail);
             this.Controls.Add(this.chkUsaTemplateLocale);
             this.Controls.Add(this.btnEsegui);
             this.Controls.Add(this.chkSaveOutput);
@@ -92,5 +105,6 @@
         private System.Windows.Forms.CheckBox chkSaveOutput;
         private System.Windows.Forms.Button btnEsegui;
         private System.Windows.Forms.CheckBox chkUsaTemplateLocale;
+        private System.Windows.Forms.CheckBox chbInvioEmail;
     }
 }

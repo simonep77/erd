@@ -405,7 +405,10 @@ namespace EasyReportDispatcher_DESKTOP
             ReportEstrazioneDestinatarioEmail dest = AppContextERD.Slot.CreateObject<ReportEstrazioneDestinatarioEmail>();
 
             if (isNew)
+            {
                 dest = AppContextERD.Slot.CreateObject<ReportEstrazioneDestinatarioEmail>();
+                dest.EstrazioneId = this.mEstrazioneBiz.DataObj.Id;
+            }
             else
                 dest = this.cmbDestEmail.SelectedItem as ReportEstrazioneDestinatarioEmail;
 
