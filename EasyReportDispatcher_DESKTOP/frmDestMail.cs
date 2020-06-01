@@ -32,8 +32,9 @@ namespace EasyReportDispatcher_DESKTOP
         private void loadData()
         {
             this.Text = string.Format("Destinatari Mail ID: {0}", this.mDest.ObjectState == Bdo.Objects.EObjectState.New ? @"<new>" : this.mDest.Id.ToString());
-            this.txtMailSubj.Text =  this.mDest.MailSUBJ;
-            this.txtMailCorpo.Text =  this.mDest.MailBODY;
+            this.chbAttivo.Checked = (this.mDest.Attivo > 0 || this.mDest.ObjectState == EObjectState.New);
+            this.txtMailSubj.Text = this.mDest.ObjectState == EObjectState.New ? this.mDest.Estrazione.Nome : this.mDest.MailSUBJ;
+            this.txtMailCorpo.Text = this.mDest.ObjectState == EObjectState.New ? @"In allegato." : this.mDest.MailBODY;
             this.txtPassword.Text =  this.mDest.Password;
             this.txtMailFROM.Text =  this.mDest.MailFROM;
             this.txtMailTO.Text =  this.mDest.MailTO;
@@ -54,7 +55,7 @@ namespace EasyReportDispatcher_DESKTOP
 
                 //Salvataggio
                 this.mDest.SmtpConfigId = (this.cmbSmtp.SelectedItem as ReportSmtpConfig).Id;
-                this.mDest.Attivo = 1;
+                this.mDest.Attivo = (sbyte)(this.chbAttivo.Checked ? 1 : 0);
                 this.mDest.MailSUBJ = this.txtMailSubj.Text;
                 this.mDest.MailBODY = this.txtMailCorpo.Text;
                 this.mDest.Password = this.txtPassword.Text;

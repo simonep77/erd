@@ -56,6 +56,7 @@
             this.btnSmtpAdd = new System.Windows.Forms.Button();
             this.cmbSmtp = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.chbAttivo = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panSalva.SuspendLayout();
@@ -281,6 +282,7 @@
             // 
             // panTop
             // 
+            this.panTop.Controls.Add(this.chbAttivo);
             this.panTop.Controls.Add(this.btnSmtpDel);
             this.panTop.Controls.Add(this.btnSmtpEdit);
             this.panTop.Controls.Add(this.btnSmtpAdd);
@@ -296,7 +298,7 @@
             // btnSmtpDel
             // 
             this.btnSmtpDel.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.delete;
-            this.btnSmtpDel.Location = new System.Drawing.Point(548, 23);
+            this.btnSmtpDel.Location = new System.Drawing.Point(548, 31);
             this.btnSmtpDel.Name = "btnSmtpDel";
             this.btnSmtpDel.Size = new System.Drawing.Size(29, 26);
             this.btnSmtpDel.TabIndex = 9;
@@ -306,7 +308,7 @@
             // btnSmtpEdit
             // 
             this.btnSmtpEdit.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.table_edit;
-            this.btnSmtpEdit.Location = new System.Drawing.Point(516, 23);
+            this.btnSmtpEdit.Location = new System.Drawing.Point(516, 31);
             this.btnSmtpEdit.Name = "btnSmtpEdit";
             this.btnSmtpEdit.Size = new System.Drawing.Size(29, 26);
             this.btnSmtpEdit.TabIndex = 8;
@@ -316,7 +318,7 @@
             // btnSmtpAdd
             // 
             this.btnSmtpAdd.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.add;
-            this.btnSmtpAdd.Location = new System.Drawing.Point(485, 23);
+            this.btnSmtpAdd.Location = new System.Drawing.Point(485, 31);
             this.btnSmtpAdd.Name = "btnSmtpAdd";
             this.btnSmtpAdd.Size = new System.Drawing.Size(29, 26);
             this.btnSmtpAdd.TabIndex = 7;
@@ -327,7 +329,7 @@
             // 
             this.cmbSmtp.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSmtp.FormattingEnabled = true;
-            this.cmbSmtp.Location = new System.Drawing.Point(157, 24);
+            this.cmbSmtp.Location = new System.Drawing.Point(157, 32);
             this.cmbSmtp.Name = "cmbSmtp";
             this.cmbSmtp.Size = new System.Drawing.Size(322, 26);
             this.cmbSmtp.TabIndex = 2;
@@ -335,11 +337,21 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(43, 27);
+            this.label9.Location = new System.Drawing.Point(43, 35);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(42, 18);
             this.label9.TabIndex = 1;
             this.label9.Text = "SMTP";
+            // 
+            // chbAttivo
+            // 
+            this.chbAttivo.AutoSize = true;
+            this.chbAttivo.Location = new System.Drawing.Point(157, 5);
+            this.chbAttivo.Name = "chbAttivo";
+            this.chbAttivo.Size = new System.Drawing.Size(96, 22);
+            this.chbAttivo.TabIndex = 10;
+            this.chbAttivo.Text = "Invio attivo";
+            this.chbAttivo.UseVisualStyleBackColor = true;
             // 
             // frmDestMail
             // 
@@ -400,5 +412,6 @@
         private System.Windows.Forms.Button btnSmtpDel;
         private System.Windows.Forms.Button btnSmtpEdit;
         private System.Windows.Forms.Button btnSmtpAdd;
+        private System.Windows.Forms.CheckBox chbAttivo;
     }
 }

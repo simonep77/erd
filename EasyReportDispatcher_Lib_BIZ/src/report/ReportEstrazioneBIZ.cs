@@ -219,6 +219,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             foreach (var item in this.ListaDesinatariEmail)
             {
                 var dest = this.Slot.CloneObjectForNew(item);
+                dest.EstrazioneId = estBiz.DataObj.Id;
                 this.Slot.SaveObject(dest);
 
                 estBiz.mListaDesinatariEmail.Add(item);
@@ -229,6 +230,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             foreach (var item in this.ListaCopyTo)
             {
                 var dest = this.Slot.CloneObjectForNew(item);
+                dest.EstrazioneId = estBiz.DataObj.Id;
                 this.Slot.SaveObject(dest);
 
                 estBiz.mListaCopyTo.Add(item);
