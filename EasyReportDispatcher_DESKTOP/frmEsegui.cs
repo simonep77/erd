@@ -34,13 +34,16 @@ namespace EasyReportDispatcher_DESKTOP
         {
             this.chkUsaTemplateLocale.Enabled = File.Exists(this.mLocalTemplatePath);
             this.chbInvioEmail.Enabled = this.mEstrazioneBiz.IsPrevistoInvioMail;
+            this.chbApriExcel.Checked = this.chkUsaTemplateLocale.Enabled || !this.chkSaveOutput.Enabled || !this.chbInvioEmail.Enabled;
 
         }
 
         private void btnEsegui_Click(object sender, EventArgs e)
         {
             this.Cursor = Cursors.WaitCursor;
-
+            this.btnEsegui.Text = "Esecuzione...";
+            this.btnEsegui.Enabled = false;
+            Application.DoEvents();
             try
             {
                 if (this.chkUsaTemplateLocale.Checked)
@@ -51,13 +54,19 @@ namespace EasyReportDispatcher_DESKTOP
                 if (this.chbInvioEmail.Checked)
                     this.mEstrazioneBiz.SendEmail(this.chkSaveOutput.Checked);
 
-                //Apre
-                Directory.CreateDirectory(AppContextERD.UserDataDirOutput);
+                if (this.chbApriExcel.Checked)
+                {
+                    //Apre
+                    Directory.CreateDirectory(AppContextERD.UserDataDirOutput);
 
-                var outFilePath = Path.Combine(AppContextERD.UserDataDirOutput, this.mEstrazioneBiz.LastResult.NomeFile);
-                File.WriteAllBytes(outFilePath, this.mEstrazioneBiz.LastResult.DataBlob);
+                    var outFilePath = Path.Combine(AppContextERD.UserDataDirOutput, this.mEstrazioneBiz.LastResult.NomeFile);
+                    File.WriteAllBytes(outFilePath, this.mEstrazioneBiz.LastResult.DataBlob);
 
-                Process.Start(outFilePath);
+                    Process.Start(outFilePath);
+
+                }
+                else
+                    UI_Utils.ShowInfo("Esecuzione conclusa con successo");
 
                 this.Close();
             }
@@ -75,6 +84,8 @@ namespace EasyReportDispatcher_DESKTOP
             finally
             {
                 this.Cursor = this.DefaultCursor;
+            this.btnEsegui.Text = "Esegui";
+            this.btnEsegui.Enabled = true;
             }
 
         }

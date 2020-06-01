@@ -32,6 +32,7 @@
             this.btnEsegui = new System.Windows.Forms.Button();
             this.chkUsaTemplateLocale = new System.Windows.Forms.CheckBox();
             this.chbInvioEmail = new System.Windows.Forms.CheckBox();
+            this.chbApriExcel = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // chkSaveOutput
@@ -47,7 +48,7 @@
             // 
             // btnEsegui
             // 
-            this.btnEsegui.Location = new System.Drawing.Point(103, 144);
+            this.btnEsegui.Location = new System.Drawing.Point(103, 178);
             this.btnEsegui.Margin = new System.Windows.Forms.Padding(4);
             this.btnEsegui.Name = "btnEsegui";
             this.btnEsegui.Size = new System.Drawing.Size(100, 34);
@@ -78,11 +79,23 @@
             this.chbInvioEmail.Text = "Invia Email";
             this.chbInvioEmail.UseVisualStyleBackColor = true;
             // 
+            // chbApriExcel
+            // 
+            this.chbApriExcel.AutoSize = true;
+            this.chbApriExcel.Location = new System.Drawing.Point(40, 134);
+            this.chbApriExcel.Margin = new System.Windows.Forms.Padding(4);
+            this.chbApriExcel.Name = "chbApriExcel";
+            this.chbApriExcel.Size = new System.Drawing.Size(181, 23);
+            this.chbApriExcel.TabIndex = 6;
+            this.chbApriExcel.Text = "Scarica ed apri risultato";
+            this.chbApriExcel.UseVisualStyleBackColor = true;
+            // 
             // frmEsegui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(321, 212);
+            this.ClientSize = new System.Drawing.Size(321, 254);
+            this.Controls.Add(this.chbApriExcel);
             this.Controls.Add(this.chbInvioEmail);
             this.Controls.Add(this.chkUsaTemplateLocale);
             this.Controls.Add(this.btnEsegui);
@@ -106,5 +119,6 @@
         private System.Windows.Forms.Button btnEsegui;
         private System.Windows.Forms.CheckBox chkUsaTemplateLocale;
         private System.Windows.Forms.CheckBox chbInvioEmail;
+        private System.Windows.Forms.CheckBox chbApriExcel;
     }
 }
