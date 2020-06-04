@@ -255,8 +255,6 @@ namespace EasyReportDispatcher_DESKTOP
                 }
 
 
-
-
                 //Estrazione
                 this.mEstrazioneBiz.DataObj.Nome = this.txtNome.Text;
                 this.mEstrazioneBiz.DataObj.Note = this.txtNote.Text;
@@ -288,8 +286,7 @@ namespace EasyReportDispatcher_DESKTOP
 
                 this.mResult = DialogResult.OK;
 
-                if (MessageBox.Show("Estrazione salvata. Vuoi rimanere nella pagina di modifica?", "Conferma", MessageBoxButtons.YesNo, MessageBoxIcon.Information) != DialogResult.Yes)
-                    this.DialogResult = this.mResult;
+                UI_Utils.ShowInfo(@"Dati salvati");
 
             }
             catch (Exception ex)
