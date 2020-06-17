@@ -35,7 +35,7 @@ namespace EasyReportDispatcher_DESKTOP
             this.chkUsaTemplateLocale.Enabled = File.Exists(this.mLocalTemplatePath);
             this.chbInvioEmail.Enabled = this.mEstrazioneBiz.IsPrevistoInvioMail;
             this.chbApriExcel.Checked = this.chkUsaTemplateLocale.Enabled || !this.chkSaveOutput.Enabled || !this.chbInvioEmail.Enabled;
-
+            this.chkCopyTo.Enabled = !string.IsNullOrWhiteSpace(this.mEstrazioneBiz.DataObj.CopyToPath);
         }
 
         private void btnEsegui_Click(object sender, EventArgs e)
@@ -49,7 +49,7 @@ namespace EasyReportDispatcher_DESKTOP
                 if (this.chkUsaTemplateLocale.Checked)
                     this.mEstrazioneBiz.ForcedTemplate = File.ReadAllBytes(this.mLocalTemplatePath);
 
-                this.mEstrazioneBiz.Run(this.chkSaveOutput.Checked);
+                this.mEstrazioneBiz.Run(this.chkSaveOutput.Checked, this.chbInvioEmail.Checked, this.chkCopyTo.Checked);
 
                 if (this.chbInvioEmail.Checked)
                     this.mEstrazioneBiz.SendEmail(this.chkSaveOutput.Checked);

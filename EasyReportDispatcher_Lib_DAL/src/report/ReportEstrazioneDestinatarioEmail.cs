@@ -44,7 +44,5 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         [AcceptNull()]
         public abstract string Password { get; set; }
 
-        [AcceptNull()]
-        public abstract int CopyToId { get; set; }
     }
 }

@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.gbGenerali = new System.Windows.Forms.GroupBox();
+            this.btnInfoCopy = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtCopyToPath = new System.Windows.Forms.TextBox();
             this.btnEmailDestDel = new System.Windows.Forms.Button();
             this.btnEmailDestEdit = new System.Windows.Forms.Button();
             this.btnEmailDestAdd = new System.Windows.Forms.Button();
@@ -69,16 +72,25 @@
             this.gbSql = new System.Windows.Forms.GroupBox();
             this.txtSQL = new ScintillaNET.Scintilla();
             this.btnSalva = new System.Windows.Forms.Button();
+            this.panTop = new System.Windows.Forms.Panel();
+            this.panCenter = new System.Windows.Forms.Panel();
+            this.panBottom = new System.Windows.Forms.Panel();
             this.gbGenerali.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtNumOutput)).BeginInit();
             this.gbExcel.SuspendLayout();
             this.panExcelCustom.SuspendLayout();
             this.panExcelBase.SuspendLayout();
             this.gbSql.SuspendLayout();
+            this.panTop.SuspendLayout();
+            this.panCenter.SuspendLayout();
+            this.panBottom.SuspendLayout();
             this.SuspendLayout();
             // 
             // gbGenerali
             // 
+            this.gbGenerali.Controls.Add(this.btnInfoCopy);
+            this.gbGenerali.Controls.Add(this.label1);
+            this.gbGenerali.Controls.Add(this.txtCopyToPath);
             this.gbGenerali.Controls.Add(this.btnEmailDestDel);
             this.gbGenerali.Controls.Add(this.btnEmailDestEdit);
             this.gbGenerali.Controls.Add(this.btnEmailDestAdd);
@@ -103,13 +115,40 @@
             this.gbGenerali.Controls.Add(this.label2);
             this.gbGenerali.Controls.Add(this.txtNome);
             this.gbGenerali.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gbGenerali.Location = new System.Drawing.Point(20, 20);
+            this.gbGenerali.Location = new System.Drawing.Point(0, 0);
             this.gbGenerali.Margin = new System.Windows.Forms.Padding(3, 3, 3, 20);
             this.gbGenerali.Name = "gbGenerali";
-            this.gbGenerali.Size = new System.Drawing.Size(1027, 201);
+            this.gbGenerali.Size = new System.Drawing.Size(1379, 230);
             this.gbGenerali.TabIndex = 0;
             this.gbGenerali.TabStop = false;
             this.gbGenerali.Text = "Generali";
+            // 
+            // btnInfoCopy
+            // 
+            this.btnInfoCopy.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.information;
+            this.btnInfoCopy.Location = new System.Drawing.Point(322, 153);
+            this.btnInfoCopy.Name = "btnInfoCopy";
+            this.btnInfoCopy.Size = new System.Drawing.Size(27, 23);
+            this.btnInfoCopy.TabIndex = 31;
+            this.btnInfoCopy.UseVisualStyleBackColor = true;
+            this.btnInfoCopy.Click += new System.EventHandler(this.btnInfoCopy_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(20, 155);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(64, 18);
+            this.label1.TabIndex = 30;
+            this.label1.Text = "Copia su:";
+            // 
+            // txtCopyToPath
+            // 
+            this.txtCopyToPath.Location = new System.Drawing.Point(115, 152);
+            this.txtCopyToPath.Multiline = true;
+            this.txtCopyToPath.Name = "txtCopyToPath";
+            this.txtCopyToPath.Size = new System.Drawing.Size(201, 57);
+            this.txtCopyToPath.TabIndex = 29;
             // 
             // btnEmailDestDel
             // 
@@ -184,7 +223,7 @@
             // chkAccorpaDati
             // 
             this.chkAccorpaDati.AutoSize = true;
-            this.chkAccorpaDati.Location = new System.Drawing.Point(833, 165);
+            this.chkAccorpaDati.Location = new System.Drawing.Point(833, 163);
             this.chkAccorpaDati.Name = "chkAccorpaDati";
             this.chkAccorpaDati.Size = new System.Drawing.Size(81, 22);
             this.chkAccorpaDati.TabIndex = 20;
@@ -194,7 +233,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(425, 169);
+            this.label11.Location = new System.Drawing.Point(425, 166);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(133, 18);
             this.label11.TabIndex = 19;
@@ -202,7 +241,7 @@
             // 
             // txtEstrazioniAcc
             // 
-            this.txtEstrazioniAcc.Location = new System.Drawing.Point(626, 165);
+            this.txtEstrazioniAcc.Location = new System.Drawing.Point(626, 161);
             this.txtEstrazioniAcc.Name = "txtEstrazioniAcc";
             this.txtEstrazioniAcc.Size = new System.Drawing.Size(201, 26);
             this.txtEstrazioniAcc.TabIndex = 18;
@@ -211,7 +250,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(425, 137);
+            this.label10.Location = new System.Drawing.Point(425, 136);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(89, 18);
             this.label10.TabIndex = 17;
@@ -219,7 +258,7 @@
             // 
             // txtNumOutput
             // 
-            this.txtNumOutput.Location = new System.Drawing.Point(626, 133);
+            this.txtNumOutput.Location = new System.Drawing.Point(626, 132);
             this.txtNumOutput.Maximum = new decimal(new int[] {
             127,
             0,
@@ -337,10 +376,10 @@
             this.gbExcel.Controls.Add(this.rbTemplateCustom);
             this.gbExcel.Controls.Add(this.rbTemplateBase);
             this.gbExcel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gbExcel.Location = new System.Drawing.Point(20, 221);
+            this.gbExcel.Location = new System.Drawing.Point(0, 230);
             this.gbExcel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 20);
             this.gbExcel.Name = "gbExcel";
-            this.gbExcel.Size = new System.Drawing.Size(1027, 133);
+            this.gbExcel.Size = new System.Drawing.Size(1379, 125);
             this.gbExcel.TabIndex = 6;
             this.gbExcel.TabStop = false;
             this.gbExcel.Text = "Specifiche Excel";
@@ -352,7 +391,7 @@
             this.panExcelCustom.Controls.Add(this.txtNomeTemplate);
             this.panExcelCustom.Controls.Add(this.btnScegliTemplate);
             this.panExcelCustom.Controls.Add(this.label8);
-            this.panExcelCustom.Location = new System.Drawing.Point(450, 44);
+            this.panExcelCustom.Location = new System.Drawing.Point(450, 32);
             this.panExcelCustom.Name = "panExcelCustom";
             this.panExcelCustom.Size = new System.Drawing.Size(567, 83);
             this.panExcelCustom.TabIndex = 11;
@@ -409,7 +448,7 @@
             this.panExcelBase.Controls.Add(this.txtExcelTitolo);
             this.panExcelBase.Controls.Add(this.label4);
             this.panExcelBase.Controls.Add(this.label6);
-            this.panExcelBase.Location = new System.Drawing.Point(32, 44);
+            this.panExcelBase.Location = new System.Drawing.Point(32, 32);
             this.panExcelBase.Name = "panExcelBase";
             this.panExcelBase.Size = new System.Drawing.Size(369, 83);
             this.panExcelBase.TabIndex = 10;
@@ -449,7 +488,7 @@
             // rbTemplateCustom
             // 
             this.rbTemplateCustom.AutoSize = true;
-            this.rbTemplateCustom.Location = new System.Drawing.Point(630, 23);
+            this.rbTemplateCustom.Location = new System.Drawing.Point(630, 11);
             this.rbTemplateCustom.Name = "rbTemplateCustom";
             this.rbTemplateCustom.Size = new System.Drawing.Size(156, 22);
             this.rbTemplateCustom.TabIndex = 9;
@@ -461,7 +500,7 @@
             // rbTemplateBase
             // 
             this.rbTemplateBase.AutoSize = true;
-            this.rbTemplateBase.Location = new System.Drawing.Point(151, 23);
+            this.rbTemplateBase.Location = new System.Drawing.Point(151, 11);
             this.rbTemplateBase.Name = "rbTemplateBase";
             this.rbTemplateBase.Size = new System.Drawing.Size(209, 22);
             this.rbTemplateBase.TabIndex = 8;
@@ -472,14 +511,12 @@
             // 
             // gbSql
             // 
-            this.gbSql.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.gbSql.Controls.Add(this.txtSQL);
-            this.gbSql.Location = new System.Drawing.Point(20, 354);
+            this.gbSql.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gbSql.Location = new System.Drawing.Point(0, 0);
             this.gbSql.Name = "gbSql";
             this.gbSql.Padding = new System.Windows.Forms.Padding(10);
-            this.gbSql.Size = new System.Drawing.Size(1027, 213);
+            this.gbSql.Size = new System.Drawing.Size(1379, 291);
             this.gbSql.TabIndex = 7;
             this.gbSql.TabStop = false;
             this.gbSql.Text = "SQL";
@@ -491,13 +528,13 @@
             this.txtSQL.Lexer = ScintillaNET.Lexer.Sql;
             this.txtSQL.Location = new System.Drawing.Point(10, 29);
             this.txtSQL.Name = "txtSQL";
-            this.txtSQL.Size = new System.Drawing.Size(1007, 174);
+            this.txtSQL.Size = new System.Drawing.Size(1359, 252);
             this.txtSQL.TabIndex = 0;
             // 
             // btnSalva
             // 
             this.btnSalva.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnSalva.Location = new System.Drawing.Point(470, 573);
+            this.btnSalva.Location = new System.Drawing.Point(605, 9);
             this.btnSalva.Name = "btnSalva";
             this.btnSalva.Size = new System.Drawing.Size(93, 34);
             this.btnSalva.TabIndex = 14;
@@ -505,15 +542,42 @@
             this.btnSalva.UseVisualStyleBackColor = true;
             this.btnSalva.Click += new System.EventHandler(this.btnSalva_Click);
             // 
+            // panTop
+            // 
+            this.panTop.Controls.Add(this.gbExcel);
+            this.panTop.Controls.Add(this.gbGenerali);
+            this.panTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panTop.Location = new System.Drawing.Point(20, 20);
+            this.panTop.Name = "panTop";
+            this.panTop.Size = new System.Drawing.Size(1379, 360);
+            this.panTop.TabIndex = 16;
+            // 
+            // panCenter
+            // 
+            this.panCenter.Controls.Add(this.gbSql);
+            this.panCenter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panCenter.Location = new System.Drawing.Point(20, 380);
+            this.panCenter.Name = "panCenter";
+            this.panCenter.Size = new System.Drawing.Size(1379, 291);
+            this.panCenter.TabIndex = 0;
+            // 
+            // panBottom
+            // 
+            this.panBottom.Controls.Add(this.btnSalva);
+            this.panBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panBottom.Location = new System.Drawing.Point(20, 671);
+            this.panBottom.Name = "panBottom";
+            this.panBottom.Size = new System.Drawing.Size(1379, 51);
+            this.panBottom.TabIndex = 18;
+            // 
             // frmEstrazione
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1067, 623);
-            this.Controls.Add(this.btnSalva);
-            this.Controls.Add(this.gbSql);
-            this.Controls.Add(this.gbExcel);
-            this.Controls.Add(this.gbGenerali);
+            this.ClientSize = new System.Drawing.Size(1419, 742);
+            this.Controls.Add(this.panCenter);
+            this.Controls.Add(this.panTop);
+            this.Controls.Add(this.panBottom);
             this.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmEstrazione";
@@ -532,6 +596,9 @@
             this.panExcelBase.ResumeLayout(false);
             this.panExcelBase.PerformLayout();
             this.gbSql.ResumeLayout(false);
+            this.panTop.ResumeLayout(false);
+            this.panCenter.ResumeLayout(false);
+            this.panBottom.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -579,5 +646,11 @@
         private System.Windows.Forms.Button btnEmailDestEdit;
         private System.Windows.Forms.Button btnEmailDestAdd;
         private System.Windows.Forms.ComboBox cmbDestEmail;
+        private System.Windows.Forms.Panel panTop;
+        private System.Windows.Forms.Panel panCenter;
+        private System.Windows.Forms.Panel panBottom;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtCopyToPath;
+        private System.Windows.Forms.Button btnInfoCopy;
     }
 }

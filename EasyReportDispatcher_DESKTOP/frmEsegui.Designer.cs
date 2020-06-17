@@ -33,6 +33,7 @@
             this.chkUsaTemplateLocale = new System.Windows.Forms.CheckBox();
             this.chbInvioEmail = new System.Windows.Forms.CheckBox();
             this.chbApriExcel = new System.Windows.Forms.CheckBox();
+            this.chkCopyTo = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // chkSaveOutput
@@ -48,7 +49,7 @@
             // 
             // btnEsegui
             // 
-            this.btnEsegui.Location = new System.Drawing.Point(103, 178);
+            this.btnEsegui.Location = new System.Drawing.Point(113, 212);
             this.btnEsegui.Margin = new System.Windows.Forms.Padding(4);
             this.btnEsegui.Name = "btnEsegui";
             this.btnEsegui.Size = new System.Drawing.Size(100, 34);
@@ -71,7 +72,7 @@
             // chbInvioEmail
             // 
             this.chbInvioEmail.AutoSize = true;
-            this.chbInvioEmail.Location = new System.Drawing.Point(40, 103);
+            this.chbInvioEmail.Location = new System.Drawing.Point(40, 133);
             this.chbInvioEmail.Margin = new System.Windows.Forms.Padding(4);
             this.chbInvioEmail.Name = "chbInvioEmail";
             this.chbInvioEmail.Size = new System.Drawing.Size(99, 23);
@@ -82,7 +83,7 @@
             // chbApriExcel
             // 
             this.chbApriExcel.AutoSize = true;
-            this.chbApriExcel.Location = new System.Drawing.Point(40, 134);
+            this.chbApriExcel.Location = new System.Drawing.Point(40, 164);
             this.chbApriExcel.Margin = new System.Windows.Forms.Padding(4);
             this.chbApriExcel.Name = "chbApriExcel";
             this.chbApriExcel.Size = new System.Drawing.Size(181, 23);
@@ -90,11 +91,23 @@
             this.chbApriExcel.Text = "Scarica ed apri risultato";
             this.chbApriExcel.UseVisualStyleBackColor = true;
             // 
+            // chkCopyTo
+            // 
+            this.chkCopyTo.AutoSize = true;
+            this.chkCopyTo.Location = new System.Drawing.Point(40, 103);
+            this.chkCopyTo.Margin = new System.Windows.Forms.Padding(4);
+            this.chkCopyTo.Name = "chkCopyTo";
+            this.chkCopyTo.Size = new System.Drawing.Size(173, 23);
+            this.chkCopyTo.TabIndex = 8;
+            this.chkCopyTo.Text = "Copia su path previsto";
+            this.chkCopyTo.UseVisualStyleBackColor = true;
+            // 
             // frmEsegui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(321, 254);
+            this.ClientSize = new System.Drawing.Size(343, 283);
+            this.Controls.Add(this.chkCopyTo);
             this.Controls.Add(this.chbApriExcel);
             this.Controls.Add(this.chbInvioEmail);
             this.Controls.Add(this.chkUsaTemplateLocale);
@@ -120,5 +133,6 @@
         private System.Windows.Forms.CheckBox chkUsaTemplateLocale;
         private System.Windows.Forms.CheckBox chbInvioEmail;
         private System.Windows.Forms.CheckBox chbApriExcel;
+        private System.Windows.Forms.CheckBox chkCopyTo;
     }
 }

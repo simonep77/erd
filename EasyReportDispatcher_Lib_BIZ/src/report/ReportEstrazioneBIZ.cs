@@ -11,6 +11,8 @@ using EasyReportDispatcher_Lib_Common.src.enums;
 using EasyReportDispatcher_Lib_DAL.src.report;
 using EasyReportDispatcher_Lib_BIZ.src.utils;
 using Ionic.Zip;
+using Newtonsoft.Json;
+using EasyReportDispatcher_Lib_Common.src;
 
 namespace EasyReportDispatcher_Lib_BIZ.src.report
 {
@@ -68,23 +70,6 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             }
         }
 
-
-        private ReportEstrazioneCopyToLista mListaCopyTo;
-        /// <summary>
-        /// Lista posizioni su cui copiare il file
-        /// </summary>
-        public ReportEstrazioneCopyToLista ListaCopyTo
-        {
-            get
-            {
-                if (this.mListaCopyTo == null)
-                {
-                    this.mListaCopyTo = this.Slot.CreateList<ReportEstrazioneCopyToLista>()
-                         .SearchByColumn(new FilterEQUAL(nameof(ReportEstrazioneDestinatarioEmail.EstrazioneId), this.DataObj.Id));
-                }
-                return this.mListaCopyTo;
-            }
-        }
 
         /// <summary>
         /// Data la stringa cron di schedulazione indica se puo' girare oppure no. Funziona solo su base giornaliera
@@ -225,16 +210,6 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 estBiz.mListaDesinatariEmail.Add(item);
             }
 
-            //Clona copy to
-            estBiz.mListaCopyTo = this.Slot.CreateList<ReportEstrazioneCopyToLista>();
-            foreach (var item in this.ListaCopyTo)
-            {
-                var dest = this.Slot.CloneObjectForNew(item);
-                dest.EstrazioneId = estBiz.DataObj.Id;
-                this.Slot.SaveObject(dest);
-
-                estBiz.mListaCopyTo.Add(item);
-            }
 
             //Clona template
             if (this.DataObj.TemplateId > 0)
@@ -258,7 +233,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         }
 
 
-        public void Run(bool saveResult)
+        public void Run(bool saveResult, bool sendEmail, bool copyTo)
        {
             this.Slot.LogDebug(DebugLevel.Debug_1, "Avvio Run()");
 
@@ -292,7 +267,8 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 this.runAccorpaAltreEstrazioni();
 
                 //Esegue copia
-                this.runCopyTo();
+                if (copyTo)
+                    this.runCopyTo();
 
                 //Esito OK
                 this.mLastResult.StatoId = eReport.StatoEstrazione.TerminataConSuccesso;
@@ -440,7 +416,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                         throw new ApplicationException(string.Format(@"L'estrazione {0} - {1} deve essere dello stesso tipo di quella principale {2}",
                             repBiz.DataObj.Id, repBiz.DataObj.Nome, this.DataObj.Id));
 
-                    repBiz.Run(false);
+                    repBiz.Run(false, false, false);
                     //Aggiunge ad elenco
                     estraz.Add(repBiz.LastResult.DataBlob);
                 }
@@ -487,40 +463,35 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         /// </summary>
         private void runCopyTo()
         {
+            if (string.IsNullOrWhiteSpace(this.DataObj.CopyToPath))
+                return;
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin Copy To");
 
+            var pathText = this.DataObj.CopyToPath.Trim();
 
-            foreach (var item in this.ListaCopyTo)
+
+
+            //Se json allora notazione hfs
+            if (pathText.StartsWith(@"{", StringComparison.Ordinal))
             {
-                var output = this.LastResult;
-                var destFile = this.getCopyToDestFile(item, output);
-                var destDir = Path.GetDirectoryName(destFile);
+                //HFS
+                dynamic obj = Newtonsoft.Json.JsonConvert.DeserializeObject(pathText);
 
-                //Lambda di creazione dir e salvataggio file
-                Action actCopy = () =>
+                string hfsuri = obj.Uri;
+                string vpath = string.Format(obj.Path.ToString(), this.LastResult.DataOraInizio);
+
+                //vai   aa
+                using (var hfs = SDS.CommonUtils.Arch.FileSystem.FileSystemFactory.GetFileSystem(hfsuri))
                 {
-                    this.Slot.LogDebug(DebugLevel.Debug_1, "Begin create dir");
-                    Directory.CreateDirectory(destDir);
-                    this.Slot.LogDebug(DebugLevel.Debug_1, "End create dir");
-
-                    this.Slot.LogDebug(DebugLevel.Debug_1, "Begin write file");
-                    File.WriteAllBytes(destFile, output.DataBlob);
-                    this.Slot.LogDebug(DebugLevel.Debug_1, "End write file");
-                };
-
-                if (!string.IsNullOrWhiteSpace(item.User))
-                {
-                    var cred = new SimpleImpersonation.UserCredentials(item.User, item.Pass);
-                    this.Slot.LogDebug(DebugLevel.Debug_1, "Begin Impersonation");
-                    SimpleImpersonation.Impersonation.RunAsUser(cred, SimpleImpersonation.LogonType.Interactive, actCopy);
-                    this.Slot.LogDebug(DebugLevel.Debug_1, "End Impersonation");
+                    hfs.FileWriteFromBuffer(vpath, this.LastResult.DataBlob);
                 }
-                else
-                {
-                    actCopy.Invoke();
-                }
-               
+            }
+            else
+            {
+                //Fisico o UNC
+                var finalPath = string.Format(this.DataObj.CopyToPath, this.LastResult.DataOraInizio);
+                File.WriteAllBytes(finalPath, this.LastResult.DataBlob);
             }
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "End Copy To");
@@ -606,15 +577,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                             msg.Subject = item.MailSUBJ;
                             msg.Body = item.MailBODY;
 
-                            if (item.CopyToId > 0)
-                            {
-                                var filePath = this.getCopyToDestFile(this.ListaCopyTo.First(ct => ct.Id == item.CopyToId), this.ListaOutput.GetLast()).Replace('\\', '/');
-
-                                msg.Body += string.Format($"<br/><br/>LINK al file: <a href=\"file:///{filePath}\" target=\"_blank\" >clicca qui</a>");
-                                msg.Body += string.Format($"<br/>Se il link non funzionasse copiare il seguente percorso ed utilizzarlo dal proprio PC: <b>{filePath}</b>");
-
-                            }
-                            else
+                            if (string.IsNullOrWhiteSpace(this.DataObj.CopyToPath))
                             {
                                 var fileout = this.getBlobForDispatch(item);
 
@@ -685,6 +648,12 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 db.ExecutionTimeout = 100000;
                 //db.SQL = this.DataObj.SqlText.Replace('\n',' ');
                 db.SQL = this.DataObj.SqlText;
+
+                //Aggiunge una serie di parametri di sistema:
+                //@ERD_LAST_ELAB: ultima elaborazione
+                db.AddParameter(Costanti.Sql_Params.REPORT_ID, this.DataObj.Id);
+                db.AddParameter(Costanti.Sql_Params.LAST_ELAB_DATE, this.ListaOutput.Count > 0 ? this.ListaOutput.GetLast().DataOraInizio : DateTime.MinValue);
+
                 this.mTabResultSQL = db.Select();
             }
         }

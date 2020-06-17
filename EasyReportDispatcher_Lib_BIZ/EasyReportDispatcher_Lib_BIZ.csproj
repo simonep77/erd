@@ -58,8 +58,11 @@
     <Reference Include="NCrontab, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NCrontab.3.3.1\lib\net35\NCrontab.dll</HintPath>
     </Reference>
-    <Reference Include="SimpleImpersonation, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleImpersonation.3.0.0\lib\net45\SimpleImpersonation.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SDS.CommonUtils, Version=1.0.0.1, Culture=neutral, PublicKeyToken=58ac14580549da77, processorArchitecture=MSIL">
+      <HintPath>..\packages\SDS.CommonUtils.1.0.0.97\lib\net\SDS.CommonUtils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

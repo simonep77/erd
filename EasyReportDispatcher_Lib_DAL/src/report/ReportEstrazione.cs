@@ -60,5 +60,8 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         [PropertyMap(nameof(TemplateId))]
         public abstract ReportTemplate Template { get; }
 
+        [AcceptNull()]
+        public abstract string CopyToPath { get; set; }
+
     }
 }

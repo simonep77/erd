@@ -71,12 +71,11 @@ namespace EasyReportDispatcher_DESKTOP
                 //
             }
 
-            this.btnEmailDestAdd.Enabled = (this.mEstrazioneBiz.DataObj.ObjectState != EObjectState.New);
-            this.btnEmailDestEdit.Enabled = (this.mEstrazioneBiz.DataObj.ObjectState != EObjectState.New);
-            this.btnEmailDestDel.Enabled = (this.mEstrazioneBiz.DataObj.ObjectState != EObjectState.New);
-            this.chbInvioEmail.Enabled = (this.mEstrazioneBiz.DataObj.ObjectState != EObjectState.New);
+            //Pulsantiera
+
   
 
+            this.txtCopyToPath.Text = this.mEstrazioneBiz.DataObj.CopyToPath;
             this.txtNumOutput.Value = this.mEstrazioneBiz.DataObj.NumOutputStorico;
 
 
@@ -91,6 +90,8 @@ namespace EasyReportDispatcher_DESKTOP
             //Destinatari email
             UI_Utils.Combo_Load(this.cmbDestEmail, this.mEstrazioneBiz.ListaDesinatariEmail,
                 nameof(ReportEstrazioneDestinatarioEmail.MailTO), nameof(ReportEstrazioneDestinatarioEmail.Id), this.mEstrazioneBiz.ListaDesinatariEmail.GetFirst());
+            //Copy to
+
 
             //Lancia un po' di eventi
             this.txtEstrazioniAcc_TextChanged(null, null);
@@ -276,6 +277,7 @@ namespace EasyReportDispatcher_DESKTOP
                 this.mEstrazioneBiz.DataObj.ConnessioneId = (this.cmbConnessioni.SelectedItem as ReportConnessione).Id;
                 this.mEstrazioneBiz.DataObj.NumOutputStorico = Convert.ToSByte(this.txtNumOutput.Value);
                 this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds = this.txtEstrazioniAcc.Text.Trim(',');
+                this.mEstrazioneBiz.DataObj.CopyToPath = this.txtCopyToPath.Text.Trim();
 
                 if (this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds.Length > 0)
                     this.mEstrazioneBiz.DataObj.AccorpaSoloDati = (sbyte)(this.chkAccorpaDati.Checked ? 1 : 0);
@@ -459,9 +461,16 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void cmbDestEmail_SelectedIndexChanged(object sender, EventArgs e)
         {
+            this.btnEmailDestAdd.Enabled = (this.mEstrazioneBiz.DataObj.ObjectState != EObjectState.New);
             var selected = this.cmbDestEmail.SelectedItem != null;
             this.btnEmailDestEdit.Enabled = selected;
             this.btnEmailDestDel.Enabled = selected;
+        }
+
+        private void btnInfoCopy_Click(object sender, EventArgs e)
+        {
+            var text = "* Per percorso fisico o di rete (UNC) basta immettere il percorso.\n\n* Per percorso HFS immettere un testo JSON del tipo \n{{ \n'Uri': 'hfs://user:pass@server', \n'Path': '/Mia/dir/file_{{0:yyyy_MM_dd}}.csv' \n}}\nNel PATH è possibile utilizzare la data di elaborazione come stringa di formattazione in stile .NET";
+            UI_Utils.ShowInfo(text);
         }
     }
 }
