@@ -89,7 +89,7 @@
             this.tsNumEstrazioni});
             this.statusStrip1.Location = new System.Drawing.Point(0, 636);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1224, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1394, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -116,7 +116,7 @@
             this.btnOutputDir});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1224, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1394, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -155,7 +155,7 @@
             this.panMain.Location = new System.Drawing.Point(0, 25);
             this.panMain.Name = "panMain";
             this.panMain.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-            this.panMain.Size = new System.Drawing.Size(1224, 611);
+            this.panMain.Size = new System.Drawing.Size(1394, 611);
             this.panMain.TabIndex = 3;
             // 
             // groupBox1
@@ -166,7 +166,7 @@
             this.groupBox1.Location = new System.Drawing.Point(0, 10);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(10);
-            this.groupBox1.Size = new System.Drawing.Size(1224, 601);
+            this.groupBox1.Size = new System.Drawing.Size(1394, 601);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Elenco Estrazioni";
@@ -178,7 +178,7 @@
             this.panCenter.Location = new System.Drawing.Point(10, 71);
             this.panCenter.Name = "panCenter";
             this.panCenter.Padding = new System.Windows.Forms.Padding(5);
-            this.panCenter.Size = new System.Drawing.Size(1204, 520);
+            this.panCenter.Size = new System.Drawing.Size(1374, 520);
             this.panCenter.TabIndex = 2;
             // 
             // lvEstrazioni
@@ -203,8 +203,7 @@
             this.lvEstrazioni.MultiSelect = false;
             this.lvEstrazioni.Name = "lvEstrazioni";
             this.lvEstrazioni.Scrollable = false;
-            this.lvEstrazioni.ShowGroups = false;
-            this.lvEstrazioni.Size = new System.Drawing.Size(1194, 510);
+            this.lvEstrazioni.Size = new System.Drawing.Size(1364, 510);
             this.lvEstrazioni.SmallImageList = this.imgList;
             this.lvEstrazioni.TabIndex = 0;
             this.lvEstrazioni.UseCompatibleStateImageBehavior = false;
@@ -219,7 +218,7 @@
             // colNome
             // 
             this.colNome.Text = "Nome";
-            this.colNome.Width = 250;
+            this.colNome.Width = 300;
             // 
             // colConnessione
             // 
@@ -444,7 +443,7 @@
             this.panSearch.Dock = System.Windows.Forms.DockStyle.Top;
             this.panSearch.Location = new System.Drawing.Point(10, 30);
             this.panSearch.Name = "panSearch";
-            this.panSearch.Size = new System.Drawing.Size(1204, 41);
+            this.panSearch.Size = new System.Drawing.Size(1374, 41);
             this.panSearch.TabIndex = 1;
             // 
             // lbFiltroNum
@@ -478,7 +477,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1224, 658);
+            this.ClientSize = new System.Drawing.Size(1394, 658);
             this.Controls.Add(this.panMain);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);

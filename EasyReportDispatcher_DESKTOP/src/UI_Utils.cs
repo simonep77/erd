@@ -58,7 +58,7 @@ namespace EasyReportDispatcher_DESKTOP.src
 
         public static void ShowSpinner(Control ctrl)
         {
-            return;
+            //return;
 
             var pb = new PictureBox();
             pb.Name = ctrl.Name + "_spinner";

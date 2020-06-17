@@ -35,6 +35,7 @@ namespace EasyReportDispatcher_DESKTOP
             this.Text = string.Format(@"Estrazione ID: {0}", this.mEstrazioneBiz.DataObj.ObjectState == Bdo.Objects.EObjectState.New ? "<new>" : this.mEstrazioneBiz.DataObj.Id.ToString());  this.mEstrazioneBiz.DataObj.Id.ToString();
 
             this.txtNome.Text = this.mEstrazioneBiz.DataObj.Nome;
+            this.txtGruppo.Text = this.mEstrazioneBiz.DataObj.Gruppo;
             this.txtNote.Text = this.mEstrazioneBiz.DataObj.Note;
             this.txtCronString.Text = this.mEstrazioneBiz.DataObj.CronString;
             this.txtEstrazioniAcc.Text = this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds;
@@ -278,6 +279,7 @@ namespace EasyReportDispatcher_DESKTOP
                 this.mEstrazioneBiz.DataObj.NumOutputStorico = Convert.ToSByte(this.txtNumOutput.Value);
                 this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds = this.txtEstrazioniAcc.Text.Trim(',');
                 this.mEstrazioneBiz.DataObj.CopyToPath = this.txtCopyToPath.Text.Trim();
+                this.mEstrazioneBiz.DataObj.Gruppo = this.txtGruppo.Text.Trim();
 
                 if (this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds.Length > 0)
                     this.mEstrazioneBiz.DataObj.AccorpaSoloDati = (sbyte)(this.chkAccorpaDati.Checked ? 1 : 0);
@@ -470,6 +472,12 @@ namespace EasyReportDispatcher_DESKTOP
         private void btnInfoCopy_Click(object sender, EventArgs e)
         {
             var text = "* Per percorso fisico o di rete (UNC) basta immettere il percorso.\n\n* Per percorso HFS immettere un testo JSON del tipo \n{{ \n'Uri': 'hfs://user:pass@server', \n'Path': '/Mia/dir/file_{{0:yyyy_MM_dd}}.csv' \n}}\nNel PATH è possibile utilizzare la data di elaborazione come stringa di formattazione in stile .NET";
+            UI_Utils.ShowInfo(text);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var text = "E' possibile utilizzare nella query i seguenti parametri pre-valorizzati:\n\n * @ERD_LAST_ELAB_DATE: è la data/ora dell'ultima esecuzione terminata con successo registrata su DB\n\n * @ERD_REPORT_ID: è l'ID del report in esecuzione";
             UI_Utils.ShowInfo(text);
         }
     }

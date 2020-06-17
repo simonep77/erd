@@ -445,17 +445,6 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
         }
 
-        /// <summary>
-        /// Data una destinazione di copia e l'output ritorna un path completo
-        /// </summary>
-        /// <param name="copyto"></param>
-        /// <param name="output"></param>
-        /// <returns></returns>
-        private string getCopyToDestFile(ReportEstrazioneCopyTo copyto, ReportEstrazioneOutput output)
-        {
-            var destDir = string.Format(copyto.Path, output.DataOraInizio).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-            return Path.Combine(destDir, output.NomeFile);
-        }
 
 
         /// <summary>

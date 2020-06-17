@@ -33,6 +33,7 @@ namespace EasyReportDispatcher_DESKTOP
             try
             {
                 LvSort.registerLV(this.lvEstrazioni);
+                //this.lvEstrazioni.ColumnClick += (s, e) => this.ensureAllGroups();
 
                 Directory.CreateDirectory(AppContextERD.UserDataDir);
                 Directory.CreateDirectory(AppContextERD.UserDataDirOutput);
@@ -42,6 +43,7 @@ namespace EasyReportDispatcher_DESKTOP
                 MessageBox.Show(ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private void actConnetti(object sender, EventArgs e)
         {
@@ -88,20 +90,18 @@ namespace EasyReportDispatcher_DESKTOP
             try
             {
                 var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>()
+                    .LoadFullObjects()
                         .OrderBy(nameof(ReportEstrazione.Id), OrderVersus.Desc)
                         .SearchByColumn(Filter.Gt(nameof(ReportEstrazione.Attivo), -1));
 
+                Application.DoEvents();
+
                 foreach (var est in lst)
                 {
-                    this.addEstrazioneToList(est.ToBizObject<ReportEstrazioneBIZ>(), false);
-                    //Application.DoEvents();
+                    var lvItem = this.addEstrazioneToList(est.ToBizObject<ReportEstrazioneBIZ>(), false);
+                    Application.DoEvents();
                 }
 
-                //Indenta le dipendenti
-                //foreach (var item in this.mLvItems)
-                //{
-                //    var est = item.Tag as ReportEstrazioneBIZ;
-                //}
 
                 this.updateEstCount();
             }
@@ -109,16 +109,55 @@ namespace EasyReportDispatcher_DESKTOP
             {
                 UI_Utils.HideSpinner(this.lvEstrazioni);
             }
+        }
 
+
+        private void ensureAllGroups()
+        {
+            foreach (var item in this.mLvItems)
+            {
+                var repBiz = item.Tag as ReportEstrazioneBIZ;
+                this.ensureGroup(repBiz.DataObj, item);
+            }
+        }
+
+        private void ensureGroup(ReportEstrazione est, ListViewItem item)
+        {
+            item.Group = null;
+            
+            if (string.IsNullOrWhiteSpace(est.Gruppo))
+            {
+                item.Group = this.findLvGroupOrCreate(@"NESSUN GRUPPO");
+            }
+            else
+            {
+                item.Group = this.findLvGroupOrCreate(est.Gruppo);
+            }
 
         }
 
-        private void addEstrazioneToList(ReportEstrazioneBIZ est, bool select)
+        private ListViewGroup findLvGroupOrCreate(string name)
+        {
+            name = name.ToUpper();
+
+            var gp = this.lvEstrazioni.Groups[name];
+
+            if (gp == null)
+            {
+                gp = new ListViewGroup(name, name);
+                this.lvEstrazioni.Groups.Add(gp);
+            }
+
+            return gp;
+        }
+
+        private ListViewItem addEstrazioneToList(ReportEstrazioneBIZ est, bool select)
         {
             var item = new ListViewItem();
             this.setListItem(item, est);
             this.mLvItems.Add(item);
             this.lvEstrazioni.Items.Add(item);
+            this.ensureGroup(est.DataObj, item);
             this.updateEstCount();
 
             if (select)
@@ -126,81 +165,12 @@ namespace EasyReportDispatcher_DESKTOP
                 item.Selected = true;
                 item.EnsureVisible();
             }
+
+            return item;
         }
 
 
 
-        private void loadEstrazioni2()
-        {
-            this.clearAll();
-
-            var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>()
-                .SearchByColumn(Filter.Gt(nameof(ReportEstrazione.Attivo), -1));
-
-            var gps = from est in lst
-                      where est.EstrazioniAccorpateIds.Length > 0
-                      select est;
-
-            foreach (var est in gps)
-            {
-                //Crea gruppo
-                var g = new ListViewGroup("Est_" + est.Id.ToString(), est.Nome);
-                g.Tag = est;
-                this.lvEstrazioni.Groups.Add(g);
-
-                var item = new ListViewItem();
-
-                this.setListItem(item, est.ToBizObject<ReportEstrazioneBIZ>());
-
-                g.Items.Add(item);
-                this.lvEstrazioni.Items.Add(item);
-
-
-                //Cerca tutte le estrazioni da includere
-                var subs = from id in est.EstrazioniAccorpateIds.Split(new char[] { ','}, StringSplitOptions.RemoveEmptyEntries)
-                           from e in lst
-                          where id == e.Id.ToString()
-                          select e;
-
-                foreach (var est2 in subs)
-                {
-                    var item2 = new ListViewItem();
-
-                    this.setListItem(item2, est2.ToBizObject<ReportEstrazioneBIZ>());
-
-                    g.Items.Add(item2);
-                    this.lvEstrazioni.Items.Add(item2);
-                }
-            }
-
-            var gDef= new ListViewGroup("Default", "STANDARD");
-            this.lvEstrazioni.Groups.Add(gDef);
-
-            foreach (var est in lst)
-            {
-
-                foreach (var g in this.lvEstrazioni.Groups.Cast<ListViewGroup>())
-                {
-                    foreach (var it in g.Items.Cast<ListViewItem>())
-                    {
-                        if (it.Tag.Equals(est))
-                            goto endMainLoop; 
-                    }
-                }
-
-                var item = new ListViewItem();
-
-                this.setListItem(item, est.ToBizObject<ReportEstrazioneBIZ>());
-
-                gDef.Items.Add(item);
-
-                this.lvEstrazioni.Items.Add(item);
-
-                endMainLoop:;
-            }
-
-            this.updateEstCount();
-        }
 
         private void updateEstCount()
         {
@@ -212,6 +182,9 @@ namespace EasyReportDispatcher_DESKTOP
         private void setListItem(ListViewItem item, ReportEstrazioneBIZ est)
         {
             item.SubItems.Clear();
+
+            this.ensureGroup(est.DataObj, item);
+
 
             item.Tag = est;
             item.Text = est.DataObj.Id.ToString();
@@ -505,22 +478,27 @@ namespace EasyReportDispatcher_DESKTOP
                 {
                     this.lvEstrazioni.Items.Clear();
                     this.lvEstrazioni.Items.AddRange(this.mLvItems.ToArray());
+                    this.ensureAllGroups();
+
                 }
 
                 return;
             }
             //Esce se vuoto
-            if (this.lvEstrazioni.Items.Count == 0)
-                return;
+            //if (this.lvEstrazioni.Items.Count == 0)
+            //    return;
             //Svuota
             this.lvEstrazioni.Items.Clear();
             //Carica
             foreach (var item in this.mLvItems)
             {
                 var searchText = this.txtFiltro.Text.ToUpper();
-                if (item.SubItems[colNome.DisplayIndex
-                    ].Text.ToUpper().Contains(searchText))
+                if (item.SubItems[colNome.DisplayIndex].Text.ToUpper().Contains(searchText))
+                {
                     this.lvEstrazioni.Items.Add(item);
+                    //this.ensureGroup((item.Tag as ReportEstrazioneBIZ).DataObj, item);
+                }
+                this.ensureAllGroups();
             }
             //Visualizza ris
             this.lbFiltroNum.Visible = true;

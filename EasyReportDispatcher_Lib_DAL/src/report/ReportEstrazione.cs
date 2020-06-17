@@ -21,6 +21,10 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
 
         [AcceptNull()]
         public abstract String Titolo { get; set; }
+
+        [AcceptNull()]
+        public abstract string Gruppo { get; set; }
+
         [AcceptNull()]
         public abstract String Note { get; set; }
 
