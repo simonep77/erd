@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.gbGenerali = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtGruppo = new System.Windows.Forms.TextBox();
             this.btnInfoCopy = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txtCopyToPath = new System.Windows.Forms.TextBox();
@@ -76,8 +78,6 @@
             this.panTop = new System.Windows.Forms.Panel();
             this.panCenter = new System.Windows.Forms.Panel();
             this.panBottom = new System.Windows.Forms.Panel();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtGruppo = new System.Windows.Forms.TextBox();
             this.gbGenerali.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtNumOutput)).BeginInit();
             this.gbExcel.SuspendLayout();
@@ -128,10 +128,26 @@
             this.gbGenerali.TabStop = false;
             this.gbGenerali.Text = "Generali";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(510, 28);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(160, 18);
+            this.label5.TabIndex = 33;
+            this.label5.Text = "Gruppo (visualizzazione)";
+            // 
+            // txtGruppo
+            // 
+            this.txtGruppo.Location = new System.Drawing.Point(711, 23);
+            this.txtGruppo.Name = "txtGruppo";
+            this.txtGruppo.Size = new System.Drawing.Size(201, 26);
+            this.txtGruppo.TabIndex = 32;
+            // 
             // btnInfoCopy
             // 
             this.btnInfoCopy.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.information;
-            this.btnInfoCopy.Location = new System.Drawing.Point(322, 153);
+            this.btnInfoCopy.Location = new System.Drawing.Point(1138, 24);
             this.btnInfoCopy.Name = "btnInfoCopy";
             this.btnInfoCopy.Size = new System.Drawing.Size(27, 23);
             this.btnInfoCopy.TabIndex = 31;
@@ -141,24 +157,24 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 155);
+            this.label1.Location = new System.Drawing.Point(1054, 28);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(64, 18);
+            this.label1.Size = new System.Drawing.Size(78, 18);
             this.label1.TabIndex = 30;
-            this.label1.Text = "Copia su:";
+            this.label1.Text = "Deposita in";
             // 
             // txtCopyToPath
             // 
-            this.txtCopyToPath.Location = new System.Drawing.Point(115, 152);
+            this.txtCopyToPath.Location = new System.Drawing.Point(1057, 54);
             this.txtCopyToPath.Multiline = true;
             this.txtCopyToPath.Name = "txtCopyToPath";
-            this.txtCopyToPath.Size = new System.Drawing.Size(201, 72);
+            this.txtCopyToPath.Size = new System.Drawing.Size(293, 145);
             this.txtCopyToPath.TabIndex = 29;
             // 
             // btnEmailDestDel
             // 
             this.btnEmailDestDel.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.delete;
-            this.btnEmailDestDel.Location = new System.Drawing.Point(933, 119);
+            this.btnEmailDestDel.Location = new System.Drawing.Point(979, 119);
             this.btnEmailDestDel.Name = "btnEmailDestDel";
             this.btnEmailDestDel.Size = new System.Drawing.Size(27, 23);
             this.btnEmailDestDel.TabIndex = 28;
@@ -168,7 +184,7 @@
             // btnEmailDestEdit
             // 
             this.btnEmailDestEdit.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.table_edit;
-            this.btnEmailDestEdit.Location = new System.Drawing.Point(903, 119);
+            this.btnEmailDestEdit.Location = new System.Drawing.Point(949, 118);
             this.btnEmailDestEdit.Name = "btnEmailDestEdit";
             this.btnEmailDestEdit.Size = new System.Drawing.Size(27, 23);
             this.btnEmailDestEdit.TabIndex = 27;
@@ -178,7 +194,7 @@
             // btnEmailDestAdd
             // 
             this.btnEmailDestAdd.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.add;
-            this.btnEmailDestAdd.Location = new System.Drawing.Point(873, 119);
+            this.btnEmailDestAdd.Location = new System.Drawing.Point(919, 118);
             this.btnEmailDestAdd.Name = "btnEmailDestAdd";
             this.btnEmailDestAdd.Size = new System.Drawing.Size(27, 23);
             this.btnEmailDestAdd.TabIndex = 26;
@@ -189,7 +205,7 @@
             // 
             this.cmbDestEmail.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDestEmail.FormattingEnabled = true;
-            this.cmbDestEmail.Location = new System.Drawing.Point(666, 117);
+            this.cmbDestEmail.Location = new System.Drawing.Point(712, 116);
             this.cmbDestEmail.Name = "cmbDestEmail";
             this.cmbDestEmail.Size = new System.Drawing.Size(201, 26);
             this.cmbDestEmail.TabIndex = 25;
@@ -198,7 +214,7 @@
             // btnElimina
             // 
             this.btnElimina.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.delete;
-            this.btnElimina.Location = new System.Drawing.Point(382, 27);
+            this.btnElimina.Location = new System.Drawing.Point(453, 26);
             this.btnElimina.Name = "btnElimina";
             this.btnElimina.Size = new System.Drawing.Size(27, 23);
             this.btnElimina.TabIndex = 23;
@@ -208,7 +224,7 @@
             // btnEditConn
             // 
             this.btnEditConn.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.table_edit;
-            this.btnEditConn.Location = new System.Drawing.Point(352, 27);
+            this.btnEditConn.Location = new System.Drawing.Point(423, 26);
             this.btnEditConn.Name = "btnEditConn";
             this.btnEditConn.Size = new System.Drawing.Size(27, 23);
             this.btnEditConn.TabIndex = 22;
@@ -218,7 +234,7 @@
             // btnInserisciConnessione
             // 
             this.btnInserisciConnessione.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.add;
-            this.btnInserisciConnessione.Location = new System.Drawing.Point(322, 27);
+            this.btnInserisciConnessione.Location = new System.Drawing.Point(393, 26);
             this.btnInserisciConnessione.Name = "btnInserisciConnessione";
             this.btnInserisciConnessione.Size = new System.Drawing.Size(27, 23);
             this.btnInserisciConnessione.TabIndex = 21;
@@ -228,7 +244,7 @@
             // chkAccorpaDati
             // 
             this.chkAccorpaDati.AutoSize = true;
-            this.chkAccorpaDati.Location = new System.Drawing.Point(872, 178);
+            this.chkAccorpaDati.Location = new System.Drawing.Point(918, 177);
             this.chkAccorpaDati.Name = "chkAccorpaDati";
             this.chkAccorpaDati.Size = new System.Drawing.Size(81, 22);
             this.chkAccorpaDati.TabIndex = 20;
@@ -238,7 +254,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(465, 180);
+            this.label11.Location = new System.Drawing.Point(511, 179);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(133, 18);
             this.label11.TabIndex = 19;
@@ -246,7 +262,7 @@
             // 
             // txtEstrazioniAcc
             // 
-            this.txtEstrazioniAcc.Location = new System.Drawing.Point(665, 177);
+            this.txtEstrazioniAcc.Location = new System.Drawing.Point(711, 176);
             this.txtEstrazioniAcc.Name = "txtEstrazioniAcc";
             this.txtEstrazioniAcc.Size = new System.Drawing.Size(201, 26);
             this.txtEstrazioniAcc.TabIndex = 18;
@@ -255,7 +271,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(464, 150);
+            this.label10.Location = new System.Drawing.Point(510, 149);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(89, 18);
             this.label10.TabIndex = 17;
@@ -263,7 +279,7 @@
             // 
             // txtNumOutput
             // 
-            this.txtNumOutput.Location = new System.Drawing.Point(665, 147);
+            this.txtNumOutput.Location = new System.Drawing.Point(711, 146);
             this.txtNumOutput.Maximum = new decimal(new int[] {
             127,
             0,
@@ -279,7 +295,7 @@
             this.cmbConnessioni.FormattingEnabled = true;
             this.cmbConnessioni.Location = new System.Drawing.Point(115, 25);
             this.cmbConnessioni.Name = "cmbConnessioni";
-            this.cmbConnessioni.Size = new System.Drawing.Size(201, 26);
+            this.cmbConnessioni.Size = new System.Drawing.Size(272, 26);
             this.cmbConnessioni.TabIndex = 15;
             // 
             // label9
@@ -293,7 +309,7 @@
             // 
             // chbInvioEmail
             // 
-            this.chbInvioEmail.Location = new System.Drawing.Point(465, 119);
+            this.chbInvioEmail.Location = new System.Drawing.Point(511, 118);
             this.chbInvioEmail.Name = "chbInvioEmail";
             this.chbInvioEmail.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.chbInvioEmail.Size = new System.Drawing.Size(193, 22);
@@ -306,7 +322,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(464, 90);
+            this.label7.Location = new System.Drawing.Point(510, 89);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(102, 18);
             this.label7.TabIndex = 10;
@@ -316,7 +332,7 @@
             // 
             this.cmbTipoFile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTipoFile.FormattingEnabled = true;
-            this.cmbTipoFile.Location = new System.Drawing.Point(666, 86);
+            this.cmbTipoFile.Location = new System.Drawing.Point(712, 85);
             this.cmbTipoFile.Name = "cmbTipoFile";
             this.cmbTipoFile.Size = new System.Drawing.Size(201, 26);
             this.cmbTipoFile.TabIndex = 9;
@@ -324,14 +340,14 @@
             // 
             // txtCronString
             // 
-            this.txtCronString.Location = new System.Drawing.Point(665, 55);
+            this.txtCronString.Location = new System.Drawing.Point(711, 54);
             this.txtCronString.Name = "txtCronString";
             this.txtCronString.Size = new System.Drawing.Size(201, 26);
             this.txtCronString.TabIndex = 7;
             // 
             // chkAttivo
             // 
-            this.chkAttivo.Location = new System.Drawing.Point(465, 57);
+            this.chkAttivo.Location = new System.Drawing.Point(511, 56);
             this.chkAttivo.Name = "chkAttivo";
             this.chkAttivo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.chkAttivo.Size = new System.Drawing.Size(193, 22);
@@ -355,7 +371,7 @@
             this.txtNote.Location = new System.Drawing.Point(115, 89);
             this.txtNote.Multiline = true;
             this.txtNote.Name = "txtNote";
-            this.txtNote.Size = new System.Drawing.Size(201, 57);
+            this.txtNote.Size = new System.Drawing.Size(272, 110);
             this.txtNote.TabIndex = 4;
             // 
             // label2
@@ -371,7 +387,7 @@
             // 
             this.txtNome.Location = new System.Drawing.Point(115, 57);
             this.txtNome.Name = "txtNome";
-            this.txtNome.Size = new System.Drawing.Size(201, 26);
+            this.txtNome.Size = new System.Drawing.Size(272, 26);
             this.txtNome.TabIndex = 1;
             // 
             // gbExcel
@@ -585,22 +601,6 @@
             this.panBottom.Name = "panBottom";
             this.panBottom.Size = new System.Drawing.Size(1379, 51);
             this.panBottom.TabIndex = 18;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(464, 29);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(54, 18);
-            this.label5.TabIndex = 33;
-            this.label5.Text = "Gruppo";
-            // 
-            // txtGruppo
-            // 
-            this.txtGruppo.Location = new System.Drawing.Point(665, 24);
-            this.txtGruppo.Name = "txtGruppo";
-            this.txtGruppo.Size = new System.Drawing.Size(201, 26);
-            this.txtGruppo.TabIndex = 32;
             // 
             // frmEstrazione
             // 
