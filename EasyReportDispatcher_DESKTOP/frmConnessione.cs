@@ -47,7 +47,7 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void initData()
         {
-            var lst = new[] { new { Testo="MYSQL", Class="MYSQLDataBase" }, new { Testo = "MS SQL SERVER", Class = "MSSQLDataBase2005" } };
+            var lst = new[] { new { Testo="MYSQL", Class="MYSQLDataBase" }, new { Testo = "MS SQL SERVER", Class = "MSSQL2005DataBase" } };
 
             this.cmbTipoDb.DisplayMember = "Testo";
             this.cmbTipoDb.ValueMember = "Class";

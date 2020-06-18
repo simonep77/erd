@@ -32,16 +32,60 @@ namespace EasyReportDispatcher_DESKTOP
 
             try
             {
+
                 LvSort.registerLV(this.lvEstrazioni);
                 //this.lvEstrazioni.ColumnClick += (s, e) => this.ensureAllGroups();
 
                 Directory.CreateDirectory(AppContextERD.UserDataDir);
                 Directory.CreateDirectory(AppContextERD.UserDataDirOutput);
+                Directory.CreateDirectory(AppContextERD.UserDataDirTemplate);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+
+        private void retrieveUserDetails()
+        {
+    
+            var uc = new UserContext();
+
+            if (System.DirectoryServices.AccountManagement.UserPrincipal.Current != null)
+            {
+                var aduser = System.DirectoryServices.AccountManagement.UserPrincipal.Current;
+
+                uc.Username = aduser.SamAccountName;
+                uc.Nominativo = aduser.DisplayName;
+                uc.Email = aduser.EmailAddress;
+                uc.Dominio = System.DirectoryServices.ActiveDirectory.Domain.GetCurrentDomain().Name;
+
+
+            }
+            else
+            {
+                uc.Username = Environment.UserName;
+                uc.Dominio = Environment.UserDomainName;
+                uc.Nominativo = uc.Username;
+            }
+
+            //Cerca utente mappato
+            var repUser = AppContextERD.Slot.LoadObjOrNewByKEY<ReportUtente>(ReportUtente.KEY_USER_DOM, uc.Username, uc.Dominio);
+            //Se non esiste lo crea
+            if (repUser.ObjectState == EObjectState.New)
+            {
+                repUser.Nominativo = uc.Nominativo;
+                repUser.Email = uc.Email;
+
+                AppContextERD.Slot.SaveObject(repUser);
+            }
+            //Viene agganciato al contesto
+            AppContextERD.Utente = repUser;
+
+
+
+
         }
 
 
@@ -59,6 +103,8 @@ namespace EasyReportDispatcher_DESKTOP
             this.Cursor = Cursors.WaitCursor;
             try
             {
+                this.retrieveUserDetails();
+
                 this.loadEstrazioni();
 
                 this.tsConnessione.Text = "Connesso";
@@ -313,7 +359,7 @@ namespace EasyReportDispatcher_DESKTOP
 
         private string getLocalTemplate(ReportEstrazioneBIZ est)
         {
-            return Path.Combine(AppContextERD.UserDataDir, string.Format(@"ReportEstrazione_{0}.xlsx", est.DataObj.Id));
+            return Path.Combine(AppContextERD.UserDataDirTemplate, string.Format(@"ReportEstrazione_{0}.xlsx", est.DataObj.Id));
         }
 
 

@@ -15,6 +15,9 @@ namespace EasyReportDispatcher_DESKTOP.src
 
         public static string UserDataDir { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ERD");
         public static string UserDataDirOutput { get; } = Path.Combine(UserDataDir, "Output");
+        public static string UserDataDirTemplate { get; } = Path.Combine(UserDataDir, "Template");
+
+        public static EasyReportDispatcher_Lib_DAL.src.report.ReportUtente Utente { get; set; }
 
     }
 }

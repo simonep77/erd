@@ -641,7 +641,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 //Aggiunge una serie di parametri di sistema:
                 //@ERD_LAST_ELAB: ultima elaborazione
                 db.AddParameter(Costanti.Sql_Params.REPORT_ID, this.DataObj.Id);
-                db.AddParameter(Costanti.Sql_Params.LAST_ELAB_DATE, this.ListaOutput.Count > 0 ? this.ListaOutput.GetLast().DataOraInizio : DateTime.MinValue);
+                db.AddParameter(Costanti.Sql_Params.LAST_ELAB_DATE, this.ListaOutput.Count > 0 ? this.ListaOutput.GetLast().DataOraInizio : new DateTime(1900, 1, 1));
 
                 this.mTabResultSQL = db.Select();
             }
