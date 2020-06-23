@@ -140,6 +140,8 @@ namespace EasyReportDispatcher_DESKTOP
                         .OrderBy(nameof(ReportEstrazione.Id), OrderVersus.Desc)
                         .SearchByColumn(Filter.Gt(nameof(ReportEstrazione.Attivo), -1));
 
+                this.lvEstrazioni.BeginUpdate();
+
                 Application.DoEvents();
 
                 foreach (var est in lst)
@@ -150,6 +152,13 @@ namespace EasyReportDispatcher_DESKTOP
 
 
                 this.updateEstCount();
+
+                this.ensureIndent();
+
+                this.ensureAllGroups();
+
+                this.lvEstrazioni.EndUpdate();
+
             }
             finally
             {
@@ -158,9 +167,47 @@ namespace EasyReportDispatcher_DESKTOP
         }
 
 
+        /// <summary>
+        /// Rivaluta le indentazioni
+        /// </summary>
+        private void ensureIndent()
+        {
+            //return;
+
+            var items = this.lvEstrazioni.Items.Cast<ListViewItem>();
+
+            var estAgg = from it in items
+                         where (it.Tag as ReportEstrazioneBIZ).IsAccorpato
+                         select (ReportEstrazioneBIZ)it.Tag;
+
+            var sep = new char[] { ',' };
+
+            foreach (var est in estAgg)
+            {
+                var coda = 0;
+                var itemParent = items.Where(it => (it.Tag as ReportEstrazioneBIZ).DataObj.Equals(est.DataObj)).FirstOrDefault();
+
+                foreach (var estDip in est.ListaEstrazioniDaAccorpare)
+                {
+                    var item = items.Where(it => (it.Tag as ReportEstrazioneBIZ).DataObj.Equals(estDip)).FirstOrDefault();
+
+                    if (item != null)
+                    {
+                        coda++;
+                        this.lvEstrazioni.Items.RemoveAt(item.Index);
+                        this.lvEstrazioni.Items.Insert(itemParent.Index + coda, item);
+                        item.IndentCount = 1;
+                    }
+
+                }
+
+            }
+
+        }
+
         private void ensureAllGroups()
         {
-            foreach (var item in this.mLvItems)
+            foreach (ListViewItem item in this.lvEstrazioni.Items)
             {
                 var repBiz = item.Tag as ReportEstrazioneBIZ;
                 this.ensureGroup(repBiz.DataObj, item);
@@ -229,7 +276,7 @@ namespace EasyReportDispatcher_DESKTOP
         {
             item.SubItems.Clear();
 
-            this.ensureGroup(est.DataObj, item);
+            //this.ensureGroup(est.DataObj, item);
 
 
             item.Tag = est;
@@ -523,9 +570,12 @@ namespace EasyReportDispatcher_DESKTOP
                 if (this.lvEstrazioni.Items.Count != this.mLvItems.Count)
                 {
                     this.lvEstrazioni.Items.Clear();
+                    this.lvEstrazioni.BeginUpdate();
                     this.lvEstrazioni.Items.AddRange(this.mLvItems.ToArray());
+                    this.ensureIndent();
                     this.ensureAllGroups();
-
+                    this.lvEstrazioni.EndUpdate();
+                    
                 }
 
                 return;
@@ -535,6 +585,7 @@ namespace EasyReportDispatcher_DESKTOP
             //    return;
             //Svuota
             this.lvEstrazioni.Items.Clear();
+            this.lvEstrazioni.BeginUpdate();
             //Carica
             foreach (var item in this.mLvItems)
             {
@@ -544,8 +595,13 @@ namespace EasyReportDispatcher_DESKTOP
                     this.lvEstrazioni.Items.Add(item);
                     //this.ensureGroup((item.Tag as ReportEstrazioneBIZ).DataObj, item);
                 }
-                this.ensureAllGroups();
             }
+
+            this.ensureIndent();
+            this.ensureAllGroups();
+
+            this.lvEstrazioni.EndUpdate();
+
             //Visualizza ris
             this.lbFiltroNum.Visible = true;
             this.lbFiltroNum.Text = string.Format("Visibili {0} su {1}", this.lvEstrazioni.Items.Count, this.mLvItems.Count);

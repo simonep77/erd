@@ -134,6 +134,36 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             }
         }
 
+
+        private ReportEstrazioneLista mListaEstrazioniDaAccorpare;
+        public ReportEstrazioneLista ListaEstrazioniDaAccorpare
+        {
+            get
+            {
+                if (this.mListaEstrazioniDaAccorpare == null)
+                {
+                    this.mListaEstrazioniDaAccorpare = this.Slot.CreateList<ReportEstrazioneLista>();
+                    if (this.IsAccorpato)
+                    {
+                        var dips = this.DataObj.EstrazioniAccorpateIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        foreach (var estid in dips)
+                        {
+                            var estDip = this.Slot.LoadObjNullByPK<ReportEstrazione>(estid);
+
+                            this.mListaEstrazioniDaAccorpare.Add(estDip);
+
+                        }
+
+                    }
+
+                }
+
+                return this.mListaEstrazioniDaAccorpare;
+            }
+        }
+
+
         /// <summary>
         /// indica se ha un template custom
         /// </summary>

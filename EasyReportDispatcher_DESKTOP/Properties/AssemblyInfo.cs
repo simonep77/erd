@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("EasyReportDispatcher_DESKTOP")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("HP Inc.")]
+[assembly: AssemblyCompany("Poste Italiane")]
 [assembly: AssemblyProduct("EasyReportDispatcher_DESKTOP")]
-[assembly: AssemblyCopyright("Copyright © HP Inc. 2020")]
+[assembly: AssemblyCopyright("Copyright © Simone Pelaia")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

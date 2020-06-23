@@ -1,4 +1,6 @@
-﻿namespace EasyReportDispatcher_DESKTOP
+﻿using EasyReportDispatcher_DESKTOP.src;
+
+namespace EasyReportDispatcher_DESKTOP
 {
     partial class frmMain
     {
@@ -40,7 +42,8 @@
             this.panMain = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panCenter = new System.Windows.Forms.Panel();
-            this.lvEstrazioni = new System.Windows.Forms.ListView();
+            //this.lvEstrazioni = new System.Windows.Forms.ListView();
+            this.lvEstrazioni = new LvCustom();
             this.colID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colNome = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colConnessione = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -202,7 +205,6 @@
             this.lvEstrazioni.Margin = new System.Windows.Forms.Padding(20);
             this.lvEstrazioni.MultiSelect = false;
             this.lvEstrazioni.Name = "lvEstrazioni";
-            this.lvEstrazioni.Scrollable = false;
             this.lvEstrazioni.Size = new System.Drawing.Size(1364, 510);
             this.lvEstrazioni.SmallImageList = this.imgList;
             this.lvEstrazioni.TabIndex = 0;
