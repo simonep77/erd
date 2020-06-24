@@ -287,7 +287,7 @@ namespace EasyReportDispatcher_DESKTOP
 
             if (est.DataObj.Attivo > 0 && est.DataObj.CronString != null)
             {
-                var nextRun = est.GetNextSchedule(DateTime.Now);
+                var nextRun = est.GetNextSchedule(DateTime.Today);
                 item.SubItems.Add(nextRun.ToString($"{nextRun:dd/MM/yyyy HH:mm:ss}"));
             }
             else
@@ -659,6 +659,7 @@ namespace EasyReportDispatcher_DESKTOP
             {
                 frm.ShowDialog();
 
+                this.setListItem(this.lvEstrazioni.SelectedItems[0], estBiz);
             }
         }
 

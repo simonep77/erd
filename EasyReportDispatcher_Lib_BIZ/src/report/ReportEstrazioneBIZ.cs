@@ -46,6 +46,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                if (this.mListaOutput == null)
                {
                    this.mListaOutput = this.Slot.CreateList<ReportEstrazioneOutputLista>()
+                        .LoadFullObjects()
                         .OrderBy(nameof(ReportEstrazioneOutput.Id))
                         .SearchByColumn(new FilterEQUAL(nameof(ReportEstrazioneOutput.EstrazioneId), this.DataObj.Id));
                }
@@ -85,18 +86,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 try
                 {
 
-                    var nextRun = this.GetNextSchedule(DateTime.Today);
-
-                    if (DateTime.Now >= nextRun)
-                    {
-                        //Verifica se oggi ha gia' girato schedulato
-                        var lastRun = this.Slot.CreateList<ReportEstrazioneOutputLista>()
-                            .SearchByColumn(new FilterEQUAL(nameof(ReportEstrazioneOutput.EstrazioneId), this.DataObj.Id)
-                            .And(new FilterBETWEEN(nameof(ReportEstrazioneOutput.DataOraInizio), nextRun.Date, nextRun.Date.AddDays(1).AddSeconds(-1)))
-                            .And(new FilterIN(nameof(ReportEstrazioneOutput.StatoId), eReport.StatoEstrazione.Avviata, eReport.StatoEstrazione.TerminataConSuccesso)));
-
-                        return !lastRun.Any();
-                    }
+                    return (this.GetNextSchedule(DateTime.Today).Date == DateTime.Today);
                 }
                 catch (Exception e)
                 {
@@ -194,12 +184,13 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         }
 
 
-       #endregion
+        #endregion
 
         #region PUBLIC
 
+
         /// <summary>
-        /// Ritorna la prossima schedulazione determnata sulla base della data di riferimento
+        /// Ritorna la prossima schedulazione determniata sulla base della data di riferimento
         /// </summary>
         /// <param name="dtRif"></param>
         /// <returns></returns>
@@ -207,11 +198,24 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         {
             var cronExp = NCrontab.CrontabSchedule.Parse(this.DataObj.CronString);
             var dtInit = dtRif;
-            var dtEnd = dtRif.AddYears(5);
+            var dtEnd = dtRif.AddYears(2);
             var nextRun = cronExp.GetNextOccurrence(dtInit, dtEnd);
+
+            if (DateTime.Now >= nextRun)
+            {
+                //Verifica se oggi ha gia' girato schedulato
+                var d1 = nextRun.Date;
+                var d2 = d1.AddDays(1).AddSeconds(-1);
+                var lastRun = this.ListaOutput.Where(o => { return (SDS.CommonUtils.DateUT.IsBetween(o.DataOraInizio, d1, d2) && o.StatoId != eReport.StatoEstrazione.TerminataConErrori); });
+
+
+                if (lastRun.Any())
+                    return this.GetNextSchedule(dtRif.AddDays(1));
+            }
 
             return nextRun;
         }
+
 
 
         /// <summary>
