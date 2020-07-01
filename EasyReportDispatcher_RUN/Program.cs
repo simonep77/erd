@@ -11,6 +11,7 @@ using Bdo.Logging;
 using Amib.Threading;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace EasyReportDispacher_RUN
 {
@@ -19,16 +20,12 @@ namespace EasyReportDispacher_RUN
 
         private static BusinessSlot _Slot;
         private static bool _SendMail = true;
-        private static int[] _ReportForzati = { };
-
         private static string _TaskLogDir;
         private static string _TaskLogFile;
         private static FileStreamLogger _TaskLogger;
 
         static void Main(string[] args)
         {
-            printInfo();
-
             init();
 
             var rc = TaskExecute();
@@ -56,18 +53,28 @@ namespace EasyReportDispacher_RUN
             if (!string.IsNullOrWhiteSpace(EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogDir))
                 _TaskLogDir = EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogDir;
 
+            WriteLog(@"Creazione directory log");
+
             //Assicura creazione directory
             Directory.CreateDirectory(_TaskLogDir);
 
             //Nome file di log 
-            _TaskLogFile = Path.Combine(_TaskLogDir, string.Format(@"erd_{0:yyyy_MM_dd}.log", DateTime.Now));
+            _TaskLogFile = Path.Combine(_TaskLogDir, string.Format(@"erd_{0:yyyyMMdd_HHmmss}.log", DateTime.Now));
+
+            WriteLog(@"Avvio pulizia log");
 
             //Pulizia log
             if (EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogKeepNum > 0)
                 keepLogFiles();
 
+            WriteLog(@"Avvio nuovo file log");
+
             //Avvia logger
             _TaskLogger = new FileStreamLogger(_TaskLogFile);
+
+            //Scrive testata
+            printInfo();
+
         }
 
         private static void keepLogFiles()
@@ -113,22 +120,10 @@ namespace EasyReportDispacher_RUN
                 //Usa i biz
                 var reportsBiz = new ReportEstrazioneBIZ_Lista(reports);
 
-                //Se presenti dei report da forzare li filtra dall'elenco
-                IEnumerable<ReportEstrazioneBIZ> reportExec;
-                if (_ReportForzati.Length > 0)
-                {
-                    //Include solo i report forzati
-                    reportExec = reportsBiz.Where(r => _ReportForzati.Contains(r.DataObj.Id)).ToList();
-                }
-                else
-                {
-                    //Include solo i report che rientrano nella schedulazione
-                    reportExec = reportsBiz.Where(r => r.CanRunSchedulato).ToList();
-                }
+                //Include solo i report che rientrano nella schedulazione
+                var reportExec = reportsBiz.Where(r => r.CanRunSchedulato).ToList();
 
-                var iCount = reportExec.Count();
-
-                WriteLog("Numero estrazioni da eseguire: {0}", iCount);
+                WriteLog("Numero estrazioni da eseguire: {0}", reportExec.Count());
 
                 //new
 
@@ -189,12 +184,19 @@ namespace EasyReportDispacher_RUN
             var retObj = true;
             var repDefId = state.EstrazioneId;
             var bSendEmail = state.SendEmail;
+            ThreadData.ReportId = repDefId;
+
+            
 
             using (var slot = new BusinessSlot(@"Default"))
             {
                 WriteLog(SEP);
 
                 ReportEstrazioneBIZ repBiz = slot.BizNewWithLoadByPK<ReportEstrazioneBIZ>(repDefId);
+
+                ThreadData.ReportId = repDefId;
+                ThreadData.Reportname = repBiz.DataObj.Nome;
+
                 //RaiseOnProgress(index, iCount);
                 WriteLog("Avvio report {0}", repBiz.DataObj.Nome);
                 try
@@ -257,18 +259,33 @@ namespace EasyReportDispacher_RUN
         private static object _logLoc = new object();
         private static void WriteLog(string logFmt, params object[] args)
         {
+            var dtNow = DateTime.Now;
+            var thName = ThreadData.ReportId == 0 ? string.Empty : string.Concat(@"[", ThreadData.ReportId.ToString(),@"] ", ThreadData.Reportname, @" - ");
+
             lock(_logLoc)
             {
-                Console.Write(string.Format(@"{0:yyyy-MM-dd HH:mm:ss}  -  ", DateTime.Now));
+                Console.Write(string.Format($"{dtNow:yyyy-MM-dd HH:mm:ss} - {thName}"));
                 Console.WriteLine(logFmt, args);
 
                 //Altro
                 if (_TaskLogger != null)
                 {
-                    _TaskLogger.LogMessage(string.Concat(@" ", logFmt), args);
+                    _TaskLogger.LogMessage(string.Concat(@" ", thName, logFmt), args);
                 }
             }
 
+        }
+
+        /// <summary>
+        /// Classe con dati volatili relativi al singolo thread
+        /// </summary>
+        private static class ThreadData
+        {
+            [ThreadStatic]
+            public static int ReportId;
+
+            [ThreadStatic]
+            public static string Reportname;
         }
 
     }

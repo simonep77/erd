@@ -23,7 +23,7 @@ namespace EasyReportDispatcher_DESKTOP.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Server=remotemysql.com;UserId=ourKl13l8f;Password=IXehc1qbkZ;Database=ourKl13l8f;" +
             "")]
@@ -31,20 +31,14 @@ namespace EasyReportDispatcher_DESKTOP.Properties {
             get {
                 return ((string)(this["StringaConnessione"]));
             }
-            set {
-                this["StringaConnessione"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("MYSQLDataBase")]
         public string ClasseDataBase {
             get {
                 return ((string)(this["ClasseDataBase"]));
-            }
-            set {
-                this["ClasseDataBase"] = value;
             }
         }
     }
