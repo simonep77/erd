@@ -30,8 +30,6 @@ namespace EasyReportDispacher_RUN
 
             var rc = TaskExecute();
 
-            _TaskLogger.Dispose();
-
             Environment.Exit(rc);
         }
 
@@ -152,6 +150,12 @@ namespace EasyReportDispacher_RUN
             smPool.Start();
             smPool.WaitForIdle();
 
+            WriteLog(@"Fine esecuzione");
+
+            //Chiude log per invio tramite email
+            _TaskLogger.Dispose();
+
+
             if (EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogMail)
                 sendRunLog(esito);
 
@@ -184,21 +188,20 @@ namespace EasyReportDispacher_RUN
             var retObj = true;
             var repDefId = state.EstrazioneId;
             var bSendEmail = state.SendEmail;
-            ThreadData.ReportId = repDefId;
-
             
 
             using (var slot = new BusinessSlot(@"Default"))
             {
-                WriteLog(SEP);
 
                 ReportEstrazioneBIZ repBiz = slot.BizNewWithLoadByPK<ReportEstrazioneBIZ>(repDefId);
 
                 ThreadData.ReportId = repDefId;
                 ThreadData.Reportname = repBiz.DataObj.Nome;
+                
+                WriteLog(SEP);
 
                 //RaiseOnProgress(index, iCount);
-                WriteLog("Avvio report {0}", repBiz.DataObj.Nome);
+                WriteLog("Avvio report");
                 try
                 {
                     //Esegue
@@ -226,17 +229,21 @@ namespace EasyReportDispacher_RUN
 
                         }
                     }
+                    else
+                    {
+                        WriteLog("Blocco esplicito invio email");
+                    }
 
                 }
                 catch (Exception e)
                 {
-                    WriteLog("**Errore report {0}: {1}", repBiz.DataObj.Nome, e.Message);
+                    WriteLog("**Errore report: {0}", e.Message);
                     WriteLog(e.StackTrace);
                     retObj = false;
                 }
                 finally
                 {
-                    WriteLog("Fine report {0}", repBiz.DataObj.Nome);
+                    WriteLog("Fine report");
                 }
             }
 
