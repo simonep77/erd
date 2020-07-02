@@ -36,6 +36,20 @@ namespace EasyReportDispatcher_DESKTOP.src
 
 
         /// <summary>
+        /// Mostar messaggio conferma e ritorna true o false se premuto SI
+        /// </summary>
+        /// <param name="msgFmt"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static bool ShowConfirmYesNo(string msgFmt, params object[] args)
+        {
+            var dResult = MessageBox.Show(string.Format(msgFmt, args), "Conferma", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            return (dResult == DialogResult.Yes);
+
+        }
+
+
+        /// <summary>
         /// Caricamento basico combo
         /// </summary>
         /// <param name="combo"></param>

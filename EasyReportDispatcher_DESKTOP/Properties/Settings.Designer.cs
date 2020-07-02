@@ -23,13 +23,16 @@ namespace EasyReportDispatcher_DESKTOP.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Server=remotemysql.com;UserId=ourKl13l8f;Password=IXehc1qbkZ;Database=ourKl13l8f;" +
             "")]
         public string StringaConnessione {
             get {
                 return ((string)(this["StringaConnessione"]));
+            }
+            set {
+                this["StringaConnessione"] = value;
             }
         }
         

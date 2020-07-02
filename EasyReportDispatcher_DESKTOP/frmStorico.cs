@@ -1,5 +1,6 @@
 ﻿using EasyReportDispatcher_DESKTOP.src;
 using EasyReportDispatcher_Lib_BIZ.src.report;
+using EasyReportDispatcher_Lib_Common.src;
 using EasyReportDispatcher_Lib_Common.src.enums;
 using EasyReportDispatcher_Lib_DAL.src.report;
 using System;
@@ -80,6 +81,12 @@ namespace EasyReportDispatcher_DESKTOP
             if (MessageBox.Show(string.Format($"Confermi l'eleminazione dell'esecuzione con id {output.Id}?"), "Conferma", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
+            if(this.mEstBiz.IsSqlConParametriElaborazione() && output.Equals(this.mEstBiz.ListaOutput.GetLast()))
+            {
+                if (!UI_Utils.ShowConfirmYesNo("Attenzione! L'SQL dell'estrazione contiene una dipendenza [parametro {0}] dall'output che si vuole eliminare.\n\nConfermi l'eliminazione che influenzerà l'esecuzione successiva?", Costanti.Sql_Params.LAST_ELAB_DATE))
+                    return;
+            }
+
             try
             {
                 this.mEstBiz.GetSlot().DeleteObject(output);
@@ -99,6 +106,9 @@ namespace EasyReportDispatcher_DESKTOP
                 return;
 
             if (MessageBox.Show("Confermi l'eleminazione di tutti i dati di esecuzione?", "Conferma", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            if (!UI_Utils.ShowConfirmYesNo("Attenzione! L'SQL dell'estrazione contiene una dipendenza [parametro {0}] dagli output storici.\n\nConfermi l'eliminazione che può influenzare le esecuzioni successive?", Costanti.Sql_Params.LAST_ELAB_DATE))
                 return;
 
             try

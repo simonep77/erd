@@ -797,6 +797,19 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         }
 
 
+        /// <summary>
+        /// Indica se l'SQL contiene parametri di sistema che ne influiscono le esecuzioni successive
+        /// </summary>
+        /// <returns></returns>
+        public bool IsSqlConParametriElaborazione()
+        {
+
+            if (this.DataObj.SqlText.Contains(Costanti.Sql_Params.LAST_ELAB_DATE))
+                return true;
+
+            return false;
+        }
+
         #endregion
 
 
