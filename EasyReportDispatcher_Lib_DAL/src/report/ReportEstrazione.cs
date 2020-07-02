@@ -67,5 +67,21 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         [AcceptNull()]
         public abstract string CopyToPath { get; set; }
 
+        public abstract int UtenteIdInserimento { get; set; }
+
+        [PropertyMap(nameof(UtenteIdInserimento))]
+        public abstract ReportUtente UtenteInserimento { get; }
+
+        public abstract int UtenteIdAggiornamento { get; set; }
+
+        [PropertyMap(nameof(UtenteIdAggiornamento))]
+        public abstract ReportUtente UtenteAggiornamento { get; }
+
+        [AutoInsertTimestamp]
+        public abstract DateTime DataInserimento { get; }
+
+        [AutoUpdateTimestamp]
+        public abstract DateTime DataAggiornamento { get; }
+
     }
 }

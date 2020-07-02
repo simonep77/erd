@@ -297,6 +297,8 @@ namespace EasyReportDispatcher_DESKTOP
             item.SubItems.Add(est.DataObj.EstrazioniAccorpateIds.Length > 0 ? (est.DataObj.AccorpaSoloDati > 0 ? "DATI: " : "FILE: ") + est.DataObj.EstrazioniAccorpateIds : "");
             item.SubItems.Add(est.DataObj.TemplateId > 0 ? "SI" : "NO");
             item.SubItems.Add(File.Exists(this.getLocalTemplate(est)) ? "SI" : "NO");
+            item.SubItems.Add(est.DataObj.UtenteInserimento.Username);
+            item.SubItems.Add(est.DataObj.UtenteAggiornamento.Username);
 
             if (est.DataObj.EstrazioniAccorpateIds.Length > 0)
             {

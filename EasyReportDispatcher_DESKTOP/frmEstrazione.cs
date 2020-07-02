@@ -269,7 +269,7 @@ namespace EasyReportDispatcher_DESKTOP
                 {
                     this.mEstrazioneBiz.DataObj.DataInizio = new DateTime(2001, 1, 1);
                     this.mEstrazioneBiz.DataObj.DataFine = new DateTime(9999, 12, 31);
-
+                    this.mEstrazioneBiz.DataObj.UtenteIdInserimento = AppContextERD.Utente.Id;
                 }
                 this.mEstrazioneBiz.DataObj.Attivo = (sbyte)((this.chkAttivo.Checked) ? 1 : 0);
                 this.mEstrazioneBiz.DataObj.InvioMailAttivo =(sbyte)((this.chbInvioEmail.Checked) ? 1 : 0);
@@ -283,6 +283,8 @@ namespace EasyReportDispatcher_DESKTOP
 
                 if (this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds.Length > 0)
                     this.mEstrazioneBiz.DataObj.AccorpaSoloDati = (sbyte)(this.chkAccorpaDati.Checked ? 1 : 0);
+
+                this.mEstrazioneBiz.DataObj.UtenteIdAggiornamento = AppContextERD.Utente.Id;
 
                 AppContextERD.Slot.SaveObject(this.mEstrazioneBiz.DataObj);
 
