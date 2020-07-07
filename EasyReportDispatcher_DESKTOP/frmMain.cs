@@ -91,16 +91,20 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void actConnetti(object sender, EventArgs e)
         {
-            this.tsConnessione.Text = "Connessione in corso...";
-            Application.DoEvents();
 
             if (AppContextERD.Slot == null)
             {
                 AppContextERD.Slot = new BusinessSlot(Properties.Settings.Default.ClasseDataBase, Properties.Settings.Default.StringaConnessione);
-                AppContextERD.Slot.DB.AutoCloseConnection = true;
+                AppContextERD.Slot.LiveTrackingEnabled = true;
             }
+            //Velocizza il primo caricamento senza chiudere la connessione ad ogni statement
+            AppContextERD.Slot.DB.AutoCloseConnection = false;
 
+            this.tsConnessione.Text = "Caricamento in corso...";
             this.Cursor = Cursors.WaitCursor;
+            UI_Utils.ShowSpinner(this.lvEstrazioni);
+            Application.DoEvents();
+
             try
             {
                 this.retrieveUserDetails();
@@ -123,8 +127,10 @@ namespace EasyReportDispatcher_DESKTOP
             finally
             {
                 this.Cursor = Cursors.Default;
+                UI_Utils.HideSpinner(this.lvEstrazioni);
+                AppContextERD.Slot.DB.AutoCloseConnection = true;
             }
-            
+
         }
 
         private void loadEstrazioni()
@@ -132,7 +138,6 @@ namespace EasyReportDispatcher_DESKTOP
             this.clearAll();
 
             //Application.DoEvents();
-            UI_Utils.ShowSpinner(this.lvEstrazioni);
             try
             {
                 var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>()
@@ -162,7 +167,6 @@ namespace EasyReportDispatcher_DESKTOP
             }
             finally
             {
-                UI_Utils.HideSpinner(this.lvEstrazioni);
             }
         }
 
