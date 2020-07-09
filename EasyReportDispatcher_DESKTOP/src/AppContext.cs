@@ -19,5 +19,25 @@ namespace EasyReportDispatcher_DESKTOP.src
 
         public static EasyReportDispatcher_Lib_DAL.src.report.ReportUtente Utente { get; set; }
 
+
+        public static void InitDirectories()
+        {
+
+            Directory.CreateDirectory(UserDataDir);
+            Directory.CreateDirectory(UserDataDirOutput);
+            Directory.CreateDirectory(UserDataDirTemplate);
+        }
+
+
+        /// <summary>
+        /// Ritorna path locale per salvataggio con timestamp orario suffisso
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string GetLocalFileNameWithTime(string fileName)
+        {
+            return Path.Combine(UserDataDirOutput, Path.GetFileNameWithoutExtension(fileName) + "_ts" + DateTime.Now.ToString("HHmmss") + Path.GetExtension(fileName));
+        }
+
     }
 }

@@ -78,6 +78,9 @@
             this.panTop = new System.Windows.Forms.Panel();
             this.panCenter = new System.Windows.Forms.Panel();
             this.panBottom = new System.Windows.Forms.Panel();
+            this.label12 = new System.Windows.Forms.Label();
+            this.txtNomeFileMask = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.gbGenerali.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtNumOutput)).BeginInit();
             this.gbExcel.SuspendLayout();
@@ -91,6 +94,9 @@
             // 
             // gbGenerali
             // 
+            this.gbGenerali.Controls.Add(this.button2);
+            this.gbGenerali.Controls.Add(this.label12);
+            this.gbGenerali.Controls.Add(this.txtNomeFileMask);
             this.gbGenerali.Controls.Add(this.label5);
             this.gbGenerali.Controls.Add(this.txtGruppo);
             this.gbGenerali.Controls.Add(this.btnInfoCopy);
@@ -371,7 +377,7 @@
             this.txtNote.Location = new System.Drawing.Point(115, 89);
             this.txtNote.Multiline = true;
             this.txtNote.Name = "txtNote";
-            this.txtNote.Size = new System.Drawing.Size(272, 110);
+            this.txtNote.Size = new System.Drawing.Size(272, 95);
             this.txtNote.TabIndex = 4;
             // 
             // label2
@@ -602,6 +608,32 @@
             this.panBottom.Size = new System.Drawing.Size(1379, 51);
             this.panBottom.TabIndex = 18;
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(20, 193);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(69, 18);
+            this.label12.TabIndex = 35;
+            this.label12.Text = "Nome file";
+            // 
+            // txtNomeFileMask
+            // 
+            this.txtNomeFileMask.Location = new System.Drawing.Point(115, 190);
+            this.txtNomeFileMask.Name = "txtNomeFileMask";
+            this.txtNomeFileMask.Size = new System.Drawing.Size(272, 26);
+            this.txtNomeFileMask.TabIndex = 34;
+            // 
+            // button2
+            // 
+            this.button2.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.information;
+            this.button2.Location = new System.Drawing.Point(393, 191);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(27, 23);
+            this.button2.TabIndex = 36;
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // frmEstrazione
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
@@ -687,5 +719,8 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtGruppo;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox txtNomeFileMask;
+        private System.Windows.Forms.Button button2;
     }
 }

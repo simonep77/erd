@@ -46,7 +46,7 @@ namespace EasyReportDispatcher_DESKTOP
             this.txtSQL.Text = this.mEstrazioneBiz.DataObj.SqlText;
             this.txtExcelTitolo.Text = this.mEstrazioneBiz.DataObj.Titolo;
             this.txtExcelSheet.Text = this.mEstrazioneBiz.DataObj.SheetName;
-
+            this.txtNomeFileMask.Text = this.mEstrazioneBiz.DataObj.NomeFileMask;
             
             this.rbTemplateBase.Checked = (this.mEstrazioneBiz.DataObj.TipoFileId == eReport.TipoFile.Excel && this.mEstrazioneBiz.DataObj.TemplateId == 0);
             this.rbTemplateCustom.Checked = (this.mEstrazioneBiz.DataObj.TipoFileId == eReport.TipoFile.Excel && this.mEstrazioneBiz.DataObj.TemplateId > 0);
@@ -280,6 +280,7 @@ namespace EasyReportDispatcher_DESKTOP
                 this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds = this.txtEstrazioniAcc.Text.Trim(',');
                 this.mEstrazioneBiz.DataObj.CopyToPath = this.txtCopyToPath.Text.Trim();
                 this.mEstrazioneBiz.DataObj.Gruppo = this.txtGruppo.Text.Trim();
+                this.mEstrazioneBiz.DataObj.NomeFileMask = this.txtNomeFileMask.Text;
 
                 if (this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds.Length > 0)
                     this.mEstrazioneBiz.DataObj.AccorpaSoloDati = (sbyte)(this.chkAccorpaDati.Checked ? 1 : 0);
@@ -481,6 +482,11 @@ namespace EasyReportDispatcher_DESKTOP
         {
             var text = "E' possibile utilizzare nella query i seguenti parametri pre-valorizzati:\n\n * @ERD_LAST_ELAB_DATE: è la data/ora dell'ultima esecuzione terminata con successo registrata su DB\n\n * @ERD_REPORT_ID: è l'ID del report in esecuzione";
             UI_Utils.ShowInfo(text);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            UI_Utils.ShowInfo("Campo non obbligatorio.\n\nSe valorizzato deve contenere anche l'estensione ed è possibile utilizzare i fermaposto di formattazione data .NET sull'indice 0.\n\n Es. nome_file_{0:yyyy_MM_dd_HH_mm_ss}.xlsx");
         }
     }
 }

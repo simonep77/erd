@@ -36,9 +36,8 @@ namespace EasyReportDispatcher_DESKTOP
                 LvSort.registerLV(this.lvEstrazioni);
                 //this.lvEstrazioni.ColumnClick += (s, e) => this.ensureAllGroups();
 
-                Directory.CreateDirectory(AppContextERD.UserDataDir);
-                Directory.CreateDirectory(AppContextERD.UserDataDirOutput);
-                Directory.CreateDirectory(AppContextERD.UserDataDirTemplate);
+                AppContextERD.InitDirectories();
+
             }
             catch (Exception ex)
             {

@@ -144,9 +144,7 @@ namespace EasyReportDispatcher_DESKTOP
                 var selItem = this.lvStorico.SelectedItems[0];
                 var output = selItem.Tag as ReportEstrazioneOutput;
 
-                Directory.CreateDirectory(AppContextERD.UserDataDirOutput);
-
-                var outFilePath = Path.Combine(AppContextERD.UserDataDirOutput, output.NomeFile);
+                var outFilePath = AppContextERD.GetLocalFileNameWithTime(output.NomeFile);
                 File.WriteAllBytes(outFilePath, output.DataBlob);
 
                 Process.Start(outFilePath);

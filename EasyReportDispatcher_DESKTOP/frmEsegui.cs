@@ -59,8 +59,7 @@ namespace EasyReportDispatcher_DESKTOP
                     //Apre
                     Directory.CreateDirectory(AppContextERD.UserDataDirOutput);
 
-                    var tmpFileName = Path.GetFileNameWithoutExtension(this.mEstrazioneBiz.LastResult.NomeFile) + "_et" + DateTime.Now.ToString("HHmmss") + Path.GetExtension(this.mEstrazioneBiz.LastResult.NomeFile);
-                    var outFilePath = Path.Combine(AppContextERD.UserDataDirOutput, tmpFileName);
+                    var outFilePath = AppContextERD.GetLocalFileNameWithTime(this.mEstrazioneBiz.LastResult.NomeFile);
                     File.WriteAllBytes(outFilePath, this.mEstrazioneBiz.LastResult.DataBlob);
 
                     Process.Start(outFilePath);
