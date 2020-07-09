@@ -88,6 +88,13 @@ namespace EasyReportDispatcher_DESKTOP
 
         }
 
+        private void actSetEnabledUI(bool value)
+        {
+            this.toolStrip1.Enabled = value;
+            this.ctxMenuEst.Enabled = value;
+            this.panSearch.Enabled = value;
+        }
+
 
         private void actConnetti(object sender, EventArgs e)
         {
@@ -100,10 +107,10 @@ namespace EasyReportDispatcher_DESKTOP
             //Velocizza il primo caricamento senza chiudere la connessione ad ogni statement
             AppContextERD.Slot.DB.AutoCloseConnection = false;
 
+            this.actSetEnabledUI(false);
             this.tsConnessione.Text = "Caricamento in corso...";
             this.Cursor = Cursors.WaitCursor;
-            UI_Utils.ShowSpinner(this.lvEstrazioni);
-            Application.DoEvents();
+            //UI_Utils.ShowSpinner(this.lvEstrazioni);
 
             try
             {
@@ -113,7 +120,7 @@ namespace EasyReportDispatcher_DESKTOP
 
                 this.tsConnessione.Text = "Connesso";
 
-                this.tsNumEstrazioni.Visible = true;
+                //this.tsNumEstrazioni.Visible = true;
 
                 this.tsEstrazioneNew.Enabled = true;
 
@@ -126,34 +133,45 @@ namespace EasyReportDispatcher_DESKTOP
             }
             finally
             {
+                this.actSetEnabledUI(true);
                 this.Cursor = Cursors.Default;
-                UI_Utils.HideSpinner(this.lvEstrazioni);
+                //UI_Utils.HideSpinner(this.lvEstrazioni);
                 AppContextERD.Slot.DB.AutoCloseConnection = true;
             }
 
         }
 
-        private void loadEstrazioni()
+        async private void loadEstrazioni()
         {
             this.clearAll();
-
-            //Application.DoEvents();
+            
+            this.pgLoading.Visible = true;
+            this.pgLoading.Value = 0;
+            this.tsNumEstrazioni.Visible = false;
+            Application.DoEvents();
+            this.lvEstrazioni.BeginUpdate();
             try
             {
-                var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>()
-                    .LoadFullObjects()
-                        .OrderBy(nameof(ReportEstrazione.Id), OrderVersus.Desc)
-                        .SearchByColumn(Filter.Gt(nameof(ReportEstrazione.Attivo), -1));
 
-                this.lvEstrazioni.BeginUpdate();
+                await Task.Run(() => {
+                    var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>()
+                                            .LoadFullObjects()
+                                            .OrderBy(nameof(ReportEstrazione.Id), OrderVersus.Desc)
+                                            .SearchByColumn(Filter.Gt(nameof(ReportEstrazione.Attivo), -1));
 
-                Application.DoEvents();
 
-                foreach (var est in lst)
-                {
-                    var lvItem = this.addEstrazioneToList(est.ToBizObject<ReportEstrazioneBIZ>(), false);
-                    Application.DoEvents();
-                }
+                    int i = 0;
+
+                    foreach (var est in lst)
+                    {
+                        i++;
+                        this.Invoke((MethodInvoker)(()=> { this.pgLoading.Maximum = lst.Count; this.pgLoading.Value = i; } ));
+                        
+                        var lvItem = this.addEstrazioneToList(est.ToBizObject<ReportEstrazioneBIZ>(), false);
+                    }
+                });
+
+
 
 
                 this.updateEstCount();
@@ -162,11 +180,13 @@ namespace EasyReportDispatcher_DESKTOP
 
                 this.ensureAllGroups();
 
-                this.lvEstrazioni.EndUpdate();
 
             }
             finally
             {
+                this.lvEstrazioni.EndUpdate();
+                this.pgLoading.Visible = false;
+                this.tsNumEstrazioni.Visible = true;
             }
         }
 
@@ -250,6 +270,12 @@ namespace EasyReportDispatcher_DESKTOP
 
         private ListViewItem addEstrazioneToList(ReportEstrazioneBIZ est, bool select)
         {
+
+            if (this.lvEstrazioni.InvokeRequired)
+            {
+                return (ListViewItem)this.lvEstrazioni.Invoke((MethodInvoker)(() => this.addEstrazioneToList(est, select)));
+            }
+
             var item = new ListViewItem();
             this.setListItem(item, est);
             this.mLvItems.Add(item);
@@ -335,7 +361,7 @@ namespace EasyReportDispatcher_DESKTOP
             //this.lvEstrazioni.Groups.Clear();
             this.lvEstrazioni.Items.Clear();
             this.handleSelezioneEstrazione();
-            this.tsNumEstrazioni.Visible = false;
+            //this.tsNumEstrazioni.Visible = false;
             this.tsNumEstrazioni.Text = @"Estrazioni: -";
             this.txtFiltro.Text = string.Empty;
             //this.lbFiltroNum.Visible = false;

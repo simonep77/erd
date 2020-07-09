@@ -40,6 +40,7 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tsElimina = new System.Windows.Forms.ToolStripButton();
             this.btnEliminaTutti = new System.Windows.Forms.ToolStripButton();
+            this.btnOpenFile = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -65,6 +66,7 @@
             this.lvStorico.UseCompatibleStateImageBehavior = false;
             this.lvStorico.View = System.Windows.Forms.View.Details;
             this.lvStorico.SelectedIndexChanged += new System.EventHandler(this.lvStorico_SelectedIndexChanged);
+            this.lvStorico.DoubleClick += new System.EventHandler(this.actOpenFile);
             // 
             // colID
             // 
@@ -119,6 +121,7 @@
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnOpenFile,
             this.tsElimina,
             this.btnEliminaTutti});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -144,6 +147,15 @@
             this.btnEliminaTutti.Size = new System.Drawing.Size(93, 22);
             this.btnEliminaTutti.Text = "Elimina Tutti";
             this.btnEliminaTutti.Click += new System.EventHandler(this.actDeleteAll);
+            // 
+            // btnOpenFile
+            // 
+            this.btnOpenFile.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.attach;
+            this.btnOpenFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnOpenFile.Name = "btnOpenFile";
+            this.btnOpenFile.Size = new System.Drawing.Size(70, 22);
+            this.btnOpenFile.Text = "Apri File";
+            this.btnOpenFile.Click += new System.EventHandler(this.actOpenFile);
             // 
             // frmStorico
             // 
@@ -183,5 +195,6 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton tsElimina;
         private System.Windows.Forms.ToolStripButton btnEliminaTutti;
+        private System.Windows.Forms.ToolStripButton btnOpenFile;
     }
 }

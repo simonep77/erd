@@ -67,6 +67,9 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         [AcceptNull()]
         public abstract string CopyToPath { get; set; }
 
+        [AcceptNull(), MaxLength(150)]
+        public abstract string NomeFileMask { get; set; }
+
         public abstract int UtenteIdInserimento { get; set; }
 
         [PropertyMap(nameof(UtenteIdInserimento))]

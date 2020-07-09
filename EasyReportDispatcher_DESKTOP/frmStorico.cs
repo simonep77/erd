@@ -7,7 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -70,6 +72,7 @@ namespace EasyReportDispatcher_DESKTOP
             var sel = this.lvStorico.SelectedItems.Count > 0;
 
             this.tsElimina.Enabled = sel;
+            this.btnOpenFile.Enabled = sel;
             this.btnEliminaTutti.Enabled = this.mEstBiz.ListaOutput.Count > 0;
         }
 
@@ -123,6 +126,37 @@ namespace EasyReportDispatcher_DESKTOP
             {
                 UI_Utils.ShowError(ex.Message);
             }
+        }
+
+        private void actOpenFile(object sender, EventArgs e)
+        {
+            if (this.lvStorico.SelectedItems.Count == 0)
+                return;
+
+            this.Cursor = Cursors.WaitCursor;
+            Application.DoEvents();
+            try
+            {
+                var selItem = this.lvStorico.SelectedItems[0];
+                var output = selItem.Tag as ReportEstrazioneOutput;
+
+                Directory.CreateDirectory(AppContextERD.UserDataDirOutput);
+
+                var outFilePath = Path.Combine(AppContextERD.UserDataDirOutput, output.NomeFile);
+                File.WriteAllBytes(outFilePath, output.DataBlob);
+
+                Process.Start(outFilePath);
+            }
+            catch (Exception ex)
+            {
+                UI_Utils.ShowError(ex.Message);
+            }
+            finally
+            {
+                this.Cursor = this.DefaultCursor;
+            }
+            
+
         }
     }
 }

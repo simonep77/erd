@@ -399,12 +399,25 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         }
 
         /// <summary>
-        /// Ritorna il nome file da utilizzare per gli putput dell estrazione
+        /// Ritorna il nome file da utilizzare per gli output dell estrazione
         /// </summary>
         /// <returns></returns>
         public string getNomeFileIstantaneo()
         {
-            return String.Format("Report_{0}_{1:yyyy_MM_dd}.xlsx", this.DataObj.Titolo.Replace(' ','_'), DateTime.Now);
+            var nomeFile = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(this.DataObj.NomeFileMask))
+            {
+                nomeFile = string.Format(this.DataObj.NomeFileMask, this.LastResult.DataOraInizio);
+            }
+            else
+            {
+                var fileBase = this.DataObj.TipoFileId == eReport.TipoFile.Excel && !string.IsNullOrWhiteSpace(this.DataObj.Titolo) ? this.DataObj.Titolo.Replace(' ', '_') : this.DataObj.Nome.Replace(' ', '_');
+
+                nomeFile = String.Format(@"{0}_{1:yyyy_MM_dd}{2}", fileBase, this.LastResult.DataOraInizio, this.DataObj.TipoFile.Estensione);
+            }
+
+            return nomeFile;
         }
 
         private void runAccorpaAltreEstrazioni()
@@ -728,7 +741,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             }
 
             //Imposta Output
-            this.mLastResult.NomeFile = string.Format(@"{0}_{1:yyyy_MM_dd}.csv", this.DataObj.Nome.Replace(' ', '_'), this.LastResult.DataOraInizio.Date);
+            this.mLastResult.NomeFile = this.getNomeFileIstantaneo();
             this.mLastResult.DataLen = sb.Length;
             this.mLastResult.DataBlob = Encoding.UTF8.GetBytes(sb.ToString());
             this.Slot.LogDebug(DebugLevel.Debug_1, "End render csv");

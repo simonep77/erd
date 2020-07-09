@@ -79,7 +79,8 @@ namespace EasyReportDispatcher_DESKTOP.src
             pb.Image = Properties.Resources.spinner;
             pb.Width = Properties.Resources.spinner.Width;
             pb.Height = Properties.Resources.spinner.Height;
-            
+            pb.BackColor = Color.Transparent;
+
             ctrl.Controls.Add(pb);
 
             pb.Left = ctrl.Width / 2 - pb.Width/2;
@@ -103,6 +104,7 @@ namespace EasyReportDispatcher_DESKTOP.src
             //ctrl.Enabled = true;
             Application.DoEvents();
         }
+
 
 
         /// <summary>
