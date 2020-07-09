@@ -111,8 +111,12 @@ namespace EasyReportDispatcher_DESKTOP
             if (MessageBox.Show("Confermi l'eleminazione di tutti i dati di esecuzione?", "Conferma", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
-            if (!UI_Utils.ShowConfirmYesNo("Attenzione! L'SQL dell'estrazione contiene una dipendenza [parametro {0}] dagli output storici.\n\nConfermi l'eliminazione che può influenzare le esecuzioni successive?", Costanti.Sql_Params.LAST_ELAB_DATE))
-                return;
+            if (this.mEstBiz.IsSqlConParametriElaborazione())
+            {
+                if (!UI_Utils.ShowConfirmYesNo("Attenzione! L'SQL dell'estrazione contiene una dipendenza [parametro {0}] dagli output storici.\n\nConfermi l'eliminazione che può influenzare le esecuzioni successive?", Costanti.Sql_Params.LAST_ELAB_DATE))
+                    return;
+
+            }
 
             try
             {
