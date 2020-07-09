@@ -317,7 +317,7 @@ namespace EasyReportDispatcher_DESKTOP
 
             if (est.DataObj.Attivo > 0 && est.DataObj.CronString != null)
             {
-                var nextRun = est.GetNextSchedule(DateTime.Today);
+                var nextRun = est.GetNextSchedule(DateTime.Now);
                 item.SubItems.Add(nextRun.ToString($"{nextRun:dd/MM/yyyy HH:mm:ss}"));
             }
             else

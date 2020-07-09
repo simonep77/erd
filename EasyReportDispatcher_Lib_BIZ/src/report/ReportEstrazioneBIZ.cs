@@ -13,6 +13,8 @@ using EasyReportDispatcher_Lib_BIZ.src.utils;
 using Ionic.Zip;
 using Newtonsoft.Json;
 using EasyReportDispatcher_Lib_Common.src;
+using Bdo.Database;
+using ClosedXML.Excel;
 
 namespace EasyReportDispatcher_Lib_BIZ.src.report
 {
@@ -79,14 +81,45 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         { get
             {
                 //Se non valorizzata stringa cron esce
-                if (string.IsNullOrEmpty(this.DataObj.CronString))
+                if (this.DataObj.Attivo != 1 || string.IsNullOrEmpty(this.DataObj.CronString))
                     return false;
 
-                //Valuta lanciabilita'
+                //Valuta lanciabilita' ora
                 try
                 {
+                    var dtNow = DateTime.Now;
+                    var nextRun = this.GetNextSchedule(dtNow.Date);
 
-                    return (this.GetNextSchedule(DateTime.Today).Date == DateTime.Today);
+                    //Valuta se gia' eseguito oppure se ha altre schedulazioni nella giornata
+                    while (nextRun < dtNow)
+                    {
+                        //Carica le esecuzioni successive alla data di presunto run
+                        var lastRun = this.ListaOutput.Where(o => o.DataOraInizio >= nextRun);
+
+                        //Se non presenti esecuzioni OK, puo' partire
+                        if (!lastRun.Any())
+                            return true;
+
+                        //Sono presenti, dobbiamo verificare ulteriori altre schedulazioni nella giornata
+                        nextRun = this.GetNextSchedule(lastRun.First().DataOraInizio.AddSeconds(1));
+                    }
+
+                    return false;
+
+                    //return (this.GetNextSchedule(DateTime.Today).Date == DateTime.Today);
+
+                    //if (DateTime.Now >= nextRun)
+                    //{
+                    //    //Verifica se oggi ha gia' girato schedulato
+                    //    var d1 = nextRun.Date;
+                    //    var d2 = d1.AddDays(1).AddSeconds(-1);
+                    //    var lastRun = this.ListaOutput.Where(o => { return (SDS.CommonUtils.DateUT.IsBetween(o.DataOraInizio, d1, d2) && o.StatoId != eReport.StatoEstrazione.TerminataConErrori); });
+
+
+                    //    if (lastRun.Any())
+                    //        return this.GetNextSchedule(dtRif.AddDays(1));
+                    //}
+
                 }
                 catch (Exception e)
                 {
@@ -198,20 +231,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         {
             var cronExp = NCrontab.CrontabSchedule.Parse(this.DataObj.CronString);
             var dtInit = dtRif;
-            var dtEnd = dtRif.AddYears(2);
-            var nextRun = cronExp.GetNextOccurrence(dtInit, dtEnd);
-
-            if (DateTime.Now >= nextRun)
-            {
-                //Verifica se oggi ha gia' girato schedulato
-                var d1 = nextRun.Date;
-                var d2 = d1.AddDays(1).AddSeconds(-1);
-                var lastRun = this.ListaOutput.Where(o => { return (SDS.CommonUtils.DateUT.IsBetween(o.DataOraInizio, d1, d2) && o.StatoId != eReport.StatoEstrazione.TerminataConErrori); });
-
-
-                if (lastRun.Any())
-                    return this.GetNextSchedule(dtRif.AddDays(1));
-            }
+            var nextRun = cronExp.GetNextOccurrence(dtInit);
 
             return nextRun;
         }
@@ -406,7 +426,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         {
             var nomeFile = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(this.DataObj.NomeFileMask))
+            if (!string.IsNullOrWhiteSpace(this.DataObj.NomeFileMask))
             {
                 nomeFile = string.Format(this.DataObj.NomeFileMask, this.LastResult.DataOraInizio);
             }
@@ -686,12 +706,37 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 db.SQL = this.DataObj.SqlText;
 
                 //Aggiunge una serie di parametri di sistema:
-                //@ERD_LAST_ELAB: ultima elaborazione
-                db.AddParameter(Costanti.Sql_Params.REPORT_ID, this.DataObj.Id);
-                db.AddParameter(Costanti.Sql_Params.LAST_ELAB_DATE, this.ListaOutput.Count > 0 ? this.ListaOutput.GetLast().DataOraInizio : new DateTime(1900, 1, 1));
-
+                this.loadErdSqlParameters(db);
+                
+                //Esegue
                 this.mTabResultSQL = db.Select();
             }
+        }
+
+
+        private void loadErdSqlParameters(IDataBase db)
+        {
+
+            db.AddParameter(Costanti.Sql_Params.REPORT_ID, this.DataObj.Id);
+
+            var dtNow = DateTime.Now;
+            var dtAppo = dtNow.Date;
+            //Date Varie
+            db.AddParameter(Costanti.Sql_Params.DATE_TODAY, dtAppo);
+            db.AddParameter(Costanti.Sql_Params.DATE_YESTERDAY, dtAppo.AddDays(-1));
+
+            dtAppo = dtNow.Date.AddDays(dtNow.DayOfWeek == DayOfWeek.Sunday ? 6 : ((int)dtNow.DayOfWeek - 1));
+            db.AddParameter(Costanti.Sql_Params.DATE_INIT_THIS_WEEK, dtAppo);
+            db.AddParameter(Costanti.Sql_Params.DATE_END_THIS_WEEK, dtAppo.AddDays(6));
+
+            //@ERD_LAST_ELAB: ultima elaborazione
+            var lastOutput = this.ListaOutput.Where(o => o.Id != this.mLastResult.Id).OrderBy(o => o.Id).LastOrDefault();
+
+            dtAppo = lastOutput?.DataOraInizio ?? new DateTime(1900, 1, 1);
+
+            db.AddParameter(Costanti.Sql_Params.LAST_ELAB_DATE, dtAppo);
+
+
         }
 
 
