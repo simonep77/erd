@@ -23,11 +23,10 @@ namespace EasyReportDispacher_RUN
         private static string _TaskLogDir;
         private static string _TaskLogFile;
         private static FileStreamLogger _TaskLogger;
+        private static Mutex _Mutex;
 
         static void Main(string[] args)
         {
-            init();
-
             var rc = TaskExecute();
 
             Environment.Exit(rc);
@@ -73,6 +72,8 @@ namespace EasyReportDispacher_RUN
             //Scrive testata
             printInfo();
 
+            //Verifica esecuzione unica
+            oneInstance();
         }
 
         private static void keepLogFiles()
@@ -97,71 +98,108 @@ namespace EasyReportDispacher_RUN
 
             var esito = 0;
 
-            var bSendEmail = _SendMail;
-            var smPool = new SmartThreadPool();
-
-
-            WriteLog("Invio email attivo: {0}", bSendEmail.ToString());
-
-            using (_Slot)
+            try
             {
-                WriteLog(@"Caricamento estrazioni da valutare");
+                //inizializza
+                init();
 
-                var reports = _Slot.CreateList<ReportEstrazioneLista>()
-                    .SearchByColumn(new FilterEQUAL(nameof(ReportEstrazione.Attivo), 1)
-                    .And(new FilterLESSEQ(nameof(ReportEstrazione.DataInizio), DateTime.Today)
-                    .And(new FilterGREATEREQ(nameof(ReportEstrazione.DataFine), DateTime.Today))));
+                var bSendEmail = _SendMail;
+                var smPool = new SmartThreadPool();
+                
 
-                WriteLog("Numero estrazioni da valutare: {0}", reports.Count);
+                WriteLog("Invio email attivo: {0}", bSendEmail.ToString());
 
-                WriteLog(@"Avvio valutazione estrazioni");
-                //Usa i biz
-                var reportsBiz = new ReportEstrazioneBIZ_Lista(reports);
-
-                //Include solo i report che rientrano nella schedulazione
-                var reportExec = reportsBiz.Where(r => r.CanRunSchedulato).ToList();
-
-                WriteLog("Numero estrazioni da eseguire: {0}", reportExec.Count());
-
-                //new
-
-                //Raggruppa per connessione
-                var connGroup = reportExec.GroupBy(r => r.DataObj.ConnessioneId);
-
-                WriteLog("Numero estrazioni parallele: {0}", connGroup.Count());
-
-                //Carica un threadgroup per ogni connessione
-                foreach (var gp in connGroup)
+                using (_Slot)
                 {
-                    var cfg = new WIGStartInfo() { StartSuspended = true };
-                    var wig = smPool.CreateWorkItemsGroup(1);
+                    WriteLog(@"Caricamento estrazioni da valutare");
 
-                    foreach (var est in gp)
+                    var reports = _Slot.CreateList<ReportEstrazioneLista>()
+                        .SearchByColumn(new FilterEQUAL(nameof(ReportEstrazione.Attivo), 1)
+                        .And(new FilterLESSEQ(nameof(ReportEstrazione.DataInizio), DateTime.Today)
+                        .And(new FilterGREATEREQ(nameof(ReportEstrazione.DataFine), DateTime.Today))));
+
+                    WriteLog("Numero estrazioni da valutare: {0}", reports.Count);
+
+                    WriteLog(@"Avvio valutazione estrazioni");
+                    //Usa i biz
+                    var reportsBiz = new ReportEstrazioneBIZ_Lista(reports);
+
+                    //Include solo i report che rientrano nella schedulazione
+                    var reportExec = reportsBiz.Where(r => r.CanRunSchedulato).ToList();
+
+                    WriteLog("Numero estrazioni da eseguire: {0}", reportExec.Count());
+
+                    //new
+
+                    //Raggruppa per connessione
+                    var connGroup = reportExec.GroupBy(r => r.DataObj.ConnessioneId);
+
+                    WriteLog("Numero estrazioni parallele: {0}", connGroup.Count());
+
+                    //Carica un threadgroup per ogni connessione
+                    foreach (var gp in connGroup)
                     {
-                        
-                        wig.QueueWorkItem(execSingleReport, 
-                            new { EstrazioneId=est.DataObj.Id, SendEmail = bSendEmail },
-                            r =>  esito += ((!r.IsCompleted || r.Exception != null || (bool)r.Result==false) ? 1 : 0)
-                            );
+                        var cfg = new WIGStartInfo() { StartSuspended = true };
+                        var wig = smPool.CreateWorkItemsGroup(1);
+
+                        foreach (var est in gp)
+                        {
+
+                            wig.QueueWorkItem(execSingleReport,
+                                new { EstrazioneId = est.DataObj.Id, SendEmail = bSendEmail },
+                                r => esito += ((!r.IsCompleted || r.Exception != null || (bool)r.Result == false) ? 1 : 0)
+                                );
+                        }
                     }
                 }
+
+                smPool.Start();
+                smPool.WaitForIdle();
+
+                WriteLog(@"Fine esecuzione");
+            }
+            catch(Exception ex)
+            {
+                esito = 1;
+                WriteLog(@"Errore esecuzione: {0}", ex.Message);
+                WriteLog(@"Stack: {0}", ex.StackTrace);
+
+            }
+            finally
+            {
+                if (_Mutex != null)
+                    _Mutex.Dispose();
+                //Chiude log per invio tramite email
+                _TaskLogger.Dispose();
             }
 
-            smPool.Start();
-            smPool.WaitForIdle();
+            try
+            {
+                if (EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogMail)
+                    sendRunLog(esito);
 
-            WriteLog(@"Fine esecuzione");
-
-            //Chiude log per invio tramite email
-            _TaskLogger.Dispose();
-
-
-            if (EasyReportDispatcher_RUN.Properties.Settings.Default.TaskLogMail)
-                sendRunLog(esito);
-
+            }
+            catch (Exception)
+            {
+                esito = 1;
+            }
+            
             return esito;
         }
 
+
+        /// <summary>
+        /// Crea mutex per esecuzione a singola istanza
+        /// </summary>
+        private static void oneInstance()
+        {
+            bool createdNew;
+
+            _Mutex = new Mutex(true, "ERD_Mutex_Run", out createdNew);
+
+            if (!createdNew)
+                throw new ApplicationException("E' già in esecuzione un'altra istanza dell'applicazione");
+        }
 
         private static void sendRunLog(int esito)
         {

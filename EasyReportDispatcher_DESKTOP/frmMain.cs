@@ -159,6 +159,8 @@ namespace EasyReportDispatcher_DESKTOP
                                             .SearchByColumn(Filter.Gt(nameof(ReportEstrazione.Attivo), -1));
 
 
+                    this.Invoke((MethodInvoker)(() => { this.fillComboGruppi(lst); }));
+
                     int i = 0;
 
                     foreach (var est in lst)
@@ -187,6 +189,23 @@ namespace EasyReportDispatcher_DESKTOP
                 this.pgLoading.Visible = false;
                 this.tsNumEstrazioni.Visible = true;
             }
+        }
+
+
+        private void fillComboGruppi(IEnumerable<ReportEstrazione> lst)
+        {
+            var gps = lst.GroupBy(e => e.Gruppo.ToUpper()).OrderBy(g => g.Key).Where(g => !string.IsNullOrWhiteSpace(g.Key));
+
+
+            this.cmbGruppi.Items.Add("- TUTTI -");
+            this.cmbGruppi.Items.Add("- NESSUN GRUPPO -");
+
+            foreach (var item in gps)
+            {
+                this.cmbGruppi.Items.Add(item.Key);
+            }
+
+            this.cmbGruppi.SelectedIndex = 0;
         }
 
 
@@ -318,6 +337,7 @@ namespace EasyReportDispatcher_DESKTOP
             {
                 var nextRun = est.GetNextSchedule(DateTime.Now);
                 item.SubItems.Add(nextRun.ToString($"{nextRun:dd/MM/yyyy HH:mm:ss}"));
+                item.BackColor = Color.Yellow;
             }
             else
                 item.SubItems.Add(string.Empty);
@@ -363,6 +383,8 @@ namespace EasyReportDispatcher_DESKTOP
             //this.tsNumEstrazioni.Visible = false;
             this.tsNumEstrazioni.Text = @"Estrazioni: -";
             this.txtFiltro.Text = string.Empty;
+            this.cmbGruppi.Items.Clear();
+            this.chbSchedulati.Checked = false;
             //this.lbFiltroNum.Visible = false;
             //this.lbFiltroNum.Text = string.Empty;
 
@@ -592,9 +614,11 @@ namespace EasyReportDispatcher_DESKTOP
             this.updateEstCount();
         }
 
-        private void txtFiltro_TextChanged(object sender, EventArgs e)
+        private void actApplicaFiltri(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(this.txtFiltro.Text))
+            var applicaFiltro = !string.IsNullOrWhiteSpace(this.txtFiltro.Text) || this.cmbGruppi.SelectedIndex > 0 || this.chbSchedulati.Checked;
+            
+            if (!applicaFiltro)
             {
                 this.lbFiltroNum.Visible = false;
 
@@ -620,12 +644,39 @@ namespace EasyReportDispatcher_DESKTOP
             //Carica
             foreach (var item in this.mLvItems)
             {
-                var searchText = this.txtFiltro.Text.ToUpper();
-                if (item.SubItems[colNome.DisplayIndex].Text.ToUpper().Contains(searchText))
+                var bAdd = true;
+
+                //Selezione gruppi
+                switch (this.cmbGruppi.SelectedIndex)
                 {
-                    this.lvEstrazioni.Items.Add(item);
+                    case 0:
+                        bAdd = true;
+                        break;
+                    case 1:
+                        bAdd = string.IsNullOrWhiteSpace(((ReportEstrazioneBIZ)item.Tag).DataObj.Gruppo);
+                        break;
+                    default:
+                        bAdd = this.cmbGruppi.SelectedItem.ToString() == ((ReportEstrazioneBIZ)item.Tag).DataObj.Gruppo.ToUpper();
+                        break;
+
+
+                }
+
+                //Nome
+                var searchText = this.txtFiltro.Text.ToUpper();
+                if (bAdd )
+                {
+                    bAdd &= item.SubItems[colNome.DisplayIndex].Text.ToUpper().Contains(searchText);
                     //this.ensureGroup((item.Tag as ReportEstrazioneBIZ).DataObj, item);
                 }
+
+                //Solo schedulati
+                if (bAdd && this.chbSchedulati.Checked)
+                    bAdd &= (((ReportEstrazioneBIZ)item.Tag).DataObj.Attivo == 1);
+
+                if (bAdd)
+                    this.lvEstrazioni.Items.Add(item);
+
             }
 
             this.ensureIndent();
