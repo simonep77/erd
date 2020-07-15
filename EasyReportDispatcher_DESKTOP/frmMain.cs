@@ -745,6 +745,73 @@ namespace EasyReportDispatcher_DESKTOP
             }
         }
 
-       
+        private void btnManutenzione_Click(object sender, EventArgs e)
+        {
+            //elimina tutti i dati non utilizzati
+            if (!UI_Utils.ShowConfirmYesNo("Attenzione, la funzione procederà ad eliminare:\n - tutti i report eliminati logicamente con tutti i dati correlati\n - le history SQL oltre le ultime 10\n\nContinuare?"))
+                return;
+
+            this.Cursor = Cursors.WaitCursor;
+            this.actSetEnabledUI(false);
+            try
+            {
+                var lst = AppContextERD.Slot.CreateList<ReportEstrazioneLista>()
+                                .LoadFullObjects()
+                                .SearchByColumn(Filter.Eq(nameof(ReportEstrazione.Attivo), -1));
+
+                var lstBiz = new ReportEstrazioneBIZ_Lista(lst);
+
+                //Nuovo messaggio
+                AppContextERD.Slot.DbBeginTransAll();
+                try
+                {
+                    foreach (var item in lstBiz)
+                    {
+                        item.DeleteFull();
+                    }
+
+
+                    foreach (var item in this.mLvItems)
+                    {
+                        var repBiz = item.Tag as ReportEstrazioneBIZ;
+
+                        repBiz.DeleteHistory(10);
+                    }
+
+                    AppContextERD.Slot.DbCommitAll();
+
+                }
+                catch (Exception)
+                {
+                    AppContextERD.Slot.DbRollBackAll();
+
+                    throw;
+                }
+
+                UI_Utils.ShowInfo("Manutenzione terminata.");
+            }
+            catch (Exception ex)
+            {
+
+                UI_Utils.ShowError(ex.Message);
+            }
+            finally
+            {
+                this.Cursor = this.DefaultCursor;
+                this.actSetEnabledUI(true);
+            }
+
+        }
+
+        private void deleteELiminatiLogicamente()
+        {
+
+
+        }
+
+        private void toolStripMenuItem5_Click(object sender, EventArgs e)
+        {
+            this.btnManutenzione.Visible = true;
+        }
     }
 }

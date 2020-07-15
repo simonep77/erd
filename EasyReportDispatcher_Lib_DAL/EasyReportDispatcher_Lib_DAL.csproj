@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\report\ReportEstrazioneSqlHistoryLista.cs" />
+    <Compile Include="src\report\ReportEstrazioneSqlHistory.cs" />
     <Compile Include="src\report\ReportUtente.cs" />
     <Compile Include="src\report\ReportConnessione.cs" />
     <Compile Include="src\report\ReportConnessioneLista.cs" />

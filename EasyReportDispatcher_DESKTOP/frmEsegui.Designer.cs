@@ -34,6 +34,7 @@
             this.chbInvioEmail = new System.Windows.Forms.CheckBox();
             this.chbApriExcel = new System.Windows.Forms.CheckBox();
             this.chkCopyTo = new System.Windows.Forms.CheckBox();
+            this.chbSoloQuery = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // chkSaveOutput
@@ -49,7 +50,7 @@
             // 
             // btnEsegui
             // 
-            this.btnEsegui.Location = new System.Drawing.Point(113, 212);
+            this.btnEsegui.Location = new System.Drawing.Point(113, 215);
             this.btnEsegui.Margin = new System.Windows.Forms.Padding(4);
             this.btnEsegui.Name = "btnEsegui";
             this.btnEsegui.Size = new System.Drawing.Size(100, 34);
@@ -102,11 +103,24 @@
             this.chkCopyTo.Text = "Copia su path previsto";
             this.chkCopyTo.UseVisualStyleBackColor = true;
             // 
+            // chbSoloQuery
+            // 
+            this.chbSoloQuery.AutoSize = true;
+            this.chbSoloQuery.Location = new System.Drawing.Point(40, 11);
+            this.chbSoloQuery.Margin = new System.Windows.Forms.Padding(4);
+            this.chbSoloQuery.Name = "chbSoloQuery";
+            this.chbSoloQuery.Size = new System.Drawing.Size(142, 23);
+            this.chbSoloQuery.TabIndex = 10;
+            this.chbSoloQuery.Text = "Esegui solo query";
+            this.chbSoloQuery.UseVisualStyleBackColor = true;
+            this.chbSoloQuery.CheckedChanged += new System.EventHandler(this.chbSoloQuery_CheckedChanged);
+            // 
             // frmEsegui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(343, 283);
+            this.Controls.Add(this.chbSoloQuery);
             this.Controls.Add(this.chkCopyTo);
             this.Controls.Add(this.chbApriExcel);
             this.Controls.Add(this.chbInvioEmail);
@@ -134,5 +148,6 @@
         private System.Windows.Forms.CheckBox chbInvioEmail;
         private System.Windows.Forms.CheckBox chbApriExcel;
         private System.Windows.Forms.CheckBox chkCopyTo;
+        private System.Windows.Forms.CheckBox chbSoloQuery;
     }
 }

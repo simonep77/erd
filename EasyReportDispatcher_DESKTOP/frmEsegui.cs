@@ -65,6 +65,16 @@ namespace EasyReportDispatcher_DESKTOP
                     Process.Start(outFilePath);
 
                 }
+                else if (this.chbSoloQuery.Checked)
+                {
+                        var tab = this.mEstrazioneBiz.RunSQL();
+
+                        using (var f = new frmShowQResult(tab))
+                        {
+                            f.ShowDialog();
+                        }
+
+                }
                 else
                     UI_Utils.ShowInfo("Esecuzione conclusa con successo");
 
@@ -88,6 +98,22 @@ namespace EasyReportDispatcher_DESKTOP
             this.btnEsegui.Enabled = true;
             }
 
+        }
+
+        private void chbSoloQuery_CheckedChanged(object sender, EventArgs e)
+        {
+            var chks = this.Controls.Cast<Control>().Where(c => c is CheckBox && !c.Equals(this.chbSoloQuery)).ToList();
+            
+            if (this.chbSoloQuery.Checked)
+            {
+                chks.ForEach(c => { ((CheckBox)c).Checked = false; c.Enabled = false; });
+            }
+            else
+            {
+                chks.ForEach(c => { c.Enabled = true; });
+                this.loadData();
+
+            }
         }
     }
 }

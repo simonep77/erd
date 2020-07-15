@@ -225,69 +225,82 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void btnSalva_Click(object sender, EventArgs e)
         {
-
             try
             {
                 this.validazioneDati();
 
-                //Template custom
-                if (this.rbTemplateCustom.Checked)
+                AppContextERD.Slot.DbBeginTransAll();
+                try
                 {
-                    var tpl = this.mEstrazioneBiz.DataObj.Template;
-
-                    if (tpl == null)
+                    //Template custom
+                    if (this.rbTemplateCustom.Checked)
                     {
-                        tpl = AppContextERD.Slot.CreateObject<ReportTemplate>();
+                        var tpl = this.mEstrazioneBiz.DataObj.Template;
+
+                        if (tpl == null)
+                        {
+                            tpl = AppContextERD.Slot.CreateObject<ReportTemplate>();
+                        }
+                        else if (this.mEstrazioneBiz.DataObj.ObjectState == Bdo.Objects.EObjectState.New)
+                        {
+                            tpl = AppContextERD.Slot.CloneObjectForNew(tpl);
+                        }
+
+                        tpl.Nome = this.txtNomeTemplate.Text;
+
+                        if (this.lbTemplatePath.Tag != null)
+                        {
+                            tpl.TemplateBlob = File.ReadAllBytes(this.lbTemplatePath.Tag.ToString());
+                        }
+
+                        AppContextERD.Slot.SaveObject(tpl);
+
+                        this.mEstrazioneBiz.DataObj.TemplateId = tpl.Id;
                     }
-                    else if (this.mEstrazioneBiz.DataObj.ObjectState == Bdo.Objects.EObjectState.New)
+
+
+                    //Estrazione
+                    this.mEstrazioneBiz.DataObj.Nome = this.txtNome.Text;
+                    this.mEstrazioneBiz.DataObj.Note = this.txtNote.Text;
+                    this.mEstrazioneBiz.DataObj.CronString = this.txtCronString.Text;
+                    this.mEstrazioneBiz.DataObj.SqlText = this.txtSQL.Text;
+                    this.mEstrazioneBiz.DataObj.Titolo = this.txtExcelTitolo.Text;
+                    this.mEstrazioneBiz.DataObj.SheetName = this.txtExcelSheet.Text;
+
+                    if (this.mEstrazioneBiz.DataObj.ObjectState == Bdo.Objects.EObjectState.New)
                     {
-                        tpl = AppContextERD.Slot.CloneObjectForNew(tpl);
+                        this.mEstrazioneBiz.DataObj.DataInizio = new DateTime(2001, 1, 1);
+                        this.mEstrazioneBiz.DataObj.DataFine = new DateTime(9999, 12, 31);
+                        this.mEstrazioneBiz.DataObj.UtenteIdInserimento = AppContextERD.Utente.Id;
                     }
+                    this.mEstrazioneBiz.DataObj.Attivo = (sbyte)((this.chkAttivo.Checked) ? 1 : 0);
+                    this.mEstrazioneBiz.DataObj.InvioMailAttivo = (sbyte)((this.chbInvioEmail.Checked) ? 1 : 0);
+                    this.mEstrazioneBiz.DataObj.Nome = this.txtNome.Text;
+                    this.mEstrazioneBiz.DataObj.TipoFileId = (this.cmbTipoFile.SelectedItem as ReportTipoFile).Id;
+                    this.mEstrazioneBiz.DataObj.ConnessioneId = (this.cmbConnessioni.SelectedItem as ReportConnessione).Id;
+                    this.mEstrazioneBiz.DataObj.NumOutputStorico = Convert.ToSByte(this.txtNumOutput.Value);
+                    this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds = this.txtEstrazioniAcc.Text.Trim(',');
+                    this.mEstrazioneBiz.DataObj.CopyToPath = this.txtCopyToPath.Text.Trim();
+                    this.mEstrazioneBiz.DataObj.Gruppo = this.txtGruppo.Text.Trim();
+                    this.mEstrazioneBiz.DataObj.NomeFileMask = this.txtNomeFileMask.Text;
 
-                    tpl.Nome = this.txtNomeTemplate.Text;
+                    if (this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds.Length > 0)
+                        this.mEstrazioneBiz.DataObj.AccorpaSoloDati = (sbyte)(this.chkAccorpaDati.Checked ? 1 : 0);
 
-                    if (this.lbTemplatePath.Tag != null)
-                    {
-                        tpl.TemplateBlob = File.ReadAllBytes(this.lbTemplatePath.Tag.ToString());
-                    }
+                    this.mEstrazioneBiz.DataObj.UtenteIdAggiornamento = AppContextERD.Utente.Id;
 
-                    AppContextERD.Slot.SaveObject(tpl);
+                    this.mEstrazioneBiz.Salva();
 
-                    this.mEstrazioneBiz.DataObj.TemplateId = tpl.Id;
+                    AppContextERD.Slot.DbCommitAll();
+
                 }
+                catch (Exception)
+                {
+                    AppContextERD.Slot.DbRollBackAll();
 
-
-                //Estrazione
-                this.mEstrazioneBiz.DataObj.Nome = this.txtNome.Text;
-                this.mEstrazioneBiz.DataObj.Note = this.txtNote.Text;
-                this.mEstrazioneBiz.DataObj.CronString = this.txtCronString.Text;
-                this.mEstrazioneBiz.DataObj.SqlText = this.txtSQL.Text;
-                this.mEstrazioneBiz.DataObj.Titolo = this.txtExcelTitolo.Text;
-                this.mEstrazioneBiz.DataObj.SheetName = this.txtExcelSheet.Text;
+                    throw;
+                }
                 
-                if (this.mEstrazioneBiz.DataObj.ObjectState == Bdo.Objects.EObjectState.New)
-                {
-                    this.mEstrazioneBiz.DataObj.DataInizio = new DateTime(2001, 1, 1);
-                    this.mEstrazioneBiz.DataObj.DataFine = new DateTime(9999, 12, 31);
-                    this.mEstrazioneBiz.DataObj.UtenteIdInserimento = AppContextERD.Utente.Id;
-                }
-                this.mEstrazioneBiz.DataObj.Attivo = (sbyte)((this.chkAttivo.Checked) ? 1 : 0);
-                this.mEstrazioneBiz.DataObj.InvioMailAttivo =(sbyte)((this.chbInvioEmail.Checked) ? 1 : 0);
-                this.mEstrazioneBiz.DataObj.Nome = this.txtNome.Text;
-                this.mEstrazioneBiz.DataObj.TipoFileId = (this.cmbTipoFile.SelectedItem as ReportTipoFile).Id;
-                this.mEstrazioneBiz.DataObj.ConnessioneId = (this.cmbConnessioni.SelectedItem as ReportConnessione).Id;
-                this.mEstrazioneBiz.DataObj.NumOutputStorico = Convert.ToSByte(this.txtNumOutput.Value);
-                this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds = this.txtEstrazioniAcc.Text.Trim(',');
-                this.mEstrazioneBiz.DataObj.CopyToPath = this.txtCopyToPath.Text.Trim();
-                this.mEstrazioneBiz.DataObj.Gruppo = this.txtGruppo.Text.Trim();
-                this.mEstrazioneBiz.DataObj.NomeFileMask = this.txtNomeFileMask.Text;
-
-                if (this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds.Length > 0)
-                    this.mEstrazioneBiz.DataObj.AccorpaSoloDati = (sbyte)(this.chkAccorpaDati.Checked ? 1 : 0);
-
-                this.mEstrazioneBiz.DataObj.UtenteIdAggiornamento = AppContextERD.Utente.Id;
-
-                AppContextERD.Slot.SaveObject(this.mEstrazioneBiz.DataObj);
 
                 this.loadData();
 
@@ -301,9 +314,6 @@ namespace EasyReportDispatcher_DESKTOP
                 UI_Utils.ShowError(ex.Message);
 
             }
-
-
-
 
 
         }
@@ -487,6 +497,32 @@ namespace EasyReportDispatcher_DESKTOP
         private void button2_Click(object sender, EventArgs e)
         {
             UI_Utils.ShowInfo("Campo non obbligatorio.\n\nSe valorizzato deve contenere anche l'estensione ed è possibile utilizzare i fermaposto di formattazione data .NET sull'indice 0.\n\n Es. nome_file_{0:yyyy_MM_dd_HH_mm_ss}.xlsx");
+        }
+
+        private void btnEseguiQuery_Click(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.WaitCursor;
+            try
+            {
+                var tab = this.mEstrazioneBiz.RunSQL();
+
+                using (var f = new frmShowQResult(tab))
+                {
+                    f.ShowDialog();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                UI_Utils.ShowError(ex.Message);
+            }
+            finally
+            {
+                this.Cursor = this.DefaultCursor;
+            }
+
+
+
         }
     }
 }

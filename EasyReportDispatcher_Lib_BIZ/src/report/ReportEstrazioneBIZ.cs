@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using EasyReportDispatcher_Lib_Common.src;
 using Bdo.Database;
 using ClosedXML.Excel;
+using Bdo.Common;
 
 namespace EasyReportDispatcher_Lib_BIZ.src.report
 {
@@ -70,6 +71,22 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                          .SearchByColumn(new FilterEQUAL(nameof(ReportEstrazioneDestinatarioEmail.EstrazioneId), this.DataObj.Id));
                 }
                 return this.mListaDesinatariEmail;
+            }
+        }
+
+
+        private ReportEstrazioneSqlHistoryLista mListaSqlHistory;
+        public ReportEstrazioneSqlHistoryLista ListaSqlHistory
+        {
+            get
+            {
+                if (this.mListaSqlHistory == null)
+                {
+                    this.mListaSqlHistory = this.Slot.CreateList<ReportEstrazioneSqlHistoryLista>()
+                         .OrderBy(nameof(ReportEstrazioneSqlHistory.Id))
+                         .SearchByColumn(new FilterEQUAL(nameof(ReportEstrazioneSqlHistory.EstrazioneId), this.DataObj.Id));
+                }
+                return this.mListaSqlHistory;
             }
         }
 
@@ -221,6 +238,17 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
         #region PUBLIC
 
+        public void Salva()
+        {
+            var bChangedSql = this.DataObj.GetCurrentChanges().Where(p => p == nameof(ReportEstrazione.SqlText)).Any();
+            //Salva dati
+            this.Slot.SaveObject(this.DataObj);
+
+            //Storicizza SQL
+            if (bChangedSql)
+                this.handleSqlHistory();
+
+        }
 
         /// <summary>
         /// Ritorna la prossima schedulazione determniata sulla base della data di riferimento
@@ -251,7 +279,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 return estBiz;
 
             //Salva
-            this.Slot.SaveObject(estBiz.DataObj);
+            this.Salva();
 
             //Clona destinatari email
             estBiz.mListaDesinatariEmail = this.Slot.CreateList<ReportEstrazioneDestinatarioEmailLista>();
@@ -306,7 +334,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             {
                 //Esegue query
                 this.Slot.LogDebug(DebugLevel.Debug_1, "Begin runSQL()");
-                this.runSQL();
+                this.mTabResultSQL = this.RunSQL();
                 this.Slot.LogDebug(DebugLevel.Debug_1, "End runSQL()");
 
                 //se accorpamento dati (allora neanche esefue render finale)
@@ -397,9 +425,8 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                         return;
                     }
                     //Lancia Query
-                    repBiz.runSQL();
                     //Esegue merge
-                    this.mTabResultSQL.Merge(repBiz.mTabResultSQL);
+                    this.mTabResultSQL.Merge(repBiz.RunSQL());
                 }
                 catch (Exception)
                 {
@@ -697,7 +724,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         }
 
 
-        private void runSQL()
+        public DataTable RunSQL()
         {
             using (var db = Bdo.Database.DataBaseFactory.CreaDataBase(this.DataObj.Connessione.BdoDbConnectioType, this.DataObj.Connessione.ConnectionString))
             {
@@ -707,9 +734,9 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
                 //Aggiunge una serie di parametri di sistema:
                 this.loadErdSqlParameters(db);
-                
+
                 //Esegue
-                this.mTabResultSQL = db.Select();
+                return db.Select();
             }
         }
 
@@ -855,6 +882,18 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         }
 
 
+        private void handleSqlHistory()
+        {
+
+            var h = this.Slot.CreateObject<ReportEstrazioneSqlHistory>();
+            h.EstrazioneId = this.DataObj.Id;
+            h.UtenteId = this.DataObj.UtenteIdAggiornamento;
+            h.SqlText = this.DataObj.SqlText;
+
+            this.Slot.SaveObject(h);
+        }
+
+
         /// <summary>
         /// Indica se l'SQL contiene parametri di sistema che ne influiscono le esecuzioni successive
         /// </summary>
@@ -868,7 +907,47 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             return false;
         }
 
+
+        public void DeleteFull()
+        {
+            this.Slot.DeleteAll(this.ListaDesinatariEmail);
+            this.Slot.DeleteAll(this.ListaOutput);
+            this.DeleteHistory(-1);
+            this.Slot.DeleteObject(this.DataObj);
+        }
+
+
+        public void DeleteHistory(int keepNum)
+        {
+
+            if (keepNum <= 0)
+                this.Slot.DeleteAll(this.ListaSqlHistory);
+
+            var diff = this.ListaSqlHistory.Count - keepNum;
+
+            if (diff > 0)
+            {
+                //Prende quelli da mantenere
+                var subl = this.Slot.CreateList<ReportEstrazioneSqlHistoryLista>();
+                subl.AddRange(this.ListaSqlHistory.Skip(diff));
+
+                //Prende quelli da eliminare
+                var dell = this.Slot.CreateList<ReportEstrazioneSqlHistoryLista>();
+                dell.AddRange(this.ListaSqlHistory.Take(diff));
+
+                //Elimina
+                this.Slot.DeleteAll(dell);
+
+                //Imposta quelli da mantenere
+                this.mListaSqlHistory = subl;
+            }
+        }
+
+
         #endregion
+
+
+
 
 
     } // class

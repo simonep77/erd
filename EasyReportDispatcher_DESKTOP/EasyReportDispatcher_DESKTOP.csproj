@@ -132,6 +132,12 @@
     <Compile Include="frmEsegui.Designer.cs">
       <DependentUpon>frmEsegui.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmShowQResult.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmShowQResult.Designer.cs">
+      <DependentUpon>frmShowQResult.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmSmtp.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -184,6 +190,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmEsegui.resx">
       <DependentUpon>frmEsegui.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmShowQResult.resx">
+      <DependentUpon>frmShowQResult.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSmtp.resx">
       <DependentUpon>frmSmtp.cs</DependentUpon>
@@ -271,6 +280,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App-kexi-database.ico" />
+    <None Include="Resources\lightning_delete.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

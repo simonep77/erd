@@ -37,12 +37,25 @@ namespace EasyReportDispatcher_DESKTOP
             this.tsNumEstrazioni = new System.Windows.Forms.ToolStripStatusLabel();
             this.pgLoading = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.btnManutenzione = new System.Windows.Forms.ToolStripButton();
             this.btnConfig = new System.Windows.Forms.ToolStripButton();
             this.btnReload = new System.Windows.Forms.ToolStripButton();
             this.btnOutputDir = new System.Windows.Forms.ToolStripButton();
             this.panMain = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panCenter = new System.Windows.Forms.Panel();
+            this.lvEstrazioni = new EasyReportDispatcher_DESKTOP.src.LvCustom();
+            this.colID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colNome = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colConnessione = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colSchedulato = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colNextSched = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colInvioEmail = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colAccorpamento = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colTemplate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colTemplateLocale = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colUtenteIns = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colUtenteAgg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ctxMenuEst = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsTitolo = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -50,6 +63,7 @@ namespace EasyReportDispatcher_DESKTOP
             this.tsEstrazioneClona = new System.Windows.Forms.ToolStripMenuItem();
             this.tsEstrazioneEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.tsEstrazioneDel = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -63,24 +77,12 @@ namespace EasyReportDispatcher_DESKTOP
             this.tsStoricoEsecuzioni = new System.Windows.Forms.ToolStripMenuItem();
             this.imgList = new System.Windows.Forms.ImageList(this.components);
             this.panSearch = new System.Windows.Forms.Panel();
+            this.chbSchedulati = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cmbGruppi = new System.Windows.Forms.ComboBox();
             this.lbFiltroNum = new System.Windows.Forms.Label();
             this.txtFiltro = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.cmbGruppi = new System.Windows.Forms.ComboBox();
-            this.lvEstrazioni = new EasyReportDispatcher_DESKTOP.src.LvCustom();
-            this.colID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colNome = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colConnessione = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colSchedulato = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colNextSched = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colInvioEmail = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colAccorpamento = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colTemplate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colTemplateLocale = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colUtenteIns = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colUtenteAgg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.label2 = new System.Windows.Forms.Label();
-            this.chbSchedulati = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panMain.SuspendLayout();
@@ -126,6 +128,7 @@ namespace EasyReportDispatcher_DESKTOP
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnManutenzione,
             this.btnConfig,
             this.btnReload,
             this.btnOutputDir});
@@ -134,6 +137,17 @@ namespace EasyReportDispatcher_DESKTOP
             this.toolStrip1.Size = new System.Drawing.Size(1394, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // btnManutenzione
+            // 
+            this.btnManutenzione.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnManutenzione.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.lightning_delete;
+            this.btnManutenzione.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnManutenzione.Name = "btnManutenzione";
+            this.btnManutenzione.Size = new System.Drawing.Size(103, 22);
+            this.btnManutenzione.Text = "Manutenzione";
+            this.btnManutenzione.Visible = false;
+            this.btnManutenzione.Click += new System.EventHandler(this.btnManutenzione_Click);
             // 
             // btnConfig
             // 
@@ -195,233 +209,6 @@ namespace EasyReportDispatcher_DESKTOP
             this.panCenter.Padding = new System.Windows.Forms.Padding(5);
             this.panCenter.Size = new System.Drawing.Size(1374, 520);
             this.panCenter.TabIndex = 2;
-            // 
-            // ctxMenuEst
-            // 
-            this.ctxMenuEst.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.ctxMenuEst.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsTitolo,
-            this.toolStripSeparator3,
-            this.tsEstrazioneNew,
-            this.tsEstrazioneClona,
-            this.tsEstrazioneEdit,
-            this.tsEstrazioneDel,
-            this.toolStripMenuItem1,
-            this.toolStripMenuItem3,
-            this.toolStripSeparator4,
-            this.tsTemplateLocOpen,
-            this.tsTemplateLocElimina,
-            this.tsTemplateLocSave,
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem4,
-            this.toolStripSeparator5,
-            this.tsEstrazioneEsegui,
-            this.tsStoricoEsecuzioni});
-            this.ctxMenuEst.Name = "ctxMenuEst";
-            this.ctxMenuEst.Size = new System.Drawing.Size(245, 322);
-            this.ctxMenuEst.Text = "ESTRAZIONI";
-            // 
-            // tsTitolo
-            // 
-            this.tsTitolo.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.tsTitolo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tsTitolo.Enabled = false;
-            this.tsTitolo.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tsTitolo.Name = "tsTitolo";
-            this.tsTitolo.Size = new System.Drawing.Size(244, 24);
-            this.tsTitolo.Text = "Gestione Estrazioni";
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(241, 6);
-            // 
-            // tsEstrazioneNew
-            // 
-            this.tsEstrazioneNew.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.add;
-            this.tsEstrazioneNew.Name = "tsEstrazioneNew";
-            this.tsEstrazioneNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.tsEstrazioneNew.Size = new System.Drawing.Size(244, 24);
-            this.tsEstrazioneNew.Text = "&Nuova";
-            this.tsEstrazioneNew.ToolTipText = "Inserisce una nuova estrazione";
-            this.tsEstrazioneNew.Click += new System.EventHandler(this.btnAddEstrazione_Click);
-            // 
-            // tsEstrazioneClona
-            // 
-            this.tsEstrazioneClona.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.table_multiple;
-            this.tsEstrazioneClona.Name = "tsEstrazioneClona";
-            this.tsEstrazioneClona.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.tsEstrazioneClona.Size = new System.Drawing.Size(244, 24);
-            this.tsEstrazioneClona.Text = "&Clona";
-            this.tsEstrazioneClona.ToolTipText = "Crea una nuova estrazione copiando il contenuto di una esistente";
-            this.tsEstrazioneClona.Click += new System.EventHandler(this.btnClonaEstrazione_Click);
-            // 
-            // tsEstrazioneEdit
-            // 
-            this.tsEstrazioneEdit.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.table_edit;
-            this.tsEstrazioneEdit.Name = "tsEstrazioneEdit";
-            this.tsEstrazioneEdit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-            this.tsEstrazioneEdit.Size = new System.Drawing.Size(244, 24);
-            this.tsEstrazioneEdit.Text = "&Modifica";
-            this.tsEstrazioneEdit.ToolTipText = "Modifica un\'estrazione";
-            this.tsEstrazioneEdit.Click += new System.EventHandler(this.btnEditEstrazione_Click);
-            // 
-            // tsEstrazioneDel
-            // 
-            this.tsEstrazioneDel.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.delete;
-            this.tsEstrazioneDel.Name = "tsEstrazioneDel";
-            this.tsEstrazioneDel.Size = new System.Drawing.Size(244, 24);
-            this.tsEstrazioneDel.Text = "Elimina";
-            this.tsEstrazioneDel.ToolTipText = "Elimina logicamente un\'estrazione. Nessuna azione distruttiva.";
-            this.tsEstrazioneDel.Click += new System.EventHandler(this.btnDelEstrazione_Click);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(241, 6);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.toolStripMenuItem3.Enabled = false;
-            this.toolStripMenuItem3.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(244, 24);
-            this.toolStripMenuItem3.Text = "Gestione Template";
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(241, 6);
-            // 
-            // tsTemplateLocOpen
-            // 
-            this.tsTemplateLocOpen.Name = "tsTemplateLocOpen";
-            this.tsTemplateLocOpen.Size = new System.Drawing.Size(244, 24);
-            this.tsTemplateLocOpen.Text = "Apri Template (copia locale)";
-            this.tsTemplateLocOpen.ToolTipText = "Scarica in locale il custom template per poterlo visualizzare e/o modifcare";
-            this.tsTemplateLocOpen.Click += new System.EventHandler(this.btnOpenTemplate_Click);
-            // 
-            // tsTemplateLocElimina
-            // 
-            this.tsTemplateLocElimina.Name = "tsTemplateLocElimina";
-            this.tsTemplateLocElimina.Size = new System.Drawing.Size(244, 24);
-            this.tsTemplateLocElimina.Text = "EliminaTemplate Locale";
-            this.tsTemplateLocElimina.ToolTipText = "Elimina la copia locale del template";
-            this.tsTemplateLocElimina.Click += new System.EventHandler(this.btnELiminaTplLocale_Click);
-            // 
-            // tsTemplateLocSave
-            // 
-            this.tsTemplateLocSave.Name = "tsTemplateLocSave";
-            this.tsTemplateLocSave.Size = new System.Drawing.Size(244, 24);
-            this.tsTemplateLocSave.Text = "Salva Template Locale";
-            this.tsTemplateLocSave.ToolTipText = "Salva la copia locale del template sul DB allineandolo";
-            this.tsTemplateLocSave.Click += new System.EventHandler(this.btnSalvaTemplate_Click);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(241, 6);
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.toolStripMenuItem4.Enabled = false;
-            this.toolStripMenuItem4.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(244, 24);
-            this.toolStripMenuItem4.Text = "Gestione Operativa";
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(241, 6);
-            // 
-            // tsEstrazioneEsegui
-            // 
-            this.tsEstrazioneEsegui.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.database_go;
-            this.tsEstrazioneEsegui.Name = "tsEstrazioneEsegui";
-            this.tsEstrazioneEsegui.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
-            this.tsEstrazioneEsegui.Size = new System.Drawing.Size(244, 24);
-            this.tsEstrazioneEsegui.Text = "&Esegui";
-            this.tsEstrazioneEsegui.ToolTipText = "Esegue l\'estrazione";
-            this.tsEstrazioneEsegui.Click += new System.EventHandler(this.btnEsegui_Click);
-            // 
-            // tsStoricoEsecuzioni
-            // 
-            this.tsStoricoEsecuzioni.Name = "tsStoricoEsecuzioni";
-            this.tsStoricoEsecuzioni.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.tsStoricoEsecuzioni.Size = new System.Drawing.Size(244, 24);
-            this.tsStoricoEsecuzioni.Text = "&Storico";
-            this.tsStoricoEsecuzioni.Click += new System.EventHandler(this.tsStoricoEsecuzioni_Click);
-            // 
-            // imgList
-            // 
-            this.imgList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgList.ImageStream")));
-            this.imgList.TransparentColor = System.Drawing.Color.Transparent;
-            this.imgList.Images.SetKeyName(0, "add2.png");
-            this.imgList.Images.SetKeyName(1, "attach.png");
-            this.imgList.Images.SetKeyName(2, "cancel.png");
-            this.imgList.Images.SetKeyName(3, "database_go.png");
-            this.imgList.Images.SetKeyName(4, "database_refresh.png");
-            this.imgList.Images.SetKeyName(5, "delete1.png");
-            this.imgList.Images.SetKeyName(6, "folder_explore.png");
-            this.imgList.Images.SetKeyName(7, "table.png");
-            this.imgList.Images.SetKeyName(8, "table_edit.png");
-            this.imgList.Images.SetKeyName(9, "table_multiple.png");
-            this.imgList.Images.SetKeyName(10, "wrench_orange.png");
-            this.imgList.Images.SetKeyName(11, "application_double.png");
-            // 
-            // panSearch
-            // 
-            this.panSearch.Controls.Add(this.chbSchedulati);
-            this.panSearch.Controls.Add(this.label2);
-            this.panSearch.Controls.Add(this.cmbGruppi);
-            this.panSearch.Controls.Add(this.lbFiltroNum);
-            this.panSearch.Controls.Add(this.txtFiltro);
-            this.panSearch.Controls.Add(this.label1);
-            this.panSearch.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panSearch.Location = new System.Drawing.Point(10, 30);
-            this.panSearch.Name = "panSearch";
-            this.panSearch.Size = new System.Drawing.Size(1374, 41);
-            this.panSearch.TabIndex = 1;
-            // 
-            // lbFiltroNum
-            // 
-            this.lbFiltroNum.AutoSize = true;
-            this.lbFiltroNum.Location = new System.Drawing.Point(1020, 11);
-            this.lbFiltroNum.Name = "lbFiltroNum";
-            this.lbFiltroNum.Size = new System.Drawing.Size(94, 19);
-            this.lbFiltroNum.TabIndex = 2;
-            this.lbFiltroNum.Text = "Visibili x su y";
-            this.lbFiltroNum.Visible = false;
-            // 
-            // txtFiltro
-            // 
-            this.txtFiltro.Location = new System.Drawing.Point(518, 6);
-            this.txtFiltro.Name = "txtFiltro";
-            this.txtFiltro.Size = new System.Drawing.Size(301, 27);
-            this.txtFiltro.TabIndex = 1;
-            this.txtFiltro.TextChanged += new System.EventHandler(this.actApplicaFiltri);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(56, 19);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Gruppo";
-            // 
-            // cmbGruppi
-            // 
-            this.cmbGruppi.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbGruppi.FormattingEnabled = true;
-            this.cmbGruppi.Location = new System.Drawing.Point(83, 6);
-            this.cmbGruppi.Name = "cmbGruppi";
-            this.cmbGruppi.Size = new System.Drawing.Size(352, 27);
-            this.cmbGruppi.TabIndex = 3;
-            this.cmbGruppi.SelectedIndexChanged += new System.EventHandler(this.actApplicaFiltri);
             // 
             // lvEstrazioni
             // 
@@ -512,14 +299,206 @@ namespace EasyReportDispatcher_DESKTOP
             this.colUtenteAgg.Text = "Aggiornata da";
             this.colUtenteAgg.Width = 120;
             // 
-            // label2
+            // ctxMenuEst
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(465, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(47, 19);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Nome";
+            this.ctxMenuEst.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.ctxMenuEst.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsTitolo,
+            this.toolStripSeparator3,
+            this.tsEstrazioneNew,
+            this.tsEstrazioneClona,
+            this.tsEstrazioneEdit,
+            this.tsEstrazioneDel,
+            this.toolStripMenuItem5,
+            this.toolStripMenuItem1,
+            this.toolStripMenuItem3,
+            this.toolStripSeparator4,
+            this.tsTemplateLocOpen,
+            this.tsTemplateLocElimina,
+            this.tsTemplateLocSave,
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem4,
+            this.toolStripSeparator5,
+            this.tsEstrazioneEsegui,
+            this.tsStoricoEsecuzioni});
+            this.ctxMenuEst.Name = "ctxMenuEst";
+            this.ctxMenuEst.Size = new System.Drawing.Size(287, 346);
+            this.ctxMenuEst.Text = "ESTRAZIONI";
+            // 
+            // tsTitolo
+            // 
+            this.tsTitolo.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.tsTitolo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsTitolo.Enabled = false;
+            this.tsTitolo.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsTitolo.Name = "tsTitolo";
+            this.tsTitolo.Size = new System.Drawing.Size(286, 24);
+            this.tsTitolo.Text = "Gestione Estrazioni";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(283, 6);
+            // 
+            // tsEstrazioneNew
+            // 
+            this.tsEstrazioneNew.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.add;
+            this.tsEstrazioneNew.Name = "tsEstrazioneNew";
+            this.tsEstrazioneNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.tsEstrazioneNew.Size = new System.Drawing.Size(286, 24);
+            this.tsEstrazioneNew.Text = "&Nuova";
+            this.tsEstrazioneNew.ToolTipText = "Inserisce una nuova estrazione";
+            this.tsEstrazioneNew.Click += new System.EventHandler(this.btnAddEstrazione_Click);
+            // 
+            // tsEstrazioneClona
+            // 
+            this.tsEstrazioneClona.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.table_multiple;
+            this.tsEstrazioneClona.Name = "tsEstrazioneClona";
+            this.tsEstrazioneClona.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.tsEstrazioneClona.Size = new System.Drawing.Size(286, 24);
+            this.tsEstrazioneClona.Text = "&Clona";
+            this.tsEstrazioneClona.ToolTipText = "Crea una nuova estrazione copiando il contenuto di una esistente";
+            this.tsEstrazioneClona.Click += new System.EventHandler(this.btnClonaEstrazione_Click);
+            // 
+            // tsEstrazioneEdit
+            // 
+            this.tsEstrazioneEdit.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.table_edit;
+            this.tsEstrazioneEdit.Name = "tsEstrazioneEdit";
+            this.tsEstrazioneEdit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
+            this.tsEstrazioneEdit.Size = new System.Drawing.Size(286, 24);
+            this.tsEstrazioneEdit.Text = "&Modifica";
+            this.tsEstrazioneEdit.ToolTipText = "Modifica un\'estrazione";
+            this.tsEstrazioneEdit.Click += new System.EventHandler(this.btnEditEstrazione_Click);
+            // 
+            // tsEstrazioneDel
+            // 
+            this.tsEstrazioneDel.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.delete;
+            this.tsEstrazioneDel.Name = "tsEstrazioneDel";
+            this.tsEstrazioneDel.Size = new System.Drawing.Size(286, 24);
+            this.tsEstrazioneDel.Text = "Elimina";
+            this.tsEstrazioneDel.ToolTipText = "Elimina logicamente un\'estrazione. Nessuna azione distruttiva.";
+            this.tsEstrazioneDel.Click += new System.EventHandler(this.btnDelEstrazione_Click);
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.X)));
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(286, 24);
+            this.toolStripMenuItem5.Text = "Manutenzione";
+            this.toolStripMenuItem5.Visible = false;
+            this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(283, 6);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.toolStripMenuItem3.Enabled = false;
+            this.toolStripMenuItem3.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(286, 24);
+            this.toolStripMenuItem3.Text = "Gestione Template";
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(283, 6);
+            // 
+            // tsTemplateLocOpen
+            // 
+            this.tsTemplateLocOpen.Name = "tsTemplateLocOpen";
+            this.tsTemplateLocOpen.Size = new System.Drawing.Size(286, 24);
+            this.tsTemplateLocOpen.Text = "Apri Template (copia locale)";
+            this.tsTemplateLocOpen.ToolTipText = "Scarica in locale il custom template per poterlo visualizzare e/o modifcare";
+            this.tsTemplateLocOpen.Click += new System.EventHandler(this.btnOpenTemplate_Click);
+            // 
+            // tsTemplateLocElimina
+            // 
+            this.tsTemplateLocElimina.Name = "tsTemplateLocElimina";
+            this.tsTemplateLocElimina.Size = new System.Drawing.Size(286, 24);
+            this.tsTemplateLocElimina.Text = "EliminaTemplate Locale";
+            this.tsTemplateLocElimina.ToolTipText = "Elimina la copia locale del template";
+            this.tsTemplateLocElimina.Click += new System.EventHandler(this.btnELiminaTplLocale_Click);
+            // 
+            // tsTemplateLocSave
+            // 
+            this.tsTemplateLocSave.Name = "tsTemplateLocSave";
+            this.tsTemplateLocSave.Size = new System.Drawing.Size(286, 24);
+            this.tsTemplateLocSave.Text = "Salva Template Locale";
+            this.tsTemplateLocSave.ToolTipText = "Salva la copia locale del template sul DB allineandolo";
+            this.tsTemplateLocSave.Click += new System.EventHandler(this.btnSalvaTemplate_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(283, 6);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.toolStripMenuItem4.Enabled = false;
+            this.toolStripMenuItem4.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(286, 24);
+            this.toolStripMenuItem4.Text = "Gestione Operativa";
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(283, 6);
+            // 
+            // tsEstrazioneEsegui
+            // 
+            this.tsEstrazioneEsegui.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.database_go;
+            this.tsEstrazioneEsegui.Name = "tsEstrazioneEsegui";
+            this.tsEstrazioneEsegui.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
+            this.tsEstrazioneEsegui.Size = new System.Drawing.Size(286, 24);
+            this.tsEstrazioneEsegui.Text = "&Esegui";
+            this.tsEstrazioneEsegui.ToolTipText = "Esegue l\'estrazione";
+            this.tsEstrazioneEsegui.Click += new System.EventHandler(this.btnEsegui_Click);
+            // 
+            // tsStoricoEsecuzioni
+            // 
+            this.tsStoricoEsecuzioni.Name = "tsStoricoEsecuzioni";
+            this.tsStoricoEsecuzioni.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.tsStoricoEsecuzioni.Size = new System.Drawing.Size(286, 24);
+            this.tsStoricoEsecuzioni.Text = "&Storico";
+            this.tsStoricoEsecuzioni.Click += new System.EventHandler(this.tsStoricoEsecuzioni_Click);
+            // 
+            // imgList
+            // 
+            this.imgList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgList.ImageStream")));
+            this.imgList.TransparentColor = System.Drawing.Color.Transparent;
+            this.imgList.Images.SetKeyName(0, "add2.png");
+            this.imgList.Images.SetKeyName(1, "attach.png");
+            this.imgList.Images.SetKeyName(2, "cancel.png");
+            this.imgList.Images.SetKeyName(3, "database_go.png");
+            this.imgList.Images.SetKeyName(4, "database_refresh.png");
+            this.imgList.Images.SetKeyName(5, "delete1.png");
+            this.imgList.Images.SetKeyName(6, "folder_explore.png");
+            this.imgList.Images.SetKeyName(7, "table.png");
+            this.imgList.Images.SetKeyName(8, "table_edit.png");
+            this.imgList.Images.SetKeyName(9, "table_multiple.png");
+            this.imgList.Images.SetKeyName(10, "wrench_orange.png");
+            this.imgList.Images.SetKeyName(11, "application_double.png");
+            // 
+            // panSearch
+            // 
+            this.panSearch.Controls.Add(this.chbSchedulati);
+            this.panSearch.Controls.Add(this.label2);
+            this.panSearch.Controls.Add(this.cmbGruppi);
+            this.panSearch.Controls.Add(this.lbFiltroNum);
+            this.panSearch.Controls.Add(this.txtFiltro);
+            this.panSearch.Controls.Add(this.label1);
+            this.panSearch.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panSearch.Location = new System.Drawing.Point(10, 30);
+            this.panSearch.Name = "panSearch";
+            this.panSearch.Size = new System.Drawing.Size(1374, 41);
+            this.panSearch.TabIndex = 1;
             // 
             // chbSchedulati
             // 
@@ -531,6 +510,52 @@ namespace EasyReportDispatcher_DESKTOP
             this.chbSchedulati.Text = "Solo schedulati";
             this.chbSchedulati.UseVisualStyleBackColor = true;
             this.chbSchedulati.CheckedChanged += new System.EventHandler(this.actApplicaFiltri);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(465, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(47, 19);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Nome";
+            // 
+            // cmbGruppi
+            // 
+            this.cmbGruppi.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbGruppi.FormattingEnabled = true;
+            this.cmbGruppi.Location = new System.Drawing.Point(83, 6);
+            this.cmbGruppi.Name = "cmbGruppi";
+            this.cmbGruppi.Size = new System.Drawing.Size(352, 27);
+            this.cmbGruppi.TabIndex = 3;
+            this.cmbGruppi.SelectedIndexChanged += new System.EventHandler(this.actApplicaFiltri);
+            // 
+            // lbFiltroNum
+            // 
+            this.lbFiltroNum.AutoSize = true;
+            this.lbFiltroNum.Location = new System.Drawing.Point(1020, 11);
+            this.lbFiltroNum.Name = "lbFiltroNum";
+            this.lbFiltroNum.Size = new System.Drawing.Size(94, 19);
+            this.lbFiltroNum.TabIndex = 2;
+            this.lbFiltroNum.Text = "Visibili x su y";
+            this.lbFiltroNum.Visible = false;
+            // 
+            // txtFiltro
+            // 
+            this.txtFiltro.Location = new System.Drawing.Point(518, 6);
+            this.txtFiltro.Name = "txtFiltro";
+            this.txtFiltro.Size = new System.Drawing.Size(301, 27);
+            this.txtFiltro.TabIndex = 1;
+            this.txtFiltro.TextChanged += new System.EventHandler(this.actApplicaFiltri);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(21, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(56, 19);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Gruppo";
             // 
             // frmMain
             // 
@@ -612,6 +637,8 @@ namespace EasyReportDispatcher_DESKTOP
         private System.Windows.Forms.ComboBox cmbGruppi;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox chbSchedulati;
+        private System.Windows.Forms.ToolStripButton btnManutenzione;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
     }
 }
 
