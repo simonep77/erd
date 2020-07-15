@@ -30,10 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmShowQResult));
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.tsTotRows = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tsRecSel = new System.Windows.Forms.ToolStripStatusLabel();
             this.dgv = new System.Windows.Forms.DataGridView();
             this.nav = new System.Windows.Forms.BindingNavigator(this.components);
             this.bindingNavigatorCountItem = new System.Windows.Forms.ToolStripLabel();
@@ -45,43 +41,10 @@
             this.bindingNavigatorMoveNextItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nav)).BeginInit();
             this.nav.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsTotRows,
-            this.toolStripStatusLabel1,
-            this.tsRecSel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 497);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(933, 22);
-            this.statusStrip1.TabIndex = 0;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // tsTotRows
-            // 
-            this.tsTotRows.Name = "tsTotRows";
-            this.tsTotRows.Size = new System.Drawing.Size(80, 17);
-            this.tsTotRows.Text = "Totale righe: 0";
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.AutoSize = false;
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(30, 17);
-            this.toolStripStatusLabel1.Text = "|";
-            this.toolStripStatusLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // tsRecSel
-            // 
-            this.tsRecSel.Name = "tsRecSel";
-            this.tsRecSel.Size = new System.Drawing.Size(156, 17);
-            this.tsRecSel.Text = "Record selezionato: nessuno";
             // 
             // dgv
             // 
@@ -94,7 +57,7 @@
             this.dgv.Name = "dgv";
             this.dgv.ReadOnly = true;
             this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv.Size = new System.Drawing.Size(933, 472);
+            this.dgv.Size = new System.Drawing.Size(933, 494);
             this.dgv.TabIndex = 1;
             // 
             // nav
@@ -198,12 +161,9 @@
             this.ClientSize = new System.Drawing.Size(933, 519);
             this.Controls.Add(this.dgv);
             this.Controls.Add(this.nav);
-            this.Controls.Add(this.statusStrip1);
             this.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmShowQResult";
             this.Text = "Visualizzatore risultati query";
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nav)).EndInit();
             this.nav.ResumeLayout(false);
@@ -214,12 +174,7 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.DataGridView dgv;
-        private System.Windows.Forms.ToolStripStatusLabel tsTotRows;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripStatusLabel tsRecSel;
         private System.Windows.Forms.BindingNavigator nav;
         private System.Windows.Forms.ToolStripLabel bindingNavigatorCountItem;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveFirstItem;
