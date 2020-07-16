@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1AA5122D-4561-41D9-B48D-75067FD8C326}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>EasyReportDispatcher_SCHEDULER</RootNamespace>
+    <AssemblyName>EasyReportDispatcher_SCHEDULER</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Business.Data.Objects, Version=4.0.0.0, Culture=neutral, PublicKeyToken=1dc0a08b888e7d1a, processorArchitecture=MSIL">
+      <HintPath>..\packages\bdo.4.0.7\lib\net20\Business.Data.Objects.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.1.0\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.1.0\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="LevelB.Arch.Core, Version=0.1.1.268, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LevelB.Arch.Core.0.1.1.268\lib\net45\LevelB.Arch.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="LevelB.Vici.WinService, Version=0.1.1.268, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LevelB.Vici.WinService.0.1.1.268\lib\net45\LevelB.Vici.WinService.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.8.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.6.8.8\lib\net45\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="NCrontab, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NCrontab.3.3.1\lib\net35\NCrontab.dll</HintPath>
+    </Reference>
+    <Reference Include="NinjaNye.SearchExtensions, Version=1.0.5395.16422, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NinjaNye.SearchExtensions.1.0.5395.16422\lib\net40\NinjaNye.SearchExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz, Version=3.0.7.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.3.0.7\lib\net452\Quartz.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Vici.Core, Version=2.0.0.1114, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\vici.core.2.0.0.1114\lib\net35\Vici.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\AppContextERD.cs" />
+    <Compile Include="src\Common\CostantiSched.cs" />
+    <Compile Include="src\Jobs\JobScheduleUpdater.cs" />
+    <Compile Include="src\Svcs\IntSvcScheduler.cs" />
+    <Compile Include="src\Svcs\MainService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EasyReportDispatcher_Lib_BIZ\EasyReportDispatcher_Lib_BIZ.csproj">
+      <Project>{3a9380b8-38d5-42a4-8396-20833592e262}</Project>
+      <Name>EasyReportDispatcher_Lib_BIZ</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EasyReportDispatcher_Lib_Common\EasyReportDispatcher_Lib_Common.csproj">
+      <Project>{b5a1ef14-47ca-4f0e-8c97-a2546a66b9c4}</Project>
+      <Name>EasyReportDispatcher_Lib_Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EasyReportDispatcher_Lib_DAL\EasyReportDispatcher_Lib_DAL.csproj">
+      <Project>{3593e08f-ff4d-4d73-8cb9-315a4112ab3f}</Project>
+      <Name>EasyReportDispatcher_Lib_DAL</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -163,7 +163,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\AppContext.cs" />
+    <Compile Include="src\AppContextERD.cs" />
     <Compile Include="src\ErdForm.cs">
       <SubType>Form</SubType>
     </Compile>

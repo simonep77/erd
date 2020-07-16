@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyReportDispatcher_RUN", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyReportDispatcher_DESKTOP", "EasyReportDispatcher_DESKTOP\EasyReportDispatcher_DESKTOP.csproj", "{6151736D-ED94-43D2-B5F0-38950068E399}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyReportDispatcher_SCHEDULER", "EasyReportDispatcher_SCHEDULER\EasyReportDispatcher_SCHEDULER.csproj", "{1AA5122D-4561-41D9-B48D-75067FD8C326}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{6151736D-ED94-43D2-B5F0-38950068E399}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6151736D-ED94-43D2-B5F0-38950068E399}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6151736D-ED94-43D2-B5F0-38950068E399}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AA5122D-4561-41D9-B48D-75067FD8C326}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AA5122D-4561-41D9-B48D-75067FD8C326}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AA5122D-4561-41D9-B48D-75067FD8C326}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AA5122D-4561-41D9-B48D-75067FD8C326}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

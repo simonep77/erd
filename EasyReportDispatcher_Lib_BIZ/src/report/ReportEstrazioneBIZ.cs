@@ -944,6 +944,24 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         }
 
 
+        /// <summary>
+        /// Esegue la validazione dei dati
+        /// </summary>
+        public void ValidazioneDati()
+        {
+            if (this.DataObj.Attivo > 0 && !string.IsNullOrWhiteSpace(this.DataObj.CronString))
+            {
+                try
+                {
+                    var cron = NCrontab.CrontabSchedule.Parse(this.DataObj.CronString);
+                }
+                catch (Exception)
+                {
+                    throw new ApplicationException(@"Cronstring non valida");
+                }
+            }
+        }
+
         #endregion
 
 
