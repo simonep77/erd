@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EasyReportDispatcher_SCHEDULER.src.Svcs;
+using EasyReportDispatcher_SCHEDULER.Properties;
 
 namespace EasyReportDispatcher_SCHEDULER.src
 {
@@ -15,9 +16,7 @@ namespace EasyReportDispatcher_SCHEDULER.src
         public const string LOG_EVENT_SOURCE = @"ERD_Scheduler";
         public const string LOG_EVENT_SOURCE_LOG = @"ERD Scheduler Eventlog";
 
-        public const int SCHEDULE_FORCED_UPDATE_CHECK_SECONDS = 60;
-        public const int SCHEDULE_FORCED_REFRESH_MINUTES = 120;
-
+        public static readonly int SCHEDULE_FORCED_UPDATE_CHECK_SECONDS = Settings.Default.SecondiCheckModificheSchedulazioni;
 
         public static string UserDataDir { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ERD");
         public static string UserDataDirOutput { get; } = Path.Combine(UserDataDir, "Output");

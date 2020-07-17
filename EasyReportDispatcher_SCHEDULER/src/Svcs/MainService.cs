@@ -8,12 +8,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EasyReportDispatcher_SCHEDULER.src.Svcs
 {
     public class MainService : Service
     {
+        private Mutex mMutex;
 
         public int RunMode { get; set; }
 
@@ -95,25 +97,37 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
         {
             this.RunMode = mode;
 
-            switch (mode)
+            try
             {
-                case CostantiSched.RunMode.Service:
-                    //Service
-                    this.Run();
-                    break;
-                case CostantiSched.RunMode.Console:
-                    //Console
-                    this.RunConsole();
-                    break;
-                case CostantiSched.RunMode.Install:
-                    this.Install();
-                    break;
-                case CostantiSched.RunMode.Uninstall:
-                    this.UnInstall();
-                    break;
-                default:
-                    break;
+                this.checkOneInstance();
+
+                switch (mode)
+                {
+                    case CostantiSched.RunMode.Service:
+                        //Service
+                        this.Run();
+                        break;
+                    case CostantiSched.RunMode.Console:
+                        //Console
+                        this.RunConsole();
+                        break;
+                    case CostantiSched.RunMode.Install:
+                        this.Install();
+                        break;
+                    case CostantiSched.RunMode.Uninstall:
+                        this.UnInstall();
+                        break;
+                    default:
+                        break;
+                }
+
             }
+            catch (Exception ex)
+            {
+                this.WriteLog(EventLogEntryType.Error, ex.Message);
+            }
+
+            
         }
 
         /// <summary>
@@ -128,19 +142,19 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
         #endregion
 
 
-        public void WriteLog(EventLogEntryType logType, string logFmt, params object[] args)
+        public void WriteLog(EventLogEntryType logType, string logMessage)
         {
 
             if (this.RunMode == 0)
             {
-                EventLog.WriteEntry(AppContextERD.LOG_EVENT_SOURCE, string.Format(logFmt, args), logType);
+                EventLog.WriteEntry(AppContextERD.LOG_EVENT_SOURCE, logMessage, logType);
             }
             else
             {
                 var dtNow = DateTime.Now;
 
                 Console.Write(string.Format($"{dtNow:yyyy-MM-dd HH:mm:ss} - {Enum.GetName(typeof(EventLogEntryType), logType)} - "));
-                Console.WriteLine(logFmt, args);
+                Console.WriteLine(logMessage);
             }
 
         }
@@ -148,7 +162,18 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
 
         #region PRIVATE
 
+        /// <summary>
+        /// Crea mutex per esecuzione a singola istanza
+        /// </summary>
+        private void checkOneInstance()
+        {
+            bool createdNew;
 
+            this.mMutex = new Mutex(true, "ERD_Mutex_Run", out createdNew);
+
+            if (!createdNew)
+                throw new ApplicationException("E' già in esecuzione un'altra istanza dell'applicazione");
+        }
 
 
         private void initEventLog()

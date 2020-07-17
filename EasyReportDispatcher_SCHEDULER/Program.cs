@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EasyReportDispatcher_SCHEDULER
 {
     class Program
     {
+
         static int Main(string[] args)
         {
             AppContextERD.Service.RunByMode(searchRunMode(args));
@@ -37,5 +39,7 @@ namespace EasyReportDispatcher_SCHEDULER
             return CostantiSched.RunMode.Service;
 
         }
+
+
     }
 }
