@@ -16,7 +16,9 @@ namespace EasyReportDispatcher_SCHEDULER.src
         public const string LOG_EVENT_SOURCE = @"ERD_Scheduler";
         public const string LOG_EVENT_SOURCE_LOG = @"ERD Scheduler Eventlog";
 
+        public static readonly string SCHEDULE_EXTEND_PLAN_CRONSTRING = @"0 7 0 ? * * *";
         public static readonly int SCHEDULE_FORCED_UPDATE_CHECK_SECONDS = Settings.Default.SecondiCheckModificheSchedulazioni;
+        public static readonly int SCHEDULE_EXECUTION_PLAN_DAYS = 2;
 
         public static string UserDataDir { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ERD");
         public static string UserDataDirOutput { get; } = Path.Combine(UserDataDir, "Output");

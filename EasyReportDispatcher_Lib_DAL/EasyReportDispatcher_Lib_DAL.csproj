@@ -48,6 +48,9 @@
     <Compile Include="src\query\QueryReports.cs" />
     <Compile Include="src\report\ReportEstrazioneSqlHistoryLista.cs" />
     <Compile Include="src\report\ReportEstrazioneSqlHistory.cs" />
+    <Compile Include="src\report\ReportSchedulazione.cs" />
+    <Compile Include="src\report\ReportSchedulazioneStato.cs" />
+    <Compile Include="src\report\ReportSchedulazioneLista.cs" />
     <Compile Include="src\report\ReportUtente.cs" />
     <Compile Include="src\report\ReportConnessione.cs" />
     <Compile Include="src\report\ReportConnessioneLista.cs" />

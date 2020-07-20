@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Bdo.Attributes;
+using Bdo.Objects;
+
+namespace EasyReportDispatcher_Lib_DAL.src.report
+{
+    [Table("report_piano_schedulazione"), GlobalCache()]
+    public abstract class ReportSchedulazioneStato : DataObject<ReportSchedulazioneStato>
+    {
+        [PrimaryKey]
+        public abstract sbyte Id { get; }
+
+        [MaxLength(100)]
+        public abstract string Nome { get; }
+
+    }
+}

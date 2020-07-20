@@ -19,6 +19,17 @@ namespace EasyReportDispatcher_Lib_Common.src.enums
             public const sbyte TerminataConErrori = 3;
         }
 
+        /// <summary>
+        /// Stato della schedulazione
+        /// </summary>
+        public class StatoSchedulazione
+        {
+            public const sbyte Pianificata = 1;
+            public const sbyte Avviata = 2;
+            public const sbyte Eseguita = 3;
+            public const sbyte Saltata = 4;
+        }
+
         public class TipoFile
         {
            public const int  Csv = 1;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Bdo.Objects;
+using EasyReportDispatcher_Lib_Common.src.enums;
 using EasyReportDispatcher_Lib_DAL.src.report;
 using EasyReportDispatcher_SCHEDULER.src.Common;
 using EasyReportDispatcher_SCHEDULER.src.Jobs;
@@ -44,7 +45,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
             var trg = TriggerBuilder
                 .Create()
                 .WithIdentity(CostantiSched.Quartz.TriggerNames.System.ScheduleExtender, TRIGGER_INTERNAL_GROUP)
-                .WithCronSchedule(@"0 10 0 ? * * *")
+                .WithCronSchedule(AppContextERD.SCHEDULE_EXTEND_PLAN_CRONSTRING)
                 .Build();
 
             await this.mScheduler.ScheduleJob(new JobDetailImpl(CostantiSched.Quartz.JobNames.System.ScheduleExtender, JOB_INTERNAL_GROUP, typeof(JobScheduleUpdater)), trg);
@@ -66,7 +67,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
             AppContextERD.Service.WriteLog(System.Diagnostics.EventLogEntryType.Information, @"Schedulatore interno job in chiusura...");
             //Stoppa schedulatore
             await this.mScheduler.PauseAll();
-            await this.mScheduler.Clear();
+            //await this.mScheduler.Clear();
             await this.mScheduler.Shutdown(true);
 
             AppContextERD.Service.WriteLog(System.Diagnostics.EventLogEntryType.Information, @"Schedulatore interno job terminato");
@@ -81,7 +82,17 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
             await this.mScheduler.DeleteJobs(jobkeys);
         }
 
-        async public void ReloadReportSchedules()
+        private string CalcTrigName(int estrazId, DateTime date)
+        {
+            return $"T_{estrazId}_dt_{date:yyyyMMddHHmm}";
+        }
+
+        private string CalcJobName(int estrazId, DateTime date)
+        {
+            return $"J_{estrazId}_dt_{date:yyyyMMddHHmm}";
+        }
+
+        async public void ReloadReportSchedules_OLD()
         {
             //Mette in pausa tutte le schedulazioni
             await this.mScheduler.PauseAll();
@@ -116,9 +127,9 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
                         foreach (var dt in cs)
                         {
                             //Crea trigger
-                            var trg = TriggerBuilder.Create().StartAt(dt.ToUniversalTime()).WithIdentity(string.Format($"Trig_Rep_{rep.Id}_seq{idxTrig}"), TRIGGER_TASKS_GROUP).Build();
+                            var trg = TriggerBuilder.Create().StartAt(dt.ToUniversalTime()).WithIdentity(this.CalcTrigName(rep.Id, dt), TRIGGER_TASKS_GROUP).Build();
                             //Crea job
-                            var jobDet = new JobDetailImpl(string.Format($"Job_Rep_{rep.Id}_seq{idxTrig}"), JOB_TASKS_GROUP, typeof(JobReport));
+                            var jobDet = new JobDetailImpl(this.CalcJobName(rep.Id, dt), JOB_TASKS_GROUP, typeof(JobReport));
                             jobDet.JobDataMap.Add(CostantiSched.JobDataMap.Reports.ReportId, rep.Id);
                             jobDet.JobDataMap.Add(CostantiSched.JobDataMap.Reports.ReportName, rep.Nome);
 
@@ -173,9 +184,247 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
                 sb.AppendLine();
             }
 
-            AppContextERD.Service.WriteLog(System.Diagnostics.EventLogEntryType.Information, "Schedulazioni caricate");
+            AppContextERD.Service.WriteLog(System.Diagnostics.EventLogEntryType.Information, $"Schedulazioni caricate: {trsOrdered.Count()}");
 
         }
 
+
+
+        async public void ReloadReportSchedules_NODB()
+        {
+            //Mette in pausa tutte le schedulazioni
+            await this.mScheduler.PauseAll();
+            try
+            {
+
+
+                var matcher = GroupMatcher<JobKey>.GroupContains(JOB_TASKS_GROUP);
+                var jobkeys = await this.mScheduler.GetJobKeys(matcher);
+                var trigDiz = new Dictionary<string, ITrigger>();
+
+                //Carichiamo i trigger == job
+                foreach (var key in jobkeys)
+                {
+                    foreach (var trg in await this.mScheduler.GetTriggersOfJob(key))
+                    {
+                        trigDiz.Add(trg.Key.Name, trg);
+                    }
+                }
+
+                int iNumSched = 0;
+
+                using (var slot = AppContextERD.Service.CreateSlot())
+                {
+
+                    var reports = slot.CreateList<ReportEstrazioneLista>()
+                        .SearchByColumn(Filter.Eq(nameof(ReportEstrazione.Attivo), 1)
+                        .And(Filter.Neq(nameof(ReportEstrazione.CronString), string.Empty)
+                        .And(Filter.Lte(nameof(ReportEstrazione.DataInizio), DateTime.Today)
+                        .And(Filter.Gte(nameof(ReportEstrazione.DataFine), DateTime.Today)))));
+
+                    iNumSched = reports.Count;
+
+                    //Verifica essistenza ed aggiunge schedulazioni
+                    foreach (var rep in reports)
+                    {
+
+                        //Viene utilizzata la notazione senza secondi NCrontab (Cron.guru)
+                        var c = CrontabSchedule.Parse(rep.CronString);
+
+                        var cs = c.GetNextOccurrences(DateTime.Now, DateTime.Now.AddDays(AppContextERD.SCHEDULE_EXECUTION_PLAN_DAYS).ToUniversalTime());
+
+                        foreach (var dt in cs)
+                        {
+                            //Crea nome trigger
+                            var trName = this.CalcTrigName(rep.Id, dt);
+
+                            //Verifica esistenza: se non esiste lo crea, se esiste lo rimuove da elenco
+                            if (!trigDiz.ContainsKey(trName))
+                            {
+                                //Crea trigger
+                                var trg = TriggerBuilder.Create().StartAt(dt.ToUniversalTime()).WithIdentity(trName, TRIGGER_TASKS_GROUP).Build();
+                                //Crea job
+                                var jobDet = new JobDetailImpl(this.CalcJobName(rep.Id, dt), JOB_TASKS_GROUP, typeof(JobReport));
+                                jobDet.JobDataMap.Add(CostantiSched.JobDataMap.Reports.ReportId, rep.Id);
+                                jobDet.JobDataMap.Add(CostantiSched.JobDataMap.Reports.ReportName, rep.Nome);
+
+                                await this.mScheduler.ScheduleJob(jobDet, trg);
+                            }
+                            else
+                            {
+                                //Rimuove da elenco in quanto esistente
+                                trigDiz.Remove(trName);
+                            }
+                        }
+
+                    }
+                    //Rimuove quelle non piu' esistenti/coerenti
+                    foreach (var item in trigDiz)
+                    {
+                        await this.mScheduler.DeleteJob(item.Value.JobKey);
+                    }
+                    trigDiz.Clear();
+
+                }
+
+                if (AppContextERD.Service.RunMode == CostantiSched.RunMode.Console)
+                    this.printSchedules();
+                else
+                    AppContextERD.Service.WriteLog(System.Diagnostics.EventLogEntryType.Information, $"Caricate {iNumSched} schedulazioni");
+            }
+            catch (Exception ex)
+            {
+                AppContextERD.Service.WriteLog(System.Diagnostics.EventLogEntryType.Error, ex.Message);
+            }
+            finally
+            {
+                //Riavvia tutte le schedulazioni
+                await this.mScheduler.ResumeAll();
+            }
+
+        }
+
+        private class TriggerStatus
+        {
+            public ITrigger Trigger;
+            public ReportSchedulazione Schedulazione;
+        }
+
+        async public void ReloadReportSchedules()
+        {
+            //Mette in pausa tutte le schedulazioni
+            await this.mScheduler.PauseAll();
+            try
+            {
+
+
+                var matcher = GroupMatcher<JobKey>.GroupContains(JOB_TASKS_GROUP);
+                var jobkeys = await this.mScheduler.GetJobKeys(matcher);
+                var trigDiz = new Dictionary<string, TriggerStatus>();
+                int iNumSched = 0;
+
+                using (var slot = AppContextERD.Service.CreateSlot())
+                {
+                    //Carica le schedulazioni
+                    var schedList = slot.CreateList<ReportSchedulazioneLista>()
+                        .LoadFullObjects()
+                        .SearchByColumn(Filter.Eq(nameof(ReportSchedulazione.StatoId), eReport.StatoSchedulazione.Pianificata));
+
+                    //Carichiamo i trigger == job
+                    foreach (var key in jobkeys)
+                    {
+                        foreach (var trg in await this.mScheduler.GetTriggersOfJob(key))
+                        {
+                            var sched = schedList.FindFirstByPropertyFilter(Filter.Eq(nameof(ReportSchedulazione.TriggerKey), trg.Key.Name));
+
+                            if (sched == null)
+                            {
+                                //Strano....
+                                AppContextERD.Service.WriteLog(System.Diagnostics.EventLogEntryType.Warning, $"Attenzione: il trigger {trg.Key.Name} non ha una schedulazione DB associata!");
+                            }
+                            else
+                                trigDiz.Add(trg.Key.Name, new TriggerStatus() { Trigger=trg, Schedulazione=sched });
+                        }
+                    }
+
+
+                    var reports = slot.CreateList<ReportEstrazioneLista>()
+                        .LoadFullObjects()
+                        .SearchByColumn(Filter.Eq(nameof(ReportEstrazione.Attivo), 1)
+                        .And(Filter.Neq(nameof(ReportEstrazione.CronString), string.Empty)
+                        .And(Filter.Lte(nameof(ReportEstrazione.DataInizio), DateTime.Today)
+                        .And(Filter.Gte(nameof(ReportEstrazione.DataFine), DateTime.Today)))));
+
+                    iNumSched = reports.Count;
+
+                    //Verifica essistenza ed aggiunge schedulazioni
+                    foreach (var rep in reports)
+                    {
+
+                        //Viene utilizzata la notazione senza secondi NCrontab (Cron.guru)
+                        var c = CrontabSchedule.Parse(rep.CronString);
+
+                        var cs = c.GetNextOccurrences(DateTime.Now, DateTime.Now.AddDays(AppContextERD.SCHEDULE_EXECUTION_PLAN_DAYS).ToUniversalTime());
+
+                        foreach (var dt in cs)
+                        {
+                            //Crea nome trigger
+                            var trName = this.CalcTrigName(rep.Id, dt);
+
+                            var sched = schedList.FindFirstByPropertyFilter(Filter.Eq(nameof(ReportSchedulazione.TriggerKey), trName));
+
+                            TriggerStatus trStatus = null;
+
+                            //Verifica esistenza: se non esiste lo crea, se esiste lo rimuove da elenco
+                            if (!trigDiz.TryGetValue(trName, out trStatus))
+                            {
+                                //Crea trigger
+                                var trg = TriggerBuilder.Create().StartAt(dt.ToUniversalTime()).WithIdentity(trName, TRIGGER_TASKS_GROUP).Build();
+                                //Crea job
+                                var jobDet = new JobDetailImpl(this.CalcJobName(rep.Id, dt), JOB_TASKS_GROUP, typeof(JobReport));
+                                jobDet.JobDataMap.Add(CostantiSched.JobDataMap.Reports.ReportId, rep.Id);
+                                jobDet.JobDataMap.Add(CostantiSched.JobDataMap.Reports.ReportName, rep.Nome);
+
+                                await this.mScheduler.ScheduleJob(jobDet, trg);
+
+                                //Ricerca piano da DB
+                                if (sched == null)
+                                {
+                                    //Crea schedulazione db
+                                    sched = slot.CreateObject<ReportSchedulazione>();
+                                    sched.EstrazioneId = rep.Id;
+                                    sched.TriggerKey = trName;
+                                    sched.DataEsecuzione = dt;
+                                    sched.StatoId = eReport.StatoSchedulazione.Pianificata;
+
+                                    slot.SaveObject(sched);
+                                }
+
+                            }
+                            else
+                            {
+                                //Rimuove da elenco in quanto esistente dei trigger in memoria
+                                trigDiz.Remove(trName);
+
+                            }
+
+                            //Se la schedulazione a db c'e' allora la rimuove da elenco di valutazione
+                            if (sched != null)
+                                schedList.Remove(sched);
+                        }
+
+                    }
+                    //Imposta le entry db non trovate come saltate
+                    schedList.SetPropertyMassive(nameof(ReportSchedulazione.StatoId), eReport.StatoSchedulazione.Saltata);
+                    slot.SaveAll(schedList);
+
+                    //Rimuove quelle non piu' esistenti/coerenti
+                    foreach (var item in trigDiz)
+                    {
+                        if (item.Value.Schedulazione.ObjectState == EObjectState.Loaded)
+                            slot.DeleteObject(item.Value.Schedulazione);
+                        
+                        await this.mScheduler.DeleteJob(item.Value.Trigger.JobKey);
+                    }
+                    trigDiz.Clear();
+
+                }
+
+                if (AppContextERD.Service.RunMode == CostantiSched.RunMode.Console)
+                    this.printSchedules();
+                else
+                    AppContextERD.Service.WriteLog(System.Diagnostics.EventLogEntryType.Information, $"Caricate {iNumSched} schedulazioni");
+            }
+            catch (Exception ex)
+            {
+                AppContextERD.Service.WriteLog(System.Diagnostics.EventLogEntryType.Error, ex.Message);
+            }
+            finally
+            {
+                //Riavvia tutte le schedulazioni
+                await this.mScheduler.ResumeAll();
+            }
+
+        }
     }
 }

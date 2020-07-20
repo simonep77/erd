@@ -31,6 +31,17 @@ namespace EasyReportDispatcher_SCHEDULER.src.Jobs
 
                     using (var slot = AppContextERD.Service.CreateSlot())
                     {
+                        //Ricerca schedulazione db
+                        var sched = slot.LoadObjNullByKEY<ReportSchedulazione>(ReportSchedulazione.KEY_TRIGGER, context.Trigger.Key.Name);
+
+                        if (sched != null)
+                        {
+                            sched.StatoId = eReport.StatoSchedulazione.Avviata;
+                            slot.SaveObject(sched);
+                        }
+
+                        //Aggiorna piano schedulazione
+
                         //Scrive nel log il debug User1
                         slot.OnLogDebugSent += ((a, b, c) => { if (b == DebugLevel.User_1) sb.AppendLine(c); });
 
@@ -42,6 +53,16 @@ namespace EasyReportDispatcher_SCHEDULER.src.Jobs
                         ret.Message = $"{repBiz.LastResult.EstrazioneEsito} {repBiz.LastResult.MailEsito}".Trim();
                         ret.Output = repBiz.LastResult;
 
+                        //Termina schedulazione
+                        if (sched != null)
+                        {
+                            if (repBiz.LastResult.Id > 0)
+                                sched.OutputId = repBiz.LastResult.Id;
+
+
+                            sched.StatoId = eReport.StatoSchedulazione.Eseguita;
+                            slot.SaveObject(sched);
+                        }
                     }
 
 
