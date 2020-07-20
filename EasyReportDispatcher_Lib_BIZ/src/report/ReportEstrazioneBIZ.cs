@@ -459,7 +459,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             }
             else
             {
-                var fileBase = this.DataObj.TipoFileId == eReport.TipoFile.Excel && !string.IsNullOrWhiteSpace(this.DataObj.Titolo) ? this.DataObj.Titolo.Replace(' ', '_') : this.DataObj.Nome.Replace(' ', '_');
+                var fileBase = this.DataObj.Nome.Replace(' ', '_');
 
                 nomeFile = String.Format(@"{0}_{1:yyyy_MM_dd}{2}", fileBase, this.LastResult.DataOraInizio, this.DataObj.TipoFile.Estensione);
             }
