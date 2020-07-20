@@ -15,8 +15,6 @@ namespace EasyReportDispatcher_SCHEDULER.src.Jobs
 {
     class JobReport : IJob
     {
-        private string hashSchedules = string.Empty;
-
         public Task Execute(IJobExecutionContext context)
         {
             return Task.Run(() => {
@@ -33,28 +31,12 @@ namespace EasyReportDispatcher_SCHEDULER.src.Jobs
 
                     using (var slot = AppContextERD.Service.CreateSlot())
                     {
+                        //Scrive nel log il debug User1
+                        slot.OnLogDebugSent += ((a, b, c) => { if (b == DebugLevel.User_1) sb.AppendLine(c); });
 
                         ReportEstrazioneBIZ repBiz = slot.BizNewWithLoadByPK<ReportEstrazioneBIZ>(repDefId);
 
                         repBiz.Run(true, bSendEmail, true);
-
-                        //Invia email
-                        if (repBiz.LastResult.StatoId == eReport.StatoEstrazione.TerminataConSuccesso)
-                        {
-                            if (repBiz.IsPrevistoInvioMail)
-                            {
-                                var mails = repBiz.SendEmail(true);
-
-                                foreach (var item in mails)
-                                {
-                                    sb.AppendLine("Mail inviata");
-                                    sb.AppendLine($" >> MailTO: {item.MailTO}");
-                                    sb.AppendLine($" >> MailCC: {item.MailCC}");
-                                    sb.AppendLine($" >> MailBCC: {item.MailCC}");
-                                }
-                            }
-
-                        }
 
                         ret.IsOK = (repBiz.LastResult.StatoId == eReport.StatoEstrazione.TerminataConSuccesso && string.IsNullOrWhiteSpace(repBiz.LastResult.MailEsito));
                         ret.Message = $"{repBiz.LastResult.EstrazioneEsito} {repBiz.LastResult.MailEsito}".Trim();

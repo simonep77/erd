@@ -51,9 +51,6 @@ namespace EasyReportDispatcher_DESKTOP
 
                 this.mEstrazioneBiz.Run(this.chkSaveOutput.Checked, this.chbInvioEmail.Checked, this.chkCopyTo.Checked);
 
-                if (this.chbInvioEmail.Checked)
-                    this.mEstrazioneBiz.SendEmail(this.chkSaveOutput.Checked);
-
                 if (this.chbApriExcel.Checked)
                 {
                     //Apre

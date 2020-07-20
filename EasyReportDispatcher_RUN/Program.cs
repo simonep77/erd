@@ -230,7 +230,9 @@ namespace EasyReportDispacher_RUN
 
             using (var slot = new BusinessSlot(@"Default"))
             {
-
+                //Scrive nel log il debug User1
+                slot.OnLogDebugSent += ((a, b, c) => { if (b == DebugLevel.User_1) WriteLog(c); });
+                
                 ReportEstrazioneBIZ repBiz = slot.BizNewWithLoadByPK<ReportEstrazioneBIZ>(repDefId);
 
                 ThreadData.ReportId = repDefId;
@@ -247,30 +249,8 @@ namespace EasyReportDispacher_RUN
                     repBiz.Run(true, bSendEmail, true);
 
                     //Invia email
-                    if (bSendEmail)
-                    {
-
-                        WriteLog("Previsto invio mail {0}", repBiz.IsPrevistoInvioMail ? "SI" : "NO");
-
-                        if (repBiz.IsPrevistoInvioMail)
-                        {
-                            var mails = repBiz.SendEmail(true);
-
-                            foreach (var item in mails)
-                            {
-                                WriteLog("Mail inviata");
-                                WriteLog(" >> MailTO: {0}", item.MailTO);
-                                WriteLog(" >> MailCC: {0}", item.MailCC);
-                                WriteLog(" >> MailBCC: {0}", item.MailBCC);
-                            }
-
-
-                        }
-                    }
-                    else
-                    {
+                    if (!bSendEmail)
                         WriteLog("Blocco esplicito invio email");
-                    }
 
                 }
                 catch (Exception e)

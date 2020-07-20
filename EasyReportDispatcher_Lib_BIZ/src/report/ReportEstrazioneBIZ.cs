@@ -352,6 +352,10 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 if (copyTo)
                     this.runCopyTo();
 
+                //Esegue sendmail
+                if (this.IsPrevistoInvioMail && sendEmail)
+                    this.SendEmail(saveResult);
+
                 //Esito OK
                 this.mLastResult.StatoId = eReport.StatoEstrazione.TerminataConSuccesso;
 
@@ -365,6 +369,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             {
 
             }
+
 
             //Fine: aggiornamento output
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin aggiornamento output");
@@ -672,6 +677,12 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
                             //Aggiunge a email inviate
                             retList.Add(item);
+
+                            //Scrive nel log dello slot
+                            this.Slot.LogDebug(DebugLevel.User_1, @"Mail inviata");
+                            this.Slot.LogDebug(DebugLevel.User_1, $" >> MailTO: {item.MailTO}");
+                            this.Slot.LogDebug(DebugLevel.User_1, $" >> MailCC: {item.MailCC}");
+                            this.Slot.LogDebug(DebugLevel.User_1, $" >> MailBCC: {item.MailBCC}");
 
                             //Fine: aggiornamento
                             this.mLastResult.MailDataInvio = DateTime.Now;
