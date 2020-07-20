@@ -12,7 +12,7 @@
 /EasyReportDispatcher_RUN/obj
 /packages
 /.vs
-/EasyReportDispatcher_DESKTOP/bin/Debug
-/EasyReportDispatcher_DESKTOP/obj/Debug
-/EasyReportDispatcher_DESKTOP/obj/Release
-/EasyReportDispatcher_DESKTOP/bin/Release
+/EasyReportDispatcher_DESKTOP/bin
+/EasyReportDispatcher_DESKTOP/obj
+/EasyReportDispatcher_SCHEDULER/bin
+/EasyReportDispatcher_SCHEDULER/obj
