@@ -17,6 +17,9 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         public abstract long Id { get; }
 
         public abstract int EstrazioneId { get; set; }
+        
+        [PropertyMap(nameof(EstrazioneId))]
+        public abstract ReportEstrazione Estrazione { get; }
 
         [MaxLength(50),SearchKey(KEY_TRIGGER)]
         public abstract string TriggerKey { get; set; }
@@ -24,9 +27,15 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         public abstract DateTime DataEsecuzione { get; set; }
 
         public abstract sbyte StatoId { get; set; }
-        
+
+        [PropertyMap(nameof(StatoId))]
+        public abstract ReportSchedulazioneStato Stato { get; }
+
         [AcceptNull]
         public abstract long OutputId { get; set; }
+        
+        [PropertyMap(nameof(OutputId))]
+        public abstract ReportEstrazioneOutput Output { get; }
 
 
         [AutoInsertTimestamp]

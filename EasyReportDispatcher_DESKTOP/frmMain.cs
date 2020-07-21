@@ -1,6 +1,7 @@
 ﻿using Bdo.Objects;
 using EasyReportDispatcher_DESKTOP.src;
 using EasyReportDispatcher_Lib_BIZ.src.report;
+using EasyReportDispatcher_Lib_Common.src.enums;
 using EasyReportDispatcher_Lib_DAL.src.report;
 using System;
 using System.CodeDom;
@@ -778,6 +779,14 @@ namespace EasyReportDispatcher_DESKTOP
                         repBiz.DeleteHistory(10);
                     }
 
+                    //Elimina schedulazioni saltate
+                    var lstS = AppContextERD.Slot.CreateList<ReportSchedulazioneLista>()
+                        .LoadFullObjects()
+                        .OrderBy(nameof(ReportSchedulazione.DataEsecuzione), OrderVersus.Asc)
+                        .SearchByColumn(Filter.Eq(nameof(ReportSchedulazione.StatoId), eReport.StatoSchedulazione.Saltata));
+
+                    AppContextERD.Slot.DeleteAll(lstS);
+
                     AppContextERD.Slot.DbCommitAll();
 
                 }
@@ -812,6 +821,16 @@ namespace EasyReportDispatcher_DESKTOP
         private void toolStripMenuItem5_Click(object sender, EventArgs e)
         {
             this.btnManutenzione.Visible = true;
+        }
+
+        private void btnPianoSched_Click(object sender, EventArgs e)
+        {
+
+            using (var frm = new frmPianoSched())
+            {
+                frm.ShowDialog();
+
+            }
         }
     }
 }

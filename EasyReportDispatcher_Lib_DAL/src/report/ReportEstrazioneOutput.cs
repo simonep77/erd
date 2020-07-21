@@ -19,6 +19,9 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
         [DefaultValue("1")]
         public abstract sbyte StatoId { get; set; }
 
+        [PropertyMap(nameof(StatoId))]
+        public abstract ReportEstrazioneOutputStato Stato { get; }
+
         [AcceptNull()]
         public abstract string EstrazioneEsito { get; set; }
 

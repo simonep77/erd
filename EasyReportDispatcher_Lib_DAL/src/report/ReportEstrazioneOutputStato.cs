@@ -8,8 +8,8 @@ using Bdo.Objects;
 
 namespace EasyReportDispatcher_Lib_DAL.src.report
 {
-    [Table("report_piano_schedulazione_stati"), GlobalCache()]
-    public abstract class ReportSchedulazioneStato : DataObject<ReportSchedulazioneStato>
+    [Table("report_estrazioni_output_stati"), GlobalCache()]
+    public abstract class ReportEstrazioneOutputStato : DataObject<ReportEstrazioneOutputStato>
     {
         [PrimaryKey]
         public abstract sbyte Id { get; }

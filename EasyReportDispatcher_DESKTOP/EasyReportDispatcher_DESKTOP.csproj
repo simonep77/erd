@@ -150,6 +150,12 @@
     <Compile Include="frmSpinner.Designer.cs">
       <DependentUpon>frmSpinner.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmPianoSched.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPianoSched.Designer.cs">
+      <DependentUpon>frmPianoSched.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmStorico.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -199,6 +205,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmSpinner.resx">
       <DependentUpon>frmSpinner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPianoSched.resx">
+      <DependentUpon>frmPianoSched.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmStorico.resx">
       <DependentUpon>frmStorico.cs</DependentUpon>

@@ -40,7 +40,7 @@ namespace EasyReportDispatcher_DESKTOP
             this.btnManutenzione = new System.Windows.Forms.ToolStripButton();
             this.btnConfig = new System.Windows.Forms.ToolStripButton();
             this.btnReload = new System.Windows.Forms.ToolStripButton();
-            this.btnOutputDir = new System.Windows.Forms.ToolStripButton();
+            this.btnPianoSched = new System.Windows.Forms.ToolStripButton();
             this.panMain = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panCenter = new System.Windows.Forms.Panel();
@@ -83,6 +83,7 @@ namespace EasyReportDispatcher_DESKTOP
             this.lbFiltroNum = new System.Windows.Forms.Label();
             this.txtFiltro = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panMain.SuspendLayout();
@@ -128,10 +129,11 @@ namespace EasyReportDispatcher_DESKTOP
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1,
             this.btnManutenzione,
             this.btnConfig,
             this.btnReload,
-            this.btnOutputDir});
+            this.btnPianoSched});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1394, 25);
@@ -168,14 +170,15 @@ namespace EasyReportDispatcher_DESKTOP
             this.btnReload.Text = "Aggiorna/Riconnetti";
             this.btnReload.Click += new System.EventHandler(this.actRicarica);
             // 
-            // btnOutputDir
+            // btnPianoSched
             // 
-            this.btnOutputDir.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.folder_explore;
-            this.btnOutputDir.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnOutputDir.Name = "btnOutputDir";
-            this.btnOutputDir.Size = new System.Drawing.Size(86, 22);
-            this.btnOutputDir.Text = "Output Dir.";
-            this.btnOutputDir.Click += new System.EventHandler(this.actOutputDir);
+            this.btnPianoSched.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.folder_explore;
+            this.btnPianoSched.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnPianoSched.Name = "btnPianoSched";
+            this.btnPianoSched.Size = new System.Drawing.Size(103, 22);
+            this.btnPianoSched.Text = "Schedulazione";
+            this.btnPianoSched.ToolTipText = "Schedulazione";
+            this.btnPianoSched.Click += new System.EventHandler(this.btnPianoSched_Click);
             // 
             // panMain
             // 
@@ -557,6 +560,14 @@ namespace EasyReportDispatcher_DESKTOP
             this.label1.TabIndex = 0;
             this.label1.Text = "Gruppo";
             // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.folder_explore;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(86, 22);
+            this.toolStripButton1.Text = "Output Dir.";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
@@ -625,7 +636,7 @@ namespace EasyReportDispatcher_DESKTOP
         private System.Windows.Forms.Label lbFiltroNum;
         private System.Windows.Forms.Panel panCenter;
         private System.Windows.Forms.ToolStripButton btnConfig;
-        private System.Windows.Forms.ToolStripButton btnOutputDir;
+        private System.Windows.Forms.ToolStripButton btnPianoSched;
         private System.Windows.Forms.ToolStripButton btnReload;
         private System.Windows.Forms.ColumnHeader colNextSched;
         private System.Windows.Forms.ImageList imgList;
@@ -639,6 +650,7 @@ namespace EasyReportDispatcher_DESKTOP
         private System.Windows.Forms.CheckBox chbSchedulati;
         private System.Windows.Forms.ToolStripButton btnManutenzione;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }
 
