@@ -293,7 +293,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
         async public void ReloadReportSchedules()
         {
             //Mette in pausa tutte le schedulazioni
-            await this.mScheduler.PauseAll();
+            await this.mScheduler.Standby();
             try
             {
 
@@ -310,7 +310,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
                         .LoadFullObjects()
                         .SearchByColumn(Filter.Eq(nameof(ReportSchedulazione.StatoId), eReport.StatoSchedulazione.Pianificata));
 
-                    //Carichiamo i trigger == job
+                    //Carichiamo i trigger == job IN MEMORIA
                     foreach (var key in jobkeys)
                     {
                         foreach (var trg in await this.mScheduler.GetTriggersOfJob(key))
@@ -336,6 +336,8 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
                         .And(Filter.Gte(nameof(ReportEstrazione.DataFine), DateTime.Today)))));
 
                     iNumSched = reports.Count;
+                    var dtPlanStart = DateTime.Now;
+                    var dtPlanEnd = dtPlanStart.AddDays(AppContextERD.SCHEDULE_EXECUTION_PLAN_DAYS);
 
                     //Verifica essistenza ed aggiunge schedulazioni
                     foreach (var rep in reports)
@@ -344,7 +346,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
                         //Viene utilizzata la notazione senza secondi NCrontab (Cron.guru)
                         var c = CrontabSchedule.Parse(rep.CronString);
 
-                        var cs = c.GetNextOccurrences(DateTime.Now, DateTime.Now.AddDays(AppContextERD.SCHEDULE_EXECUTION_PLAN_DAYS).ToUniversalTime());
+                        var cs = c.GetNextOccurrences(dtPlanStart, dtPlanEnd);
 
                         foreach (var dt in cs)
                         {
@@ -360,10 +362,12 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
                             {
                                 //Crea trigger
                                 var trg = TriggerBuilder.Create().StartAt(dt.ToUniversalTime()).WithIdentity(trName, TRIGGER_TASKS_GROUP).Build();
+                                
                                 //Crea job
                                 var jobDet = new JobDetailImpl(this.CalcJobName(rep.Id, dt), JOB_TASKS_GROUP, typeof(JobReport));
                                 jobDet.JobDataMap.Add(CostantiSched.JobDataMap.Reports.ReportId, rep.Id);
                                 jobDet.JobDataMap.Add(CostantiSched.JobDataMap.Reports.ReportName, rep.Nome);
+
 
                                 await this.mScheduler.ScheduleJob(jobDet, trg);
 
@@ -394,15 +398,20 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
                         }
 
                     }
+                    //Cerca le schedulazioni non piu' riprogrammate
+                    var schedListDel = schedList.FindAllByPropertyFilter(Filter.Gt(nameof(ReportSchedulazione.DataEsecuzione), dtPlanStart));
+                    var schedListSalt = schedList.Diff(schedListDel);
+                    //Elimina non piu' riprogrammate
+                    slot.DeleteAll(schedListDel);
                     //Imposta le entry db non trovate come saltate
-                    schedList.SetPropertyMassive(nameof(ReportSchedulazione.StatoId), eReport.StatoSchedulazione.Saltata);
-                    slot.SaveAll(schedList);
+                    schedListSalt.SetPropertyMassive(nameof(ReportSchedulazione.StatoId), eReport.StatoSchedulazione.Saltata);
+                    slot.SaveAll(schedListSalt);
 
                     //Rimuove quelle non piu' esistenti/coerenti
                     foreach (var item in trigDiz)
                     {
-                        if (item.Value.Schedulazione.ObjectState == EObjectState.Loaded)
-                            slot.DeleteObject(item.Value.Schedulazione);
+                        //if (item.Value.Schedulazione.ObjectState == EObjectState.Loaded)
+                        //    slot.DeleteObject(item.Value.Schedulazione);
                         
                         await this.mScheduler.DeleteJob(item.Value.Trigger.JobKey);
                     }
@@ -422,7 +431,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
             finally
             {
                 //Riavvia tutte le schedulazioni
-                await this.mScheduler.ResumeAll();
+                await this.mScheduler.Start();
             }
 
         }
