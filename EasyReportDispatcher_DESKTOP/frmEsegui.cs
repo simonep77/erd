@@ -49,7 +49,9 @@ namespace EasyReportDispatcher_DESKTOP
                 if (this.chkUsaTemplateLocale.Checked)
                     this.mEstrazioneBiz.ForcedTemplate = File.ReadAllBytes(this.mLocalTemplatePath);
 
-                this.mEstrazioneBiz.Run(this.chkSaveOutput.Checked, this.chbInvioEmail.Checked, this.chkCopyTo.Checked);
+                //Se solo query non esegue il Run standard
+                if (!this.chbSoloQuery.Checked)
+                    this.mEstrazioneBiz.Run(this.chkSaveOutput.Checked, this.chbInvioEmail.Checked, this.chkCopyTo.Checked);
 
                 if (this.chbApriExcel.Checked)
                 {

@@ -768,7 +768,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             db.AddParameter(Costanti.Sql_Params.DATE_END_THIS_WEEK, dtAppo.AddDays(6));
 
             //@ERD_LAST_ELAB: ultima elaborazione
-            var lastOutput = this.ListaOutput.Where(o => o.Id != this.mLastResult.Id).OrderBy(o => o.Id).LastOrDefault();
+            var lastOutput = this.ListaOutput.Where(o => o.Id != this.mLastResult?.Id).OrderBy(o => o.Id).LastOrDefault();
 
             dtAppo = lastOutput?.DataOraInizio ?? new DateTime(1900, 1, 1);
 
