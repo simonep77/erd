@@ -50,6 +50,7 @@
     <Compile Include="src\report\ReportEstrazioneSqlHistory.cs" />
     <Compile Include="src\report\ReportSchedulazione.cs" />
     <Compile Include="src\report\ReportEstrazioneOutputStato.cs" />
+    <Compile Include="src\report\ReportSchedulazioneStatoLista.cs" />
     <Compile Include="src\report\ReportSchedulazioneStato.cs" />
     <Compile Include="src\report\ReportSchedulazioneLista.cs" />
     <Compile Include="src\report\ReportUtente.cs" />

@@ -96,7 +96,7 @@ namespace EasyReportDispatcher_DESKTOP
         }
 
 
-        private void actConnetti(object sender, EventArgs e)
+        async private void actConnetti(object sender, EventArgs e)
         {
 
             if (AppContextERD.Slot == null)
@@ -116,7 +116,7 @@ namespace EasyReportDispatcher_DESKTOP
             {
                 this.retrieveUserDetails();
 
-                this.loadEstrazioni();
+                await this.loadEstrazioni();
 
                 this.tsConnessione.Text = "Connesso";
 
@@ -141,7 +141,7 @@ namespace EasyReportDispatcher_DESKTOP
 
         }
 
-        async private void loadEstrazioni()
+        async private Task<bool> loadEstrazioni()
         {
             this.clearAll();
             
@@ -171,9 +171,9 @@ namespace EasyReportDispatcher_DESKTOP
                         
                         var lvItem = this.addEstrazioneToList(est.ToBizObject<ReportEstrazioneBIZ>(), false);
                     }
+
+                    return true;
                 });
-
-
 
 
                 this.updateEstCount();
@@ -182,7 +182,6 @@ namespace EasyReportDispatcher_DESKTOP
 
                 this.ensureAllGroups();
 
-
             }
             finally
             {
@@ -190,6 +189,8 @@ namespace EasyReportDispatcher_DESKTOP
                 this.pgLoading.Visible = false;
                 this.tsNumEstrazioni.Visible = true;
             }
+
+            return true ;
         }
 
 

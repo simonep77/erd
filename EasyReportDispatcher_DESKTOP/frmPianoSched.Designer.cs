@@ -29,8 +29,9 @@
         private void InitializeComponent()
         {
             this.lvStorico = new System.Windows.Forms.ListView();
-            this.colID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colDataExec = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colGruppo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colEstr = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colStato = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colElaps = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colEsito = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -39,10 +40,13 @@
             this.lbExecCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panFiltri = new System.Windows.Forms.Panel();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.colGruppo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colEstr = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.label3 = new System.Windows.Forms.Label();
+            this.cmbStatoSched = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.dtpDataFine = new System.Windows.Forms.DateTimePicker();
+            this.dtpDataInizio = new System.Windows.Forms.DateTimePicker();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panFiltri.SuspendLayout();
@@ -52,7 +56,6 @@
             // 
             this.lvStorico.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lvStorico.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.colID,
             this.colDataExec,
             this.colGruppo,
             this.colEstr,
@@ -60,33 +63,39 @@
             this.colElaps,
             this.colEsito,
             this.colTesto});
-            this.lvStorico.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lvStorico.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvStorico.FullRowSelect = true;
+            this.lvStorico.GridLines = true;
             this.lvStorico.HideSelection = false;
-            this.lvStorico.Location = new System.Drawing.Point(5, 136);
+            this.lvStorico.Location = new System.Drawing.Point(5, 75);
             this.lvStorico.MultiSelect = false;
             this.lvStorico.Name = "lvStorico";
-            this.lvStorico.Size = new System.Drawing.Size(1127, 278);
+            this.lvStorico.Size = new System.Drawing.Size(1328, 529);
             this.lvStorico.TabIndex = 0;
             this.lvStorico.UseCompatibleStateImageBehavior = false;
             this.lvStorico.View = System.Windows.Forms.View.Details;
             this.lvStorico.SelectedIndexChanged += new System.EventHandler(this.lvStorico_SelectedIndexChanged);
             this.lvStorico.DoubleClick += new System.EventHandler(this.actOpenFile);
             // 
-            // colID
-            // 
-            this.colID.Text = "ID";
-            this.colID.Width = 80;
-            // 
             // colDataExec
             // 
-            this.colDataExec.Text = "Data Esecuzione";
+            this.colDataExec.Text = "Data Schedulazione";
             this.colDataExec.Width = 150;
+            // 
+            // colGruppo
+            // 
+            this.colGruppo.Text = "Gruppo";
+            this.colGruppo.Width = 220;
+            // 
+            // colEstr
+            // 
+            this.colEstr.Text = "Estrazione";
+            this.colEstr.Width = 350;
             // 
             // colStato
             // 
             this.colStato.Text = "Stato";
-            this.colStato.Width = 140;
+            this.colStato.Width = 180;
             // 
             // colElaps
             // 
@@ -107,9 +116,9 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lbExecCount});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 419);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 609);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1137, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1338, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -121,57 +130,100 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.panFiltri);
             this.panel1.Controls.Add(this.lvStorico);
+            this.panel1.Controls.Add(this.panFiltri);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(5);
-            this.panel1.Size = new System.Drawing.Size(1137, 419);
+            this.panel1.Size = new System.Drawing.Size(1338, 609);
             this.panel1.TabIndex = 2;
             // 
             // panFiltri
             // 
-            this.panFiltri.Controls.Add(this.dateTimePicker2);
-            this.panFiltri.Controls.Add(this.dateTimePicker1);
+            this.panFiltri.Controls.Add(this.label3);
+            this.panFiltri.Controls.Add(this.cmbStatoSched);
+            this.panFiltri.Controls.Add(this.label2);
+            this.panFiltri.Controls.Add(this.label1);
+            this.panFiltri.Controls.Add(this.btnUpdate);
+            this.panFiltri.Controls.Add(this.dtpDataFine);
+            this.panFiltri.Controls.Add(this.dtpDataInizio);
             this.panFiltri.Dock = System.Windows.Forms.DockStyle.Top;
             this.panFiltri.Location = new System.Drawing.Point(5, 5);
             this.panFiltri.Name = "panFiltri";
-            this.panFiltri.Size = new System.Drawing.Size(1127, 70);
+            this.panFiltri.Size = new System.Drawing.Size(1328, 70);
             this.panFiltri.TabIndex = 1;
             // 
-            // dateTimePicker2
+            // label3
             // 
-            this.dateTimePicker2.Location = new System.Drawing.Point(299, 20);
-            this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(200, 26);
-            this.dateTimePicker2.TabIndex = 1;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(513, 12);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(40, 18);
+            this.label3.TabIndex = 17;
+            this.label3.Text = "Stato";
             // 
-            // dateTimePicker1
+            // cmbStatoSched
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(46, 20);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 26);
-            this.dateTimePicker1.TabIndex = 0;
+            this.cmbStatoSched.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbStatoSched.FormattingEnabled = true;
+            this.cmbStatoSched.Location = new System.Drawing.Point(559, 7);
+            this.cmbStatoSched.Name = "cmbStatoSched";
+            this.cmbStatoSched.Size = new System.Drawing.Size(213, 26);
+            this.cmbStatoSched.TabIndex = 16;
             // 
-            // colGruppo
+            // label2
             // 
-            this.colGruppo.Width = 130;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(262, 13);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(15, 18);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "a";
             // 
-            // colEstr
+            // label1
             // 
-            this.colEstr.Text = "Estrazione";
-            this.colEstr.Width = 200;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(17, 13);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(24, 18);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Da";
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.database_refresh;
+            this.btnUpdate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnUpdate.Location = new System.Drawing.Point(811, 7);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(104, 26);
+            this.btnUpdate.TabIndex = 2;
+            this.btnUpdate.Text = "Aggiorna";
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // dtpDataFine
+            // 
+            this.dtpDataFine.Location = new System.Drawing.Point(290, 7);
+            this.dtpDataFine.Name = "dtpDataFine";
+            this.dtpDataFine.Size = new System.Drawing.Size(200, 26);
+            this.dtpDataFine.TabIndex = 1;
+            // 
+            // dtpDataInizio
+            // 
+            this.dtpDataInizio.Location = new System.Drawing.Point(47, 7);
+            this.dtpDataInizio.Name = "dtpDataInizio";
+            this.dtpDataInizio.Size = new System.Drawing.Size(200, 26);
+            this.dtpDataInizio.TabIndex = 0;
             // 
             // frmPianoSched
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1137, 441);
+            this.ClientSize = new System.Drawing.Size(1338, 631);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
             this.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmPianoSched";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -180,6 +232,7 @@
             this.statusStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panFiltri.ResumeLayout(false);
+            this.panFiltri.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -188,7 +241,6 @@
         #endregion
 
         private System.Windows.Forms.ListView lvStorico;
-        private System.Windows.Forms.ColumnHeader colID;
         private System.Windows.Forms.ColumnHeader colDataExec;
         private System.Windows.Forms.ColumnHeader colElaps;
         private System.Windows.Forms.ColumnHeader colEsito;
@@ -198,9 +250,14 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ColumnHeader colStato;
         private System.Windows.Forms.Panel panFiltri;
-        private System.Windows.Forms.DateTimePicker dateTimePicker2;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.DateTimePicker dtpDataFine;
+        private System.Windows.Forms.DateTimePicker dtpDataInizio;
         private System.Windows.Forms.ColumnHeader colGruppo;
         private System.Windows.Forms.ColumnHeader colEstr;
+        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cmbStatoSched;
     }
 }

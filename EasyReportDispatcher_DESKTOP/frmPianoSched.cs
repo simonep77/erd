@@ -25,33 +25,80 @@ namespace EasyReportDispatcher_DESKTOP
 
             InitializeComponent();
 
-            this.Text = $"Piano schedulazione Estrazione ";
+            this.Text = $"Piano schedulazione estrazioni";
+
+            this.loadCombo();
 
             this.loadData();
         }
-        private void loadData()
+
+
+        private void loadCombo()
         {
-            this.lvStorico.Items.Clear();
-
-            var lst = AppContextERD.Slot.CreateList<ReportSchedulazioneLista>()
+            var lst = AppContextERD.Slot.CreateList<ReportSchedulazioneStatoLista>()
                 .LoadFullObjects()
-                .OrderBy(nameof(ReportSchedulazione.DataEsecuzione), OrderVersus.Asc)
-                .SearchByColumn(Filter.Gte(nameof(ReportSchedulazione.DataEsecuzione), this.dateTimePicker1.Value.Date));
+                .OrderBy(nameof(ReportSchedulazioneStato.Id), OrderVersus.Asc)
+                .SearchAllObjects();
 
+            this.cmbStatoSched.Items.Clear();
+            this.cmbStatoSched.ValueMember = @"Id";
+            this.cmbStatoSched.DisplayMember = @"Nome";
+            this.cmbStatoSched.Items.Clear();
+            this.cmbStatoSched.Items.Add(new { Id = 0, Nome = " - TUTTI - " });
             foreach (var item in lst)
             {
-                var lvItem = new ListViewItem(item.Id.ToString());
-                lvItem.SubItems.Add(item.DataEsecuzione.ToString("dd/MM/yyyy HH:mm"));
-                lvItem.SubItems.Add(item.Estrazione.Gruppo);
-                lvItem.SubItems.Add(item.Estrazione.Nome);
-                lvItem.SubItems.Add(item.Stato.Nome);
-                lvItem.SubItems.Add(item.StatoId == eReport.StatoSchedulazione.Eseguita ? item.Output?.DataOraFine.Subtract(item.Output.DataOraInizio).ToString() ?? string.Empty : string.Empty);
-                lvItem.SubItems.Add(item.Output?.Stato.Nome ?? string.Empty);
-                lvItem.SubItems.Add(item.Output?.EstrazioneEsito ?? string.Empty);
+                this.cmbStatoSched.Items.Add(new { Id = item.Id, Nome = item.Nome });
 
-
-                this.lvStorico.Items.Add(lvItem);
             }
+
+            this.cmbStatoSched.SelectedIndex = 0;
+        }
+        private void loadData()
+        {
+
+            this.Cursor = Cursors.WaitCursor;
+            this.lbExecCount.Text = "Totale schedulazioni: -";
+            this.lvStorico.BeginUpdate();
+            this.lvStorico.Items.Clear();
+            
+            try
+            {
+                var flt = Filter.Gte(nameof(ReportSchedulazione.DataEsecuzione), this.dtpDataInizio.Value.Date)
+                    .And(Filter.Lte(nameof(ReportSchedulazione.DataEsecuzione), this.dtpDataFine.Value.Date.AddDays(1).AddSeconds(-1)));
+
+                if (this.cmbStatoSched.SelectedIndex > 0)
+                {
+                    dynamic sel = this.cmbStatoSched.SelectedItem;
+                    flt.And(Filter.Eq(nameof(ReportSchedulazione.StatoId), sel.Id));
+                }
+
+                var lst = AppContextERD.Slot.CreateList<ReportSchedulazioneLista>()
+                    .LoadFullObjects()
+                    .OrderBy(nameof(ReportSchedulazione.DataEsecuzione), OrderVersus.Asc)
+                    .SearchByColumn(flt);
+
+                foreach (var item in lst)
+                {
+                    var lvItem = new ListViewItem(item.DataEsecuzione.ToString("dd/MM/yyyy HH:mm"));
+                    lvItem.SubItems.Add(item.Estrazione.Gruppo);
+                    lvItem.SubItems.Add(item.Estrazione.Nome);
+                    lvItem.SubItems.Add(item.Stato.Nome);
+                    lvItem.SubItems.Add(item.StatoId == eReport.StatoSchedulazione.Eseguita ? item.Output?.DataOraFine.Subtract(item.Output.DataOraInizio).ToString() ?? string.Empty : string.Empty);
+                    lvItem.SubItems.Add(item.Output?.Stato.Nome ?? string.Empty);
+                    lvItem.SubItems.Add(item.Output?.EstrazioneEsito ?? string.Empty);
+
+
+                    this.lvStorico.Items.Add(lvItem);
+                }
+
+                this.lbExecCount.Text = $"Totale schedulazioni: {lst.Count}";
+            }
+            finally
+            {
+                this.lvStorico.EndUpdate();
+                this.Cursor = this.DefaultCursor;
+            }
+
 
         }
 
@@ -145,6 +192,11 @@ namespace EasyReportDispatcher_DESKTOP
             //}
             
 
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            this.loadData();
         }
     }
 }

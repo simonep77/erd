@@ -70,6 +70,7 @@ namespace EasyReportDispatcher_DESKTOP.src
         }
 
 
+
         public static void ShowSpinner(Control ctrl)
         {
             //return;
