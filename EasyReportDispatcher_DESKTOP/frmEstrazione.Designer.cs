@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.gbGenerali = new System.Windows.Forms.GroupBox();
+            this.cmbInvioEmail = new System.Windows.Forms.ComboBox();
             this.button2 = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.txtNomeFileMask = new System.Windows.Forms.TextBox();
@@ -52,7 +53,6 @@
             this.txtNumOutput = new System.Windows.Forms.NumericUpDown();
             this.cmbConnessioni = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.chbInvioEmail = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
             this.cmbTipoFile = new System.Windows.Forms.ComboBox();
             this.txtCronString = new System.Windows.Forms.TextBox();
@@ -97,6 +97,7 @@
             // 
             // gbGenerali
             // 
+            this.gbGenerali.Controls.Add(this.cmbInvioEmail);
             this.gbGenerali.Controls.Add(this.button2);
             this.gbGenerali.Controls.Add(this.label12);
             this.gbGenerali.Controls.Add(this.txtNomeFileMask);
@@ -119,7 +120,6 @@
             this.gbGenerali.Controls.Add(this.txtNumOutput);
             this.gbGenerali.Controls.Add(this.cmbConnessioni);
             this.gbGenerali.Controls.Add(this.label9);
-            this.gbGenerali.Controls.Add(this.chbInvioEmail);
             this.gbGenerali.Controls.Add(this.label7);
             this.gbGenerali.Controls.Add(this.cmbTipoFile);
             this.gbGenerali.Controls.Add(this.txtCronString);
@@ -136,6 +136,21 @@
             this.gbGenerali.TabIndex = 0;
             this.gbGenerali.TabStop = false;
             this.gbGenerali.Text = "Generali";
+            // 
+            // cmbInvioEmail
+            // 
+            this.cmbInvioEmail.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbInvioEmail.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.cmbInvioEmail.FormattingEnabled = true;
+            this.cmbInvioEmail.Items.AddRange(new object[] {
+            "Nessun invio email",
+            "Invio email attivo",
+            "Invio email condizionato (presenza almeno 1 record)"});
+            this.cmbInvioEmail.Location = new System.Drawing.Point(511, 116);
+            this.cmbInvioEmail.Name = "cmbInvioEmail";
+            this.cmbInvioEmail.Size = new System.Drawing.Size(187, 26);
+            this.cmbInvioEmail.TabIndex = 38;
+            this.cmbInvioEmail.SelectedIndexChanged += new System.EventHandler(this.cmbInvioEmail_SelectedIndexChanged);
             // 
             // button2
             // 
@@ -341,18 +356,6 @@
             this.label9.Size = new System.Drawing.Size(88, 18);
             this.label9.TabIndex = 14;
             this.label9.Text = "Connessione";
-            // 
-            // chbInvioEmail
-            // 
-            this.chbInvioEmail.Location = new System.Drawing.Point(511, 118);
-            this.chbInvioEmail.Name = "chbInvioEmail";
-            this.chbInvioEmail.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.chbInvioEmail.Size = new System.Drawing.Size(193, 22);
-            this.chbInvioEmail.TabIndex = 11;
-            this.chbInvioEmail.Text = "Invio Email";
-            this.chbInvioEmail.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chbInvioEmail.UseVisualStyleBackColor = true;
-            this.chbInvioEmail.CheckedChanged += new System.EventHandler(this.chbInvioEmail_CheckedChanged);
             // 
             // label7
             // 
@@ -696,7 +699,6 @@
         private System.Windows.Forms.TextBox txtExcelSheet;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtExcelTitolo;
-        private System.Windows.Forms.CheckBox chbInvioEmail;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox cmbTipoFile;
         private System.Windows.Forms.GroupBox gbSql;
@@ -739,5 +741,6 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button btnEseguiQuery;
         private System.Windows.Forms.ToolTip tip;
+        private System.Windows.Forms.ComboBox cmbInvioEmail;
     }
 }

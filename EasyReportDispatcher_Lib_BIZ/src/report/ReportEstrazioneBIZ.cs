@@ -353,8 +353,12 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                     this.runCopyTo();
 
                 //Esegue sendmail
-                if (this.IsPrevistoInvioMail && sendEmail)
-                    this.SendEmail(saveResult);
+                if (sendEmail)
+                {
+                    //Manda se tipo 1 (sempre) o se tipo 2 (condizionato) in presenza di righe
+                    if (this.DataObj.InvioMailAttivo == 1 || (this.DataObj.InvioMailAttivo == 2 && this.mTabResultSQL.Rows.Count > 0))
+                        this.SendEmail(saveResult);
+                }
 
                 //Esito OK
                 this.mLastResult.StatoId = eReport.StatoEstrazione.TerminataConSuccesso;

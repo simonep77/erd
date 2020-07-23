@@ -41,7 +41,7 @@ namespace EasyReportDispatcher_DESKTOP
             this.txtEstrazioniAcc.Text = this.mEstrazioneBiz.DataObj.EstrazioniAccorpateIds;
             this.chkAccorpaDati.Checked = (this.mEstrazioneBiz.DataObj.AccorpaSoloDati > 0);
             this.chkAttivo.Checked = (this.mEstrazioneBiz.DataObj.Attivo == 1);
-            this.chbInvioEmail.Checked = (this.mEstrazioneBiz.DataObj.InvioMailAttivo == 1);
+            this.cmbInvioEmail.SelectedIndex = this.mEstrazioneBiz.DataObj.InvioMailAttivo;
 
             this.txtSQL.Text = this.mEstrazioneBiz.DataObj.SqlText;
             this.txtExcelTitolo.Text = this.mEstrazioneBiz.DataObj.Titolo;
@@ -274,7 +274,7 @@ namespace EasyReportDispatcher_DESKTOP
                         this.mEstrazioneBiz.DataObj.UtenteIdInserimento = AppContextERD.Utente.Id;
                     }
                     this.mEstrazioneBiz.DataObj.Attivo = (sbyte)((this.chkAttivo.Checked) ? 1 : 0);
-                    this.mEstrazioneBiz.DataObj.InvioMailAttivo = (sbyte)((this.chbInvioEmail.Checked) ? 1 : 0);
+                    this.mEstrazioneBiz.DataObj.InvioMailAttivo = (sbyte)this.cmbInvioEmail.SelectedIndex;
                     this.mEstrazioneBiz.DataObj.Nome = this.txtNome.Text;
                     this.mEstrazioneBiz.DataObj.TipoFileId = (this.cmbTipoFile.SelectedItem as ReportTipoFile).Id;
                     this.mEstrazioneBiz.DataObj.ConnessioneId = (this.cmbConnessioni.SelectedItem as ReportConnessione).Id;
@@ -407,10 +407,6 @@ namespace EasyReportDispatcher_DESKTOP
             this.txtCronString.Enabled = this.chkAttivo.Checked;
         }
 
-        private void chbInvioEmail_CheckedChanged(object sender, EventArgs e)
-        {
-            this.cmbDestEmail.Enabled = this.chbInvioEmail.Checked;
-        }
 
         private void btnEmailDestAdd_Click(object sender, EventArgs e)
         {
@@ -523,6 +519,34 @@ namespace EasyReportDispatcher_DESKTOP
 
 
 
+        }
+
+        private void cmbInvioEmail_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var color = SystemColors.Window;
+
+            switch (this.cmbInvioEmail.SelectedIndex)
+            {
+                case 0:
+                    color = Color.LightGray;
+                    break;
+                case 1:
+                    color = Color.LightGreen;
+                    break;
+                case 2:
+                    color = Color.Orange;
+                    break;
+                default:
+                    break;
+            }
+            this.tip.SetToolTip(this.cmbInvioEmail, this.cmbInvioEmail.SelectedItem.ToString());
+            this.cmbInvioEmail.BackColor = color;
+            var bMailEn = this.cmbInvioEmail.SelectedIndex > 0;
+            var bSelDest =  (this.cmbDestEmail.SelectedIndex >= 0);
+            this.cmbDestEmail.Enabled = bMailEn;
+            this.btnEmailDestAdd.Enabled = bMailEn;
+            this.btnEmailDestEdit.Enabled = bMailEn && bSelDest;
+            this.btnEmailDestDel.Enabled = bMailEn && bSelDest;
         }
     }
 }
