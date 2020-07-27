@@ -105,7 +105,7 @@
             // colEsito
             // 
             this.colEsito.Text = "Esito";
-            this.colEsito.Width = 130;
+            this.colEsito.Width = 200;
             // 
             // colTesto
             // 

@@ -344,7 +344,7 @@ namespace EasyReportDispatcher_DESKTOP
             else
                 item.SubItems.Add(string.Empty);
 
-            item.SubItems.Add(est.DataObj.InvioMailAttivo == 1 ? "SI" : "NO");
+            item.SubItems.Add(est.IsPrevistoInvioMail ? "SI" : "NO");
             item.SubItems.Add(est.DataObj.EstrazioniAccorpateIds.Length > 0 ? (est.DataObj.AccorpaSoloDati > 0 ? "DATI: " : "FILE: ") + est.DataObj.EstrazioniAccorpateIds : "");
             item.SubItems.Add(est.DataObj.TemplateId > 0 ? "SI" : "NO");
             item.SubItems.Add(File.Exists(this.getLocalTemplate(est)) ? "SI" : "NO");

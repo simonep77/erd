@@ -37,14 +37,26 @@ namespace EasyReportDispatcher_DESKTOP
             this.tsNumEstrazioni = new System.Windows.Forms.ToolStripStatusLabel();
             this.pgLoading = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tsOutputDir = new System.Windows.Forms.ToolStripButton();
             this.btnManutenzione = new System.Windows.Forms.ToolStripButton();
             this.btnConfig = new System.Windows.Forms.ToolStripButton();
             this.btnReload = new System.Windows.Forms.ToolStripButton();
+            this.tsOutputDir = new System.Windows.Forms.ToolStripButton();
             this.btnPianoSched = new System.Windows.Forms.ToolStripButton();
             this.panMain = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panCenter = new System.Windows.Forms.Panel();
+            this.lvEstrazioni = new EasyReportDispatcher_DESKTOP.src.LvCustom();
+            this.colID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colNome = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colConnessione = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colSchedulato = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colNextSched = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colInvioEmail = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colAccorpamento = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colTemplate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colTemplateLocale = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colUtenteIns = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colUtenteAgg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ctxMenuEst = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsTitolo = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -72,18 +84,6 @@ namespace EasyReportDispatcher_DESKTOP
             this.lbFiltroNum = new System.Windows.Forms.Label();
             this.txtFiltro = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.lvEstrazioni = new EasyReportDispatcher_DESKTOP.src.LvCustom();
-            this.colID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colNome = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colConnessione = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colSchedulato = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colNextSched = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colInvioEmail = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colAccorpamento = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colTemplate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colTemplateLocale = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colUtenteIns = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colUtenteAgg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panMain.SuspendLayout();
@@ -140,15 +140,6 @@ namespace EasyReportDispatcher_DESKTOP
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // tsOutputDir
-            // 
-            this.tsOutputDir.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.folder_explore;
-            this.tsOutputDir.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsOutputDir.Name = "tsOutputDir";
-            this.tsOutputDir.Size = new System.Drawing.Size(86, 22);
-            this.tsOutputDir.Text = "Output Dir.";
-            this.tsOutputDir.Click += new System.EventHandler(this.actOutputDir);
-            // 
             // btnManutenzione
             // 
             this.btnManutenzione.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -178,6 +169,15 @@ namespace EasyReportDispatcher_DESKTOP
             this.btnReload.Size = new System.Drawing.Size(135, 22);
             this.btnReload.Text = "Aggiorna/Riconnetti";
             this.btnReload.Click += new System.EventHandler(this.actRicarica);
+            // 
+            // tsOutputDir
+            // 
+            this.tsOutputDir.Image = global::EasyReportDispatcher_DESKTOP.Properties.Resources.folder_explore;
+            this.tsOutputDir.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsOutputDir.Name = "tsOutputDir";
+            this.tsOutputDir.Size = new System.Drawing.Size(86, 22);
+            this.tsOutputDir.Text = "Output Dir.";
+            this.tsOutputDir.Click += new System.EventHandler(this.actOutputDir);
             // 
             // btnPianoSched
             // 
@@ -221,6 +221,95 @@ namespace EasyReportDispatcher_DESKTOP
             this.panCenter.Padding = new System.Windows.Forms.Padding(5);
             this.panCenter.Size = new System.Drawing.Size(1374, 520);
             this.panCenter.TabIndex = 2;
+            // 
+            // lvEstrazioni
+            // 
+            this.lvEstrazioni.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colID,
+            this.colNome,
+            this.colConnessione,
+            this.colSchedulato,
+            this.colNextSched,
+            this.colInvioEmail,
+            this.colAccorpamento,
+            this.colTemplate,
+            this.colTemplateLocale,
+            this.colUtenteIns,
+            this.colUtenteAgg});
+            this.lvEstrazioni.ContextMenuStrip = this.ctxMenuEst;
+            this.lvEstrazioni.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvEstrazioni.FullRowSelect = true;
+            this.lvEstrazioni.GridLines = true;
+            this.lvEstrazioni.HideSelection = false;
+            this.lvEstrazioni.Location = new System.Drawing.Point(5, 5);
+            this.lvEstrazioni.Margin = new System.Windows.Forms.Padding(20);
+            this.lvEstrazioni.MultiSelect = false;
+            this.lvEstrazioni.Name = "lvEstrazioni";
+            this.lvEstrazioni.Size = new System.Drawing.Size(1364, 510);
+            this.lvEstrazioni.SmallImageList = this.imgList;
+            this.lvEstrazioni.TabIndex = 0;
+            this.lvEstrazioni.UseCompatibleStateImageBehavior = false;
+            this.lvEstrazioni.View = System.Windows.Forms.View.Details;
+            this.lvEstrazioni.SelectedIndexChanged += new System.EventHandler(this.lvEstrazioni_SelectedIndexChanged);
+            this.lvEstrazioni.DoubleClick += new System.EventHandler(this.lvEstrazioni_DoubleClick);
+            // 
+            // colID
+            // 
+            this.colID.Text = "ID";
+            // 
+            // colNome
+            // 
+            this.colNome.Text = "Nome";
+            this.colNome.Width = 300;
+            // 
+            // colConnessione
+            // 
+            this.colConnessione.Text = "Connessione";
+            this.colConnessione.Width = 200;
+            // 
+            // colSchedulato
+            // 
+            this.colSchedulato.Text = "Schedulato";
+            this.colSchedulato.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.colSchedulato.Width = 100;
+            // 
+            // colNextSched
+            // 
+            this.colNextSched.Text = "Prossima Esecuzione";
+            this.colNextSched.Width = 150;
+            // 
+            // colInvioEmail
+            // 
+            this.colInvioEmail.Text = "Invio Email";
+            this.colInvioEmail.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.colInvioEmail.Width = 120;
+            // 
+            // colAccorpamento
+            // 
+            this.colAccorpamento.Text = "Accorpamento";
+            this.colAccorpamento.Width = 120;
+            // 
+            // colTemplate
+            // 
+            this.colTemplate.Text = "Template";
+            this.colTemplate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.colTemplate.Width = 100;
+            // 
+            // colTemplateLocale
+            // 
+            this.colTemplateLocale.Text = "Template Locale";
+            this.colTemplateLocale.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.colTemplateLocale.Width = 120;
+            // 
+            // colUtenteIns
+            // 
+            this.colUtenteIns.Text = "Creata da";
+            this.colUtenteIns.Width = 100;
+            // 
+            // colUtenteAgg
+            // 
+            this.colUtenteAgg.Text = "Aggiornata da";
+            this.colUtenteAgg.Width = 120;
             // 
             // ctxMenuEst
             // 
@@ -479,95 +568,6 @@ namespace EasyReportDispatcher_DESKTOP
             this.label1.Size = new System.Drawing.Size(56, 19);
             this.label1.TabIndex = 0;
             this.label1.Text = "Gruppo";
-            // 
-            // lvEstrazioni
-            // 
-            this.lvEstrazioni.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.colID,
-            this.colNome,
-            this.colConnessione,
-            this.colSchedulato,
-            this.colNextSched,
-            this.colInvioEmail,
-            this.colAccorpamento,
-            this.colTemplate,
-            this.colTemplateLocale,
-            this.colUtenteIns,
-            this.colUtenteAgg});
-            this.lvEstrazioni.ContextMenuStrip = this.ctxMenuEst;
-            this.lvEstrazioni.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lvEstrazioni.FullRowSelect = true;
-            this.lvEstrazioni.GridLines = true;
-            this.lvEstrazioni.HideSelection = false;
-            this.lvEstrazioni.Location = new System.Drawing.Point(5, 5);
-            this.lvEstrazioni.Margin = new System.Windows.Forms.Padding(20);
-            this.lvEstrazioni.MultiSelect = false;
-            this.lvEstrazioni.Name = "lvEstrazioni";
-            this.lvEstrazioni.Size = new System.Drawing.Size(1364, 510);
-            this.lvEstrazioni.SmallImageList = this.imgList;
-            this.lvEstrazioni.TabIndex = 0;
-            this.lvEstrazioni.UseCompatibleStateImageBehavior = false;
-            this.lvEstrazioni.View = System.Windows.Forms.View.Details;
-            this.lvEstrazioni.SelectedIndexChanged += new System.EventHandler(this.lvEstrazioni_SelectedIndexChanged);
-            this.lvEstrazioni.DoubleClick += new System.EventHandler(this.lvEstrazioni_DoubleClick);
-            // 
-            // colID
-            // 
-            this.colID.Text = "ID";
-            // 
-            // colNome
-            // 
-            this.colNome.Text = "Nome";
-            this.colNome.Width = 300;
-            // 
-            // colConnessione
-            // 
-            this.colConnessione.Text = "Connessione";
-            this.colConnessione.Width = 200;
-            // 
-            // colSchedulato
-            // 
-            this.colSchedulato.Text = "Schedulato";
-            this.colSchedulato.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.colSchedulato.Width = 100;
-            // 
-            // colNextSched
-            // 
-            this.colNextSched.Text = "Prossima Esecuzione";
-            this.colNextSched.Width = 150;
-            // 
-            // colInvioEmail
-            // 
-            this.colInvioEmail.Text = "Invio Email";
-            this.colInvioEmail.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.colInvioEmail.Width = 120;
-            // 
-            // colAccorpamento
-            // 
-            this.colAccorpamento.Text = "Accorpamento";
-            this.colAccorpamento.Width = 120;
-            // 
-            // colTemplate
-            // 
-            this.colTemplate.Text = "Template";
-            this.colTemplate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.colTemplate.Width = 100;
-            // 
-            // colTemplateLocale
-            // 
-            this.colTemplateLocale.Text = "Template Locale";
-            this.colTemplateLocale.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.colTemplateLocale.Width = 120;
-            // 
-            // colUtenteIns
-            // 
-            this.colUtenteIns.Text = "Creata da";
-            this.colUtenteIns.Width = 100;
-            // 
-            // colUtenteAgg
-            // 
-            this.colUtenteAgg.Text = "Aggiornata da";
-            this.colUtenteAgg.Width = 120;
             // 
             // frmMain
             // 

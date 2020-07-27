@@ -472,10 +472,7 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void cmbDestEmail_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.btnEmailDestAdd.Enabled = (this.mEstrazioneBiz.DataObj.ObjectState != EObjectState.New);
-            var selected = this.cmbDestEmail.SelectedItem != null;
-            this.btnEmailDestEdit.Enabled = selected;
-            this.btnEmailDestDel.Enabled = selected;
+            this.cmbInvioEmail_SelectedIndexChanged(sender, e);
         }
 
         private void btnInfoCopy_Click(object sender, EventArgs e)
