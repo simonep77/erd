@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 
 echo AVVIO SERVIZIO ERD SCHEDULER CONSOLE
 

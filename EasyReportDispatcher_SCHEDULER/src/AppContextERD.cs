@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using EasyReportDispatcher_SCHEDULER.src.Svcs;
 using EasyReportDispatcher_SCHEDULER.Properties;
-
 namespace EasyReportDispatcher_SCHEDULER.src
 {
     public class AppContextERD
     {
+        public const string SERVICE_NAME = @"ERD-Scheduler";
         public const string LOG_EVENT_SOURCE = @"ERD_Scheduler";
         public const string LOG_EVENT_SOURCE_LOG = @"ERD Scheduler Eventlog";
 

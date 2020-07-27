@@ -60,6 +60,8 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
 
             this.InternalScheduler.Stop();
 
+            if (this.mMutex != null)
+                this.mMutex.Dispose();
         }
 
         protected override void OnTaskException(ServiceTask serviceTask, Exception e)
@@ -145,7 +147,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
         public void WriteLog(EventLogEntryType logType, string logMessage)
         {
 
-            if (this.RunMode == 0)
+            if (this.RunMode == CostantiSched.RunMode.Service)
             {
                 EventLog.WriteEntry(AppContextERD.LOG_EVENT_SOURCE, logMessage, logType);
             }
@@ -178,7 +180,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
 
         private void initEventLog()
         {
-            if (this.RunMode == 0)
+            if (this.RunMode == CostantiSched.RunMode.Service)
             {
                 if (!EventLog.SourceExists(AppContextERD.LOG_EVENT_SOURCE))
                 {

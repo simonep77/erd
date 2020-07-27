@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 
 echo INSTALLAZIONE SERVIZIO ERD SCHEDULER (ERD-Scheduler)
 
