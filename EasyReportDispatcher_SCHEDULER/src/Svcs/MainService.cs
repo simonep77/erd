@@ -138,7 +138,9 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
         /// <returns></returns>
         public BusinessSlot CreateSlot()
         {
-            return new BusinessSlot("Default");
+            var bs = new BusinessSlot("Default");
+           
+            return bs;
         }
 
         #endregion
