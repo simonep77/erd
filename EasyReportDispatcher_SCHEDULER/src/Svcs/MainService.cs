@@ -173,7 +173,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
         {
             bool createdNew;
 
-            this.mMutex = new Mutex(true, "ERD_Mutex_Run", out createdNew);
+            this.mMutex = new Mutex(true, AppContextERD.SERVICE_NAME, out createdNew);
 
             if (!createdNew)
                 throw new ApplicationException("E' già in esecuzione un'altra istanza dell'applicazione");

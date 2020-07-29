@@ -25,7 +25,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Jobs
 
                     var repDefId = (int)context.JobDetail.JobDataMap[CostantiSched.JobDataMap.Reports.ReportId];
                     var repName = context.JobDetail.JobDataMap[CostantiSched.JobDataMap.Reports.ReportName].ToString();
-                    var bSendEmail = false;
+                    var bSendEmail = true;
                     var sb = new StringBuilder();
 
 

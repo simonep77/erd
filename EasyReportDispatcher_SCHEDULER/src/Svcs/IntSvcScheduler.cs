@@ -35,7 +35,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
             //Crea lo scheduler principale
             this.mScheduler = await (new StdSchedulerFactory()).GetScheduler();
             //Aggiunge listener per i task
-            this.mScheduler.ListenerManager.AddJobListener(new JobSystemListener(), GroupMatcher<JobKey>.GroupContains(JOB_INTERNAL_GROUP));
+            //this.mScheduler.ListenerManager.AddJobListener(new JobSystemListener(), GroupMatcher<JobKey>.GroupContains(JOB_INTERNAL_GROUP));
             this.mScheduler.ListenerManager.AddJobListener(new JobReportListener(), GroupMatcher<JobKey>.GroupContains(JOB_TASKS_GROUP));
             await this.mScheduler.Start();
 
