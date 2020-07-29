@@ -16,6 +16,7 @@ using EasyReportDispatcher_Lib_Common.src;
 using Bdo.Database;
 using ClosedXML.Excel;
 using Bdo.Common;
+using System.Threading;
 
 namespace EasyReportDispatcher_Lib_BIZ.src.report
 {
@@ -279,7 +280,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 return estBiz;
 
             //Salva
-            this.Salva();
+            estBiz.Salva();
 
             //Clona destinatari email
             estBiz.mListaDesinatariEmail = this.Slot.CreateList<ReportEstrazioneDestinatarioEmailLista>();
@@ -741,18 +742,52 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
         public DataTable RunSQL()
         {
-            using (var db = Bdo.Database.DataBaseFactory.CreaDataBase(this.DataObj.Connessione.BdoDbConnectioType, this.DataObj.Connessione.ConnectionString))
+            var minAttesa = 30;
+            var mutexKey = $"ERD_SEM_CONN_{this.DataObj.ConnessioneId}";
+
+            this.Slot.LogDebug(DebugLevel.Debug_1, $"Creazione mutex {mutexKey}");
+
+            using (var mtx = new Mutex(false, mutexKey))
             {
-                db.ExecutionTimeout = 100000;
-                //db.SQL = this.DataObj.SqlText.Replace('\n',' ');
-                db.SQL = this.DataObj.SqlText;
+                this.Slot.LogDebug(DebugLevel.Debug_1, $"Attesa mutex {minAttesa} minuti");
+                if (!mtx.WaitOne(minAttesa * 60 * 1000))
+                {
+                    throw new ApplicationException($"Impossibile eseguire la query entro i {minAttesa} minuti di attesa della connessione {this.DataObj.ConnessioneId} - {this.DataObj.Connessione.Nome}");
+                }
+                try
+                {
+                    this.Slot.LogDebug(DebugLevel.Debug_1, "Creazione connessione DB");
+                    using (var db = Bdo.Database.DataBaseFactory.CreaDataBase(this.DataObj.Connessione.BdoDbConnectioType, this.DataObj.Connessione.ConnectionString))
+                    {
+                        db.AutoCloseConnection = true;
+                        db.ExecutionTimeout = 100000;
+                        
+                        //Imposta sql
+                        db.SQL = this.DataObj.SqlText;
 
-                //Aggiunge una serie di parametri di sistema:
-                this.loadErdSqlParameters(db);
+                        //Aggiunge una serie di parametri di sistema:
+                        this.loadErdSqlParameters(db);
 
-                //Esegue
-                return db.Select();
+                        //Esegue
+                        this.Slot.LogDebug(DebugLevel.Debug_1, "Begin esecuzione");
+                        return db.Select();
+                    }
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    this.Slot.LogDebug(DebugLevel.Debug_1, "End esecuzione (release mutex)");
+                    mtx.ReleaseMutex();
+                }
+
             }
+
+                
+
+            
         }
 
 

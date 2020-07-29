@@ -751,7 +751,7 @@ namespace EasyReportDispatcher_DESKTOP
         private void btnManutenzione_Click(object sender, EventArgs e)
         {
             //elimina tutti i dati non utilizzati
-            if (!UI_Utils.ShowConfirmYesNo("Attenzione, la funzione procederà ad eliminare:\n - tutti i report eliminati logicamente con tutti i dati correlati\n - le history SQL oltre le ultime 10\n\nContinuare?"))
+            if (!UI_Utils.ShowConfirmYesNo("Attenzione, la funzione procederà ad eliminare:\n - tutti i report eliminati logicamente con tutti i dati correlati\n - le history SQL oltre le ultime 10\n - le schedulazioni saltate\n\nContinuare?"))
                 return;
 
             this.Cursor = Cursors.WaitCursor;

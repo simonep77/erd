@@ -139,7 +139,10 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
         public BusinessSlot CreateSlot()
         {
             var bs = new BusinessSlot("Default");
-           
+            bs.LiveTrackingEnabled = false;
+            bs.ChangeTrackingEnabled = true;
+            bs.DB.AutoCloseConnection = true;
+
             return bs;
         }
 

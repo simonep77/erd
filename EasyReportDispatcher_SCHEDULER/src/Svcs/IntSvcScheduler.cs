@@ -368,7 +368,6 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
                                 jobDet.JobDataMap.Add(CostantiSched.JobDataMap.Reports.ReportId, rep.Id);
                                 jobDet.JobDataMap.Add(CostantiSched.JobDataMap.Reports.ReportName, rep.Nome);
 
-
                                 await this.mScheduler.ScheduleJob(jobDet, trg);
 
                                 //Ricerca piano da DB

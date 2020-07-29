@@ -72,6 +72,11 @@ namespace EasyReportDispatcher_SCHEDULER.src.Common
                 public const string ReportId = @"ReportId";
                 public const string ReportName = @"ReportName";
 
+                /// <summary>
+                /// Chiave da utilizzare per la gestione delle estrazioni concorrenti (stessa connection)
+                /// </summary>
+                public const string ConcurrencyKey = @"ConcurrencyKey";
+
             }
         }
 

@@ -144,12 +144,6 @@
     <Compile Include="frmSmtp.Designer.cs">
       <DependentUpon>frmSmtp.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSpinner.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSpinner.Designer.cs">
-      <DependentUpon>frmSpinner.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmPianoSched.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -202,9 +196,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmSmtp.resx">
       <DependentUpon>frmSmtp.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSpinner.resx">
-      <DependentUpon>frmSpinner.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPianoSched.resx">
       <DependentUpon>frmPianoSched.cs</DependentUpon>
@@ -280,9 +271,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\application_double.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\spinner.gif" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\information.png" />

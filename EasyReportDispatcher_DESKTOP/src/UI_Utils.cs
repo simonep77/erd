@@ -71,42 +71,6 @@ namespace EasyReportDispatcher_DESKTOP.src
 
 
 
-        public static void ShowSpinner(Control ctrl)
-        {
-            //return;
-
-            var pb = new PictureBox();
-            pb.Name = ctrl.Name + "_spinner";
-            pb.Image = Properties.Resources.spinner;
-            pb.Width = Properties.Resources.spinner.Width;
-            pb.Height = Properties.Resources.spinner.Height;
-            pb.BackColor = Color.Transparent;
-
-            ctrl.Controls.Add(pb);
-
-            pb.Left = ctrl.Width / 2 - pb.Width/2;
-            pb.Top = ctrl.Height / 2 - pb.Height/2;
-            //ctrl.Enabled = false;
-            Application.DoEvents();
-        }
-
-        public static void HideSpinner(Control ctrl)
-        {
-            var pb = ctrl.Controls[ctrl.Name + "_spinner"];
-
-            if (pb != null)
-            {
-                pb.Hide();
-
-                ctrl.Controls.Remove(pb);
-                pb.Dispose();
-
-            }
-            //ctrl.Enabled = true;
-            Application.DoEvents();
-        }
-
-
 
         /// <summary>
         /// Registra il form per la chiusura tramite ESC
