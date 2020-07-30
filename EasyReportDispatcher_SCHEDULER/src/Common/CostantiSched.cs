@@ -28,6 +28,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Common
                 {
                     public const string ScheduleExtender = @"JobScheduleExtender";
                     public const string ScheduleUpdateCheck = @"JobScheduleUpdateCheck";
+                    public const string ScheduleResultCheck = @"JobScheduleResultCheck";
 
                 }
 
@@ -45,6 +46,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Common
                 {
                     public const string ScheduleExtender = @"TrigScheduleExtend";
                     public const string ScheduleUpdateCheck = @"TrigScheduleUpdateCheck";
+                    public const string ScheduleResultCheck = @"TrigScheduleResultCheck";
 
                 }
 

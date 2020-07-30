@@ -28,6 +28,7 @@ namespace EasyReportDispatcher_Lib_Common.src.enums
             public const sbyte Avviata = 2;
             public const sbyte Eseguita = 3;
             public const sbyte Saltata = 4;
+            public const sbyte NonCompletata = 5;
         }
 
         public class TipoFile

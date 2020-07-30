@@ -87,6 +87,7 @@
     <Compile Include="src\Common\CostantiSched.cs" />
     <Compile Include="src\Jobs\ErdJobResult.cs" />
     <Compile Include="src\Jobs\JobReport.cs" />
+    <Compile Include="src\Jobs\JobScheduleResultChecker.cs" />
     <Compile Include="src\Jobs\JobSystemListener.cs" />
     <Compile Include="src\Jobs\JobReportListener.cs" />
     <Compile Include="src\Jobs\JobScheduleUpdater.cs" />
