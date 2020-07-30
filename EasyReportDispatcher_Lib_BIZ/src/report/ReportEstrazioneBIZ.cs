@@ -658,14 +658,14 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
                         using (var msg = new System.Net.Mail.MailMessage())
                         {
-                            msg.From = new System.Net.Mail.MailAddress(item.MailFROM);
-                            msg.To.Add(item.MailTO);
+                            msg.From = new System.Net.Mail.MailAddress(item.MailFROM.Trim());
+                            msg.To.Add(item.MailTO.Trim());
 
                             if (!string.IsNullOrWhiteSpace(item.MailCC))
-                                msg.CC.Add(item.MailCC);
+                                msg.CC.Add(item.MailCC.Trim());
 
                             if (!string.IsNullOrWhiteSpace(item.MailBCC))
-                                msg.Bcc.Add(item.MailBCC);
+                                msg.Bcc.Add(item.MailBCC.Trim());
 
                             msg.IsBodyHtml = true;
                             msg.Subject = item.MailSUBJ;
