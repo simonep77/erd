@@ -47,10 +47,16 @@ namespace EasyReportDispatcher_SCHEDULER.src.Jobs
 
                         ReportEstrazioneBIZ repBiz = slot.BizNewWithLoadByPK<ReportEstrazioneBIZ>(repDefId);
 
-                        repBiz.Run(true, bSendEmail, true);
+                        try
+                        {
+                            repBiz.Run(true, bSendEmail, true);
+                        }
+                        catch (Exception)
+                        {
+                        }
 
-                        ret.IsOK = (repBiz.LastResult.StatoId == eReport.StatoEstrazione.TerminataConSuccesso && string.IsNullOrWhiteSpace(repBiz.LastResult.MailEsito));
-                        ret.Message = $"{repBiz.LastResult.EstrazioneEsito} {repBiz.LastResult.MailEsito}".Trim();
+                        ret.IsOK = (repBiz.LastResult.StatoId == eReport.StatoEstrazione.TerminataConSuccesso);
+                        ret.Message = $"{repBiz.LastResult.EstrazioneEsito}";
                         ret.Output = repBiz.LastResult;
 
                         //Termina schedulazione

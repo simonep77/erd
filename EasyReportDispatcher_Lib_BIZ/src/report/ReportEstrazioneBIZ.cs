@@ -393,7 +393,6 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             if (this.mLastResult.StatoId == eReport.StatoEstrazione.TerminataConErrori)
                 throw new ApplicationException(@"L'esecuzione e' terminata con errori: " + this.mLastResult.EstrazioneEsito);
 
-            //Serve?
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin pulizia output");
             this.cleanOutput();
@@ -636,6 +635,8 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin invio mail");
             this.mLastResult.MailEsito = string.Empty;
             this.mLastResult.MailDataInvio = DateTime.MinValue;
+            var sbErr = new StringBuilder();
+
 
             foreach (var item in this.ListaDesinatariEmail.Where(e => e.Attivo > 0))
             {
@@ -660,10 +661,10 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                             msg.From = new System.Net.Mail.MailAddress(item.MailFROM);
                             msg.To.Add(item.MailTO);
 
-                            if (!string.IsNullOrEmpty(item.MailCC))
+                            if (!string.IsNullOrWhiteSpace(item.MailCC))
                                 msg.CC.Add(item.MailCC);
 
-                            if (!string.IsNullOrEmpty(item.MailBCC))
+                            if (!string.IsNullOrWhiteSpace(item.MailBCC))
                                 msg.Bcc.Add(item.MailBCC);
 
                             msg.IsBodyHtml = true;
@@ -699,7 +700,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 }
                 catch (Exception ex)
                 {
-                    this.mLastResult.MailEsito += string.Format("Errore invio email a {0}: {1}\n", item.MailTO, ex.Message);
+                    sbErr.AppendLine($"Errore invio email a {item.MailTO}: {ex.Message}");
                 }
 
             }
@@ -711,8 +712,8 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 this.Slot.SaveObject(this.mLastResult);
 
             //Ripropaga email
-            if (!string.IsNullOrEmpty(this.mLastResult.MailEsito))
-                throw new ApplicationException("Errore nell'invio mail: {0}" + this.mLastResult.MailEsito);
+            if (sbErr.Length > 0)
+                throw new ApplicationException($"Errore nell'invio mail: {sbErr}");
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "End invio mail");
 
