@@ -656,10 +656,8 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                             smtp.Credentials = new NetworkCredential(item.SmtpConfig.UserName, item.SmtpConfig.Password);
                         }
 
-                        using (var msg = new System.Net.Mail.MailMessage())
+                        using (var msg = new System.Net.Mail.MailMessage(item.MailFROM.Trim(), item.MailTO.Trim()))
                         {
-                            msg.From = new System.Net.Mail.MailAddress(item.MailFROM.Trim());
-                            msg.To.Add(item.MailTO.Trim());
 
                             if (!string.IsNullOrWhiteSpace(item.MailCC))
                                 msg.CC.Add(item.MailCC.Trim());

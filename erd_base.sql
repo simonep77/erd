@@ -22,10 +22,7 @@ CREATE TABLE `report_connessioni` (
   `ConnectionString` varchar(300) NOT NULL,
   `BdoDbConnectioType` varchar(150) NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
-
-/*Data for the table `report_connessioni` */
-
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `report_destinatari_email` */
 
@@ -43,15 +40,10 @@ CREATE TABLE `report_destinatari_email` (
   `MailSUBJ` text NOT NULL,
   `MailBODY` text NOT NULL,
   `Password` varchar(60) DEFAULT NULL,
-  `CopyToId` int(11) DEFAULT NULL COMMENT 'Se valorizzato indica che la mail deve contener il link al file depositato piuttosto che l''allegato',
   PRIMARY KEY (`Id`),
   KEY `EstrazioneId` (`EstrazioneId`),
-  KEY `CopyToId` (`CopyToId`),
-  CONSTRAINT `report_destinatari_email_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`Id`),
-  CONSTRAINT `report_destinatari_email_ibfk_3` FOREIGN KEY (`CopyToId`) REFERENCES `report_estrazioni_copyto` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
-
-/*Data for the table `report_destinatari_email` */
+  CONSTRAINT `report_destinatari_email_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `report_estrazioni` */
 
@@ -73,10 +65,15 @@ CREATE TABLE `report_estrazioni` (
   `DataInizio` date NOT NULL DEFAULT '2001-01-01',
   `DataFine` date NOT NULL DEFAULT '9999-12-31',
   `NumOutputStorico` smallint(6) NOT NULL DEFAULT '10',
-  `EstrazioniAccorpateIds` varchar(50) DEFAULT NULL COMMENT 'Eventuali Id di altre estrazioni separati da virgola da eseguire contestualemnte ed accorpare (solo Excel)',
+  `EstrazioniAccorpateIds` varchar(100) DEFAULT NULL COMMENT 'Eventuali Id di altre estrazioni separati da virgola da eseguire contestualemnte ed accorpare (solo Excel)',
   `AccorpaSoloDati` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Esegue accorpamento dei dati (che devono avere identica struttura)',
   `InvioMailAttivo` tinyint(4) NOT NULL DEFAULT '1',
   `CopyToPath` mediumtext COMMENT 'Percorso (fisico, UNC o hfs) comprensivo di nome file e variabili format per data',
+  `NomeFileMask` varchar(150) DEFAULT NULL COMMENT 'Se impostato consente di personalizzare il nome del file generato. Eventuali parti dinamiche per data devono utilizzare lo standard di formattazione .NET',
+  `UtenteIdInserimento` int(11) NOT NULL,
+  `UtenteIdAggiornamento` int(11) NOT NULL,
+  `DataInserimento` datetime NOT NULL DEFAULT '2020-01-01 00:00:00',
+  `DataAggiornamento` datetime NOT NULL DEFAULT '9999-12-31 00:00:00',
   PRIMARY KEY (`Id`),
   KEY `ConnessioneId` (`ConnessioneId`),
   KEY `TipoFileId` (`TipoFileId`),
@@ -84,10 +81,7 @@ CREATE TABLE `report_estrazioni` (
   CONSTRAINT `report_estrazioni_ibfk_1` FOREIGN KEY (`ConnessioneId`) REFERENCES `report_connessioni` (`Id`),
   CONSTRAINT `report_estrazioni_ibfk_2` FOREIGN KEY (`TipoFileId`) REFERENCES `report_tipi_file` (`id`),
   CONSTRAINT `report_estrazioni_ibfk_3` FOREIGN KEY (`TemplateId`) REFERENCES `report_templates` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
-
-/*Data for the table `report_estrazioni` */
-
+) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `report_estrazioni_output` */
 
@@ -115,8 +109,7 @@ CREATE TABLE `report_estrazioni_output` (
   CONSTRAINT `report_estrazioni_output_ibfk_1` FOREIGN KEY (`TipoFileId`) REFERENCES `report_tipi_file` (`id`),
   CONSTRAINT `report_estrazioni_output_ibfk_2` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`Id`),
   CONSTRAINT `report_estrazioni_output_ibfk_3` FOREIGN KEY (`StatoId`) REFERENCES `report_estrazioni_output_stati` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
-
+) ENGINE=InnoDB AUTO_INCREMENT=300 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `report_estrazioni_output_stati` */
 
@@ -128,9 +121,53 @@ CREATE TABLE `report_estrazioni_output_stati` (
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Data for the table `report_estrazioni_output_stati` */
+/*Table structure for table `report_estrazioni_sqlhistory` */
 
-insert  into `report_estrazioni_output_stati`(`Id`,`Nome`) values (1,'In esecuzione'),(2,'Completato con successo'),(3,'Completato con errori');
+DROP TABLE IF EXISTS `report_estrazioni_sqlhistory`;
+
+CREATE TABLE `report_estrazioni_sqlhistory` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `EstrazioneId` int(11) NOT NULL,
+  `UtenteId` int(11) NOT NULL,
+  `SqlText` mediumtext NOT NULL,
+  `DataInserimento` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `EstrazioneId` (`EstrazioneId`),
+  CONSTRAINT `report_estrazioni_sqlhistory_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
+
+/*Table structure for table `report_piano_schedulazione` */
+
+DROP TABLE IF EXISTS `report_piano_schedulazione`;
+
+CREATE TABLE `report_piano_schedulazione` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `EstrazioneId` int(11) NOT NULL,
+  `TriggerKey` varchar(50) NOT NULL,
+  `DataEsecuzione` datetime NOT NULL,
+  `StatoId` tinyint(4) NOT NULL,
+  `OutputId` bigint(20) DEFAULT NULL,
+  `DataInserimento` datetime NOT NULL,
+  `DataAggiornamento` datetime NOT NULL,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `TriggerKey` (`TriggerKey`),
+  KEY `EstrazioneId` (`EstrazioneId`),
+  KEY `StatoId` (`StatoId`),
+  KEY `OutputId` (`OutputId`),
+  CONSTRAINT `report_piano_schedulazione_ibfk_1` FOREIGN KEY (`EstrazioneId`) REFERENCES `report_estrazioni` (`Id`) ON DELETE CASCADE,
+  CONSTRAINT `report_piano_schedulazione_ibfk_2` FOREIGN KEY (`StatoId`) REFERENCES `report_piano_schedulazione_stati` (`Id`),
+  CONSTRAINT `report_piano_schedulazione_ibfk_3` FOREIGN KEY (`OutputId`) REFERENCES `report_estrazioni_output` (`Id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4432 DEFAULT CHARSET=utf8;
+
+/*Table structure for table `report_piano_schedulazione_stati` */
+
+DROP TABLE IF EXISTS `report_piano_schedulazione_stati`;
+
+CREATE TABLE `report_piano_schedulazione_stati` (
+  `Id` tinyint(4) NOT NULL,
+  `Nome` varchar(100) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Table structure for table `report_smtp_configs` */
 
@@ -149,9 +186,6 @@ CREATE TABLE `report_smtp_configs` (
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
-/*Data for the table `report_smtp_configs` */
-
-
 /*Table structure for table `report_templates` */
 
 DROP TABLE IF EXISTS `report_templates`;
@@ -164,8 +198,6 @@ CREATE TABLE `report_templates` (
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-/*Data for the table `report_templates` */
-
 /*Table structure for table `report_tipi_file` */
 
 DROP TABLE IF EXISTS `report_tipi_file`;
@@ -177,10 +209,6 @@ CREATE TABLE `report_tipi_file` (
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-/*Data for the table `report_tipi_file` */
-
-insert  into `report_tipi_file`(`Id`,`Nome`,`Estensione`) values (1,'CSV','.csv'),(2,'EXCEL','.xlsx');
-
 /*Table structure for table `report_tipi_notifica` */
 
 DROP TABLE IF EXISTS `report_tipi_notifica`;
@@ -191,9 +219,20 @@ CREATE TABLE `report_tipi_notifica` (
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-/*Data for the table `report_tipi_notifica` */
+/*Table structure for table `report_utenti` */
 
-insert  into `report_tipi_notifica`(`Id`,`Nome`) values (1,'Nessuna'),(2,'Email con allegato'),(3,'Email con link');
+DROP TABLE IF EXISTS `report_utenti`;
+
+CREATE TABLE `report_utenti` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Username` varchar(50) NOT NULL,
+  `Dominio` varchar(100) NOT NULL,
+  `Nominativo` varchar(200) NOT NULL,
+  `Email` varchar(200) DEFAULT NULL,
+  `DataInserimento` datetime NOT NULL DEFAULT '2001-01-01 00:00:00',
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `Username` (`Username`,`Dominio`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
