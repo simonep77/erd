@@ -1,4 +1,5 @@
 ﻿using Bdo.Objects;
+using EasyReportDispatcher_Lib_BIZ.src.utils;
 using EasyReportDispatcher_Lib_DAL.src.query;
 using EasyReportDispatcher_Lib_DAL.src.report;
 using EasyReportDispatcher_SCHEDULER.src.Common;
@@ -17,6 +18,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Jobs
     {
         public string Name => @"JobSystemListener1";
 
+
         public Task JobExecutionVetoed(IJobExecutionContext context, CancellationToken cancellationToken = default)
         {
             //throw new NotImplementedException();
@@ -25,25 +27,30 @@ namespace EasyReportDispatcher_SCHEDULER.src.Jobs
 
         public Task JobToBeExecuted(IJobExecutionContext context, CancellationToken cancellationToken = default)
         {
-            return Task.Run(() => {
-                AppContextERD.Service.WriteLog( System.Diagnostics.EventLogEntryType.Information,$" > Avvio job [sistema] {context.JobDetail.Key.Name}");
-            });
+            return Task.Run(() => { });
+            //return Task.Run(() => {
+            //    AppContextERD.Service.WriteLog( System.Diagnostics.EventLogEntryType.Information,$" > Avvio job [sistema] {context.JobDetail.Key.Name}");
+            //});
 
         }
 
         public Task JobWasExecuted(IJobExecutionContext context, JobExecutionException jobException, CancellationToken cancellationToken = default)
         {
             return Task.Run(() => {
-                var logType = EventLogEntryType.Information;
-                var errText = string.Empty;
 
                  if (jobException != null)
                 {
-                    logType = EventLogEntryType.Error;
-                    errText = jobException.Message;
-                }
+                    //Logga
+                    AppContextERD.Service.WriteLog(System.Diagnostics.EventLogEntryType.Error, 
+                        $"Si è verificato il seguente errore nel job {context.JobInstance.GetType().Name}: {jobException.Message}");
 
-                AppContextERD.Service.WriteLog(logType, $" > Termine job [sistema] {context.JobDetail.Key.Name}" + (errText.Length == 0 ? string.Empty : string.Concat("\n", errText)));
+                    //Invia email
+                    MailUT.SendMailFromDefaultConf(Properties.Settings.Default.NotificaErroriApplicazioneTO,
+                                                    Properties.Settings.Default.NotificaErroriApplicazioneCC,
+                                                    $"ERR - ERD Scheduler - {context.JobInstance.GetType().Name}",
+                                                    $"Si è verificato il seguente errore:<br/>{jobException.Message}<br/><br/>{jobException.StackTrace}", null);
+
+                }
 
             });
         }

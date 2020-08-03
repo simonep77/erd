@@ -1,4 +1,5 @@
 ﻿using Bdo.Objects;
+using EasyReportDispatcher_Lib_BIZ.src.utils;
 using EasyReportDispatcher_Lib_DAL.src.query;
 using EasyReportDispatcher_Lib_DAL.src.report;
 using EasyReportDispatcher_SCHEDULER.src.Common;
@@ -21,6 +22,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Jobs
             return Task.Run(() => {
 
                 {
+
                     //Preimposta reload con indicazione di forzatura
                     var bEseguiReload = (context.JobDetail.JobDataMap.Contains(CostantiSched.JobDataMap.System.ForceReloadSchedules) && Convert.ToBoolean(context.JobDetail.JobDataMap[CostantiSched.JobDataMap.System.ForceReloadSchedules]));
 
@@ -42,7 +44,6 @@ namespace EasyReportDispatcher_SCHEDULER.src.Jobs
                         AppContextERD.Service.InternalScheduler.Schedule_Last_Hash = hashSchedules;
                         AppContextERD.Service.InternalScheduler.Schedule_Last_Refresh = DateTime.Now;
                     }
-
 
                 }
 

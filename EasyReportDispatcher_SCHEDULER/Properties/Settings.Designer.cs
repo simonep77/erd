@@ -31,5 +31,32 @@ namespace EasyReportDispatcher_SCHEDULER.Properties {
                 return ((int)(this["SecondiCheckModificheSchedulazioni"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public string MinutiCheckSchedulazioniSenzaEsito {
+            get {
+                return ((string)(this["MinutiCheckSchedulazioniSenzaEsito"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string NotificaErroriApplicazioneTO {
+            get {
+                return ((string)(this["NotificaErroriApplicazioneTO"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string NotificaErroriApplicazioneCC {
+            get {
+                return ((string)(this["NotificaErroriApplicazioneCC"]));
+            }
+        }
     }
 }

@@ -82,6 +82,7 @@
     <Compile Include="src\report\ReportEstrazioneBIZ.cs" />
     <Compile Include="src\report\ReportEstrazioneBIZ_Lista.cs" />
     <Compile Include="src\utils\ExcelUT.cs" />
+    <Compile Include="src\utils\MailUT.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

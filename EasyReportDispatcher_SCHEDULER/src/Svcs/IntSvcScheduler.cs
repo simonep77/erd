@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Bdo.Objects;
+using EasyReportDispatcher_Lib_BIZ.src.utils;
 using EasyReportDispatcher_Lib_Common.src.enums;
 using EasyReportDispatcher_Lib_DAL.src.report;
 using EasyReportDispatcher_SCHEDULER.src.Common;
@@ -35,10 +36,10 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
             //Crea lo scheduler principale
             this.mScheduler = await (new StdSchedulerFactory()).GetScheduler();
             //Aggiunge listener per i task
-            //this.mScheduler.ListenerManager.AddJobListener(new JobSystemListener(), GroupMatcher<JobKey>.GroupContains(JOB_INTERNAL_GROUP));
+            this.mScheduler.ListenerManager.AddJobListener(new JobSystemListener(), GroupMatcher<JobKey>.GroupContains(JOB_INTERNAL_GROUP));
             this.mScheduler.ListenerManager.AddJobListener(new JobReportListener(), GroupMatcher<JobKey>.GroupContains(JOB_TASKS_GROUP));
             await this.mScheduler.Start();
-
+            
             //Crea e schedula i job di sistema
 
             // 1) Il job di caricamento schedulazioni per garantire l'estensione del piano di esecuzione
@@ -439,10 +440,6 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
                     this.printSchedules();
                 else
                     AppContextERD.Service.WriteLog(System.Diagnostics.EventLogEntryType.Information, $"Caricate {iNumSched} schedulazioni");
-            }
-            catch (Exception ex)
-            {
-                AppContextERD.Service.WriteLog(System.Diagnostics.EventLogEntryType.Error, ex.Message);
             }
             finally
             {

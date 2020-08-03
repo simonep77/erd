@@ -50,7 +50,6 @@ namespace EasyReportDispatcher_SCHEDULER.src.Jobs
                                 slot.SaveObject(item);
                             }
                         }
-                            
                     }
                 }
 
