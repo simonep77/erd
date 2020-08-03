@@ -92,6 +92,22 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         }
 
 
+        private ReportSchedulazioneLista mListaSchedulazioni;
+        public ReportSchedulazioneLista ListaSchedulazioni
+        {
+            get
+            {
+                if (this.mListaSchedulazioni == null)
+                {
+                    this.mListaSchedulazioni = this.Slot.CreateList<ReportSchedulazioneLista>()
+                         .OrderBy(nameof(ReportSchedulazione.Id))
+                         .SearchByColumn(new FilterEQUAL(nameof(ReportSchedulazione.EstrazioneId), this.DataObj.Id));
+                }
+                return this.mListaSchedulazioni;
+            }
+        }
+
+
         /// <summary>
         /// Data la stringa cron di schedulazione indica se puo' girare oppure no. Funziona solo su base giornaliera
         /// </summary>
@@ -961,6 +977,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         {
             this.Slot.DeleteAll(this.ListaDesinatariEmail);
             this.Slot.DeleteAll(this.ListaOutput);
+            this.Slot.DeleteAll(this.ListaSchedulazioni);
             this.DeleteHistory(-1);
             this.Slot.DeleteObject(this.DataObj);
         }

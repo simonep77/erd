@@ -48,7 +48,10 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
                 .WithCronSchedule(AppContextERD.SCHEDULE_EXTEND_PLAN_CRONSTRING)
                 .Build();
 
-            await this.mScheduler.ScheduleJob(new JobDetailImpl(CostantiSched.Quartz.JobNames.System.ScheduleExtender, JOB_INTERNAL_GROUP, typeof(JobScheduleUpdater)), trg);
+            var jobDett = new JobDetailImpl(CostantiSched.Quartz.JobNames.System.ScheduleExtender, JOB_INTERNAL_GROUP, typeof(JobScheduleUpdater));
+            jobDett.JobDataMap.Add(CostantiSched.JobDataMap.System.ForceReloadSchedules, true);
+
+            await this.mScheduler.ScheduleJob(jobDett, trg);
 
             // 2) Il job di check presenza modifiche alle schedulazioni (che parte comunque immediatamente)
             trg = TriggerBuilder
@@ -57,7 +60,8 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
                 .WithSchedule(SimpleScheduleBuilder.RepeatSecondlyForever(AppContextERD.SCHEDULE_FORCED_UPDATE_CHECK_SECONDS))
                 .Build();
 
-            await this.mScheduler.ScheduleJob( new JobDetailImpl(CostantiSched.Quartz.JobNames.System.ScheduleResultCheck, JOB_INTERNAL_GROUP, typeof(JobScheduleResultChecker)) , trg);
+            jobDett = new JobDetailImpl(CostantiSched.Quartz.JobNames.System.ScheduleUpdateCheck, JOB_INTERNAL_GROUP, typeof(JobScheduleUpdater));
+            await this.mScheduler.ScheduleJob( jobDett , trg);
 
 
             // 3) Il job di check esiti schedulazione
@@ -68,7 +72,8 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
                 //.StartAt(DateTime.Now.ToUniversalTime().AddMinutes(AppContextERD.SCHEDULE_RESULT_CHECK_MINUTES))
                 .Build();
 
-            await this.mScheduler.ScheduleJob(new JobDetailImpl(CostantiSched.Quartz.JobNames.System.ScheduleUpdateCheck, JOB_INTERNAL_GROUP, typeof(JobScheduleUpdater)), trg);
+            jobDett = new JobDetailImpl(CostantiSched.Quartz.JobNames.System.ScheduleResultCheck, JOB_INTERNAL_GROUP, typeof(JobScheduleResultChecker));
+            await this.mScheduler.ScheduleJob(jobDett, trg);
 
 
             AppContextERD.Service.WriteLog(System.Diagnostics.EventLogEntryType.Information, @"Schedulatore interno job avviato");
@@ -208,15 +213,7 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
             await this.mScheduler.PauseAll();
             try
             {
-                var runjobs = await this.mScheduler.GetCurrentlyExecutingJobs();
 
-                foreach (var item in runjobs)
-                {
-                    if (item.JobDetail.Key.Group == JOB_TASKS_GROUP)
-                    {
-
-                    }
-                }
 
                 var matcher = GroupMatcher<JobKey>.GroupContains(JOB_TASKS_GROUP);
                 var jobkeys = await this.mScheduler.GetJobKeys(matcher);

@@ -100,11 +100,8 @@ namespace EasyReportDispatcher_DESKTOP
         {
 
             if (AppContextERD.Slot == null)
-            {
-                AppContextERD.Slot = new BusinessSlot(Properties.Settings.Default.ClasseDataBase, Properties.Settings.Default.StringaConnessione);
-                AppContextERD.Slot.LiveTrackingEnabled = true;
-                AppContextERD.Slot.ChangeTrackingEnabled = true;
-            }
+                AppContextERD.Slot = AppContextERD.CreateSlot();
+
             //Velocizza il primo caricamento senza chiudere la connessione ad ogni statement
             AppContextERD.Slot.DB.AutoCloseConnection = false;
 

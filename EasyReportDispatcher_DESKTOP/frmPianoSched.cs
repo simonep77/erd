@@ -20,6 +20,7 @@ namespace EasyReportDispatcher_DESKTOP
 {
     public partial class frmPianoSched : ErdForm
     {
+
         public frmPianoSched()
         {
 
@@ -58,8 +59,9 @@ namespace EasyReportDispatcher_DESKTOP
 
             this.Cursor = Cursors.WaitCursor;
             this.lbExecCount.Text = "Totale schedulazioni: -";
-            this.lvStorico.BeginUpdate();
             this.lvStorico.Items.Clear();
+
+            this.lvStorico.BeginUpdate();
             
             try
             {

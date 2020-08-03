@@ -28,6 +28,19 @@ namespace EasyReportDispatcher_DESKTOP.src
             Directory.CreateDirectory(UserDataDirTemplate);
         }
 
+        /// <summary>
+        /// Crea uno slot per l'accesso ai dati
+        /// </summary>
+        /// <returns></returns>
+        public static BusinessSlot CreateSlot()
+        {
+            var slot = new BusinessSlot(Properties.Settings.Default.ClasseDataBase, Properties.Settings.Default.StringaConnessione);
+            slot.LiveTrackingEnabled = true;
+            slot.ChangeTrackingEnabled = true;
+            slot.DB.AutoCloseConnection = true;
+
+            return slot;
+        }
 
         /// <summary>
         /// Ritorna path locale per salvataggio con timestamp orario suffisso
