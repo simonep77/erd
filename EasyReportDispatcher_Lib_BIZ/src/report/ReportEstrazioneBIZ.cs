@@ -589,11 +589,11 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 string hfsuri = obj.Uri;
                 string vpath = string.Format(obj.Path.ToString(), this.LastResult.DataOraInizio);
 
-                //vai   aa
-                using (var hfs = SDS.CommonUtils.Arch.FileSystem.FileSystemFactory.GetFileSystem(hfsuri))
-                {
-                    hfs.FileWriteFromBuffer(vpath, this.LastResult.DataBlob);
-                }
+                ////vai   aa
+                //using (var hfs = SDS.CommonUtils.Arch.FileSystem.FileSystemFactory.GetFileSystem(hfsuri))
+                //{
+                //    hfs.FileWriteFromBuffer(vpath, this.LastResult.DataBlob);
+                //}
             }
             else
             {

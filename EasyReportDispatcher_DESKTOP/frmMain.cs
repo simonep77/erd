@@ -51,17 +51,26 @@ namespace EasyReportDispatcher_DESKTOP
         {
     
             var uc = new UserContext();
+            System.DirectoryServices.AccountManagement.UserPrincipal aduser = null;
 
-            if (System.DirectoryServices.AccountManagement.UserPrincipal.Current != null)
+            try
             {
-                var aduser = System.DirectoryServices.AccountManagement.UserPrincipal.Current;
+                if (System.DirectoryServices.AccountManagement.UserPrincipal.Current != null)
+                {
+                    aduser = System.DirectoryServices.AccountManagement.UserPrincipal.Current;
+                }
+            }
+            catch (Exception)
+            {
+                UI_Utils.ShowError(@"Attenzionae: impossibile contattare il Domain Controller. Si procederà con i dati di login di sistema.");
+            }
 
+            if (aduser != null)
+            {
                 uc.Username = aduser.SamAccountName;
                 uc.Nominativo = aduser.DisplayName;
                 uc.Email = aduser.EmailAddress;
                 uc.Dominio = System.DirectoryServices.ActiveDirectory.Domain.GetCurrentDomain().Name;
-
-
             }
             else
             {
