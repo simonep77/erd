@@ -489,7 +489,7 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void button2_Click(object sender, EventArgs e)
         {
-            UI_Utils.ShowInfo("Campo non obbligatorio.\n\nSe valorizzato deve contenere anche l'estensione ed è possibile utilizzare i fermaposto di formattazione data .NET sull'indice 0.\n\n Es. nome_file_{0:yyyy_MM_dd_HH_mm_ss}.xlsx");
+            UI_Utils.ShowInfo("Campo non obbligatorio.\n\nSe valorizzato deve contenere anche l'estensione ed è possibile utilizzare i fermaposto di formattazione data .NET sull'indice 0.\n\n Es. nome_file_{{0:yyyy_MM_dd_HH_mm_ss}}.xlsx");
         }
 
         private void btnEseguiQuery_Click(object sender, EventArgs e)
