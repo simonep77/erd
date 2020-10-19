@@ -38,8 +38,7 @@ namespace EasyReportDispatcher_DESKTOP
             this.txtUsername.Text = this.mConf.UserName;
             this.txtPassword.Text = this.mConf.Password;
 
-            this.txtUsername.Enabled = this.chbAuth.Checked;
-            this.txtPassword.Enabled = this.chbAuth.Checked;
+            this.chbAuth_CheckedChanged(null, null);
         }
 
         private void btnSalva_Click(object sender, EventArgs e)
@@ -69,6 +68,12 @@ namespace EasyReportDispatcher_DESKTOP
             }
 
 
+        }
+
+        private void chbAuth_CheckedChanged(object sender, EventArgs e)
+        {
+            this.txtUsername.Enabled = this.chbAuth.Checked;
+            this.txtPassword.Enabled = this.chbAuth.Checked;
         }
     }
 }

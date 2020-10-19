@@ -121,6 +121,7 @@
             this.chbAuth.TabIndex = 7;
             this.chbAuth.Text = "Utilizza Autenticazione";
             this.chbAuth.UseVisualStyleBackColor = true;
+            this.chbAuth.CheckedChanged += new System.EventHandler(this.chbAuth_CheckedChanged);
             // 
             // txtPassword
             // 
