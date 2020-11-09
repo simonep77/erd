@@ -17,6 +17,7 @@ using Bdo.Database;
 using ClosedXML.Excel;
 using Bdo.Common;
 using System.Threading;
+using Hfs.Client;
 
 namespace EasyReportDispatcher_Lib_BIZ.src.report
 {
@@ -578,8 +579,6 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
             var pathText = this.DataObj.CopyToPath.Trim();
 
-
-
             //Se json allora notazione hfs
             if (pathText.StartsWith(@"{", StringComparison.Ordinal))
             {
@@ -590,10 +589,10 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 string vpath = string.Format(obj.Path.ToString(), this.LastResult.DataOraInizio);
 
                 ////vai   aa
-                //using (var hfs = SDS.CommonUtils.Arch.FileSystem.FileSystemFactory.GetFileSystem(hfsuri))
-                //{
-                //    hfs.FileWriteFromBuffer(vpath, this.LastResult.DataBlob);
-                //}
+                using (var hfs = new HfsClient(hfsuri))
+                {
+                    hfs.FileWriteFromBuffer(vpath, this.LastResult.DataBlob);
+                }
             }
             else
             {
