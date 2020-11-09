@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Business.Data.Objects, Version=4.0.0.0, Culture=neutral, PublicKeyToken=1dc0a08b888e7d1a, processorArchitecture=MSIL">
-      <HintPath>..\packages\bdo.4.0.7\lib\net20\Business.Data.Objects.dll</HintPath>
+      <HintPath>..\packages\bdo.4.0.11\lib\net40\Business.Data.Objects.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.1.0\lib\net40\Common.Logging.dll</HintPath>

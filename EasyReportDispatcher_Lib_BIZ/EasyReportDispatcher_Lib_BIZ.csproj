@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Business.Data.Objects, Version=4.0.0.0, Culture=neutral, PublicKeyToken=1dc0a08b888e7d1a, processorArchitecture=MSIL">
-      <HintPath>..\packages\bdo.4.0.7\lib\net20\Business.Data.Objects.dll</HintPath>
+      <HintPath>..\packages\bdo.4.0.11\lib\net40\Business.Data.Objects.dll</HintPath>
     </Reference>
     <Reference Include="ClosedXML, Version=0.92.1.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
       <HintPath>..\packages\ClosedXML.0.92.1\lib\net40\ClosedXML.dll</HintPath>

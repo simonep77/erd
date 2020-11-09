@@ -54,7 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Business.Data.Objects, Version=4.0.0.0, Culture=neutral, PublicKeyToken=1dc0a08b888e7d1a, processorArchitecture=MSIL">
-      <HintPath>..\packages\bdo.4.0.7\lib\net20\Business.Data.Objects.dll</HintPath>
+      <HintPath>..\packages\bdo.4.0.11\lib\net40\Business.Data.Objects.dll</HintPath>
     </Reference>
     <Reference Include="Google.Protobuf, Version=3.12.3.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.12.3\lib\net45\Google.Protobuf.dll</HintPath>

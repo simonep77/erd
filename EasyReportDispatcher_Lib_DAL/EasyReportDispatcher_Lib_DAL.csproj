@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Business.Data.Objects, Version=4.0.0.0, Culture=neutral, PublicKeyToken=1dc0a08b888e7d1a, processorArchitecture=MSIL">
-      <HintPath>..\packages\bdo.4.0.7\lib\net20\Business.Data.Objects.dll</HintPath>
+      <HintPath>..\packages\bdo.4.0.11\lib\net40\Business.Data.Objects.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -72,9 +72,6 @@
     <Compile Include="src\report\ReportTipoNotifica.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="src\mail\" />
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +79,9 @@
       <Project>{b5a1ef14-47ca-4f0e-8c97-a2546a66b9c4}</Project>
       <Name>EasyReportDispatcher_Lib_Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
