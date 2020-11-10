@@ -11,10 +11,13 @@ namespace EasyReportDispatcher_Lib_DAL.src.report
     [Table("report_estrazioni")]
     public abstract class ReportEstrazione : DataObject<ReportEstrazione>
     {
+
+        public const string KEY_NOME = @"KEY_NOME";
+
         [PrimaryKey, AutoIncrement]
         public abstract int Id { get; }
 
-        [MaxLength(100)]
+        [MaxLength(100), SearchKey(KEY_NOME)]
         public abstract string Nome { get; set; }
 
         public abstract sbyte Attivo { get; set; }
