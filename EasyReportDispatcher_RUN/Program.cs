@@ -58,7 +58,7 @@ namespace EasyReportDispacher_RUN
 
                 using (_Slot = new BusinessSlot(@"Default"))
                 {
-                    _Slot.OnLogDebugSent += ((a, b, c) => { if (b == DebugLevel.User_1) WriteLog(c); });
+                    _Slot.OnLogDebugSent += ((a, b, c) => { WriteLog(c); });
 
                     ReportEstrazioneBIZ repBiz = _Slot.BizNewWithLoadByKEY<ReportEstrazioneBIZ>(ReportEstrazione.KEY_NOME, _Reportname);
 
