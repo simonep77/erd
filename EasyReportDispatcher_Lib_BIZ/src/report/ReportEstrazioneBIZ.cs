@@ -18,6 +18,7 @@ using ClosedXML.Excel;
 using Bdo.Common;
 using System.Threading;
 using Hfs.Client;
+using NCrontab.Advanced;
 
 namespace EasyReportDispatcher_Lib_BIZ.src.report
 {
@@ -275,7 +276,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         /// <returns></returns>
         public DateTime GetNextSchedule(DateTime dtRif)
         {
-            var cronExp = NCrontab.CrontabSchedule.Parse(this.DataObj.CronString);
+            var cronExp = CrontabSchedule.Parse(this.DataObj.CronString);
             var dtInit = dtRif;
             var nextRun = cronExp.GetNextOccurrence(dtInit);
 
@@ -798,10 +799,20 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 }
 
             }
+        }
 
-                
+        /// <summary>
+        /// Calcola le schedulazioni nell'intervallo date specificato
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public IEnumerable<DateTime> CalcSchedules(DateTime start, DateTime end)
+        {
+            //Viene utilizzata la notazione senza secondi NCrontab (Cron.guru)
+            var c = CrontabSchedule.Parse(this.DataObj.CronString);
 
-            
+            return c.GetNextOccurrences(start, end);
         }
 
 
@@ -1018,7 +1029,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             {
                 try
                 {
-                    var cron = NCrontab.CrontabSchedule.Parse(this.DataObj.CronString);
+                    var cron = CrontabSchedule.Parse(this.DataObj.CronString);
                 }
                 catch (Exception)
                 {
