@@ -692,6 +692,20 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                                 msg.Attachments.Add(new System.Net.Mail.Attachment(fileout.Stream, fileout.NomeFile));
 
                             }
+                            else
+                            {
+                                if (this.DataObj.CopyToPath.Trim().StartsWith(@"{"))
+                                {
+                                    msg.Body += $"<br/><br/>Il file e' stato depositato su una cartella remota.";
+                                }
+                                else
+                                {
+                                    var finalPath = string.Format(this.DataObj.CopyToPath, this.LastResult.DataOraInizio);
+                      
+                                    msg.Body += $"<br/><br/>Il file e' stato depositato in:<br/><a href='file://{finalPath.Replace(@"\", @"/")}'>{finalPath}</a>";
+                                }
+                            }
+
 
                             smtp.Send(msg);
 

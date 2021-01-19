@@ -257,6 +257,12 @@ namespace EasyReportDispatcher_DESKTOP
 
                         this.mEstrazioneBiz.DataObj.TemplateId = tpl.Id;
                     }
+                    else
+                    {
+                        //Deimposta template
+                        this.mEstrazioneBiz.DataObj.TemplateId = 0;
+
+                    }
 
 
                     //Estrazione
