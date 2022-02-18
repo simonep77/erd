@@ -22,10 +22,10 @@ using NCrontab.Advanced;
 
 namespace EasyReportDispatcher_Lib_BIZ.src.report
 {
-   public class ReportEstrazioneBIZ : BusinessObject<ReportEstrazione>
+    public class ReportEstrazioneBIZ : BusinessObject<ReportEstrazione>
     {
 
-       public ReportEstrazioneBIZ(ReportEstrazione obj) : base(obj) { }
+        public ReportEstrazioneBIZ(ReportEstrazione obj) : base(obj) { }
 
 
         #region PROPERTY
@@ -44,21 +44,21 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             }
         }
 
-       private ReportEstrazioneOutputLista mListaOutput;
-       public ReportEstrazioneOutputLista ListaOutput
+        private ReportEstrazioneOutputLista mListaOutput;
+        public ReportEstrazioneOutputLista ListaOutput
         {
-           get
-           {
-               if (this.mListaOutput == null)
-               {
-                   this.mListaOutput = this.Slot.CreateList<ReportEstrazioneOutputLista>()
-                        .LoadFullObjects()
-                        .OrderBy(nameof(ReportEstrazioneOutput.Id))
-                        .SearchByColumn(new FilterEQUAL(nameof(ReportEstrazioneOutput.EstrazioneId), this.DataObj.Id));
-               }
-               return this.mListaOutput;
-           }
-       }
+            get
+            {
+                if (this.mListaOutput == null)
+                {
+                    this.mListaOutput = this.Slot.CreateList<ReportEstrazioneOutputLista>()
+                         .LoadFullObjects()
+                         .OrderBy(nameof(ReportEstrazioneOutput.Id))
+                         .SearchByColumn(new FilterEQUAL(nameof(ReportEstrazioneOutput.EstrazioneId), this.DataObj.Id));
+                }
+                return this.mListaOutput;
+            }
+        }
 
         private ReportEstrazioneDestinatarioEmailLista mListaDesinatariEmail;
         /// <summary>
@@ -110,11 +110,29 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         }
 
 
+        private ReportSchedulazioneLista mListaSchedulazioniAttive;
+        public ReportSchedulazioneLista ListaSchedulazioniAttive
+        {
+            get
+            {
+                if (this.mListaSchedulazioniAttive == null)
+                {
+                    this.mListaSchedulazioniAttive = this.Slot.CreateList<ReportSchedulazioneLista>()
+                         .OrderBy(nameof(ReportSchedulazione.Id))
+                        .SearchByColumn(Filter.Eq(nameof(ReportSchedulazione.EstrazioneId), this.DataObj.Id)
+                                        .And(Filter.Eq(nameof(ReportSchedulazione.StatoId), eReport.StatoSchedulazione.Pianificata)));
+                }
+                return this.mListaSchedulazioniAttive;
+            }
+        }
+
+
         /// <summary>
         /// Data la stringa cron di schedulazione indica se puo' girare oppure no. Funziona solo su base giornaliera
         /// </summary>
         public bool CanRunSchedulato
-        { get
+        {
+            get
             {
                 //Se non valorizzata stringa cron esce
                 if (this.DataObj.Attivo != 1 || string.IsNullOrEmpty(this.DataObj.CronString))
@@ -168,7 +186,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             }
         }
 
-        
+
 
         /// <summary>
         /// Indica se previsto invio email
@@ -181,7 +199,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             }
         }
 
-        
+
         /// <summary>
         /// Indica se presenti altre estrazioni da accorpare a questa
         /// </summary>
@@ -236,7 +254,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
 
         private byte[] mForcedTemplate;
-        
+
         /// <summary>
         /// Template XLSX da utilizzare al posto di quello a DB
         /// </summary>
@@ -335,7 +353,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
 
         public void Run(bool saveResult, bool sendEmail, bool copyTo)
-       {
+        {
             this.Slot.LogDebug(DebugLevel.Debug_1, "Avvio Run()");
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin salvataggio output");
@@ -397,7 +415,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             //Fine: aggiornamento output
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin aggiornamento output");
             this.mLastResult.DataOraFine = DateTime.Now;
-            
+
             if (saveResult)
             {
                 this.Slot.SaveObject(this.mLastResult);
@@ -638,7 +656,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
             ms.Position = 0;
 
-            return new { NomeFile= filenameMail, Stream = ms};
+            return new { NomeFile = filenameMail, Stream = ms };
         }
 
         public List<ReportEstrazioneDestinatarioEmail> SendEmail(bool saveResult)
@@ -701,7 +719,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                                 else
                                 {
                                     var finalPath = string.Format(this.DataObj.CopyToPath, this.LastResult.DataOraInizio);
-                      
+
                                     msg.Body += $"<br/><br/>Il file e' stato depositato in:<br/><a href='file://{finalPath.Replace(@"\", @"/")}'>{finalPath}</a>";
                                 }
                             }
@@ -790,7 +808,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                     {
                         db.AutoCloseConnection = true;
                         db.ExecutionTimeout = 100000;
-                        
+
                         //Imposta sql
                         db.SQL = this.DataObj.SqlText;
 
@@ -887,7 +905,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 sb.Append(col.ColumnName);
                 sb.Append(';');
             }
-            sb.Remove(sb.Length-1,1);
+            sb.Remove(sb.Length - 1, 1);
             sb.AppendLine();
 
             foreach (DataRow row in this.mTabResultSQL.Rows)
@@ -915,7 +933,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
             var sheetname = !string.IsNullOrEmpty(this.DataObj.SheetName) ? this.DataObj.SheetName : this.DataObj.Nome.PadRight(30, ' ').Substring(0, 30).Trim();
 
-            var excel = ExcelUT.EseguiRenderDataTableExcel(this.mTabResultSQL, this.DataObj.Nome, this.DataObj.Titolo, sheetname , null);
+            var excel = ExcelUT.EseguiRenderDataTableExcel(this.mTabResultSQL, this.DataObj.Nome, this.DataObj.Titolo, sheetname, null);
             this.mLastResult.NomeFile = this.getNomeFileIstantaneo();
             this.mLastResult.DataLen = excel.DatiMemory.Length;
             this.mLastResult.DataBlob = excel.DatiMemory;
@@ -1055,6 +1073,63 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
         #endregion
 
 
+        public void RebuildPianoSchedulazione(DateTime dtFrom, DateTime dtTo)
+        {
+            var recalc = this.CalcSchedules(dtFrom, dtTo);
+
+            var retlist = new List<ReportSchedulazione>();
+
+            foreach (var data in recalc)
+            {
+                var scheds = this.ListaSchedulazioniAttive.Where(x => x.DataEsecuzione == data);
+
+                if (!scheds.Any())
+                {
+                    //Crea nuova
+                    var sched = this.Slot.CreateObject<ReportSchedulazione>();
+                    sched.EstrazioneId = this.DataObj.Id;
+                    sched.TriggerKey = $"T_{this.DataObj.Id}_dt_{data:yyyyMMddHHmm}";
+                    sched.DataEsecuzione = data;
+                    sched.StatoId = eReport.StatoSchedulazione.Pianificata;
+
+                    this.Slot.SaveObject(sched);
+
+                    retlist.Add(sched);
+
+                    //esce
+                    continue;
+                }
+
+                //Rimuove dalla lista quelle trovate
+                foreach (var item in scheds)
+                {
+                    //Aggiunge a schedulazioni ancora valide
+                    retlist.Add(item);
+                    //Rimuove da lista globale (serve per rimuovere poi quelle non più schedulate)
+                    this.ListaSchedulazioniAttive.Remove(item);
+                }
+
+            }
+
+            //Rimuove dal db e dalla lista quelle non più schedulate
+            foreach (var item in this.ListaSchedulazioniAttive)
+            {
+                if (item.DataEsecuzione <= dtFrom)
+                {
+                    item.StatoId = eReport.StatoSchedulazione.Saltata;
+                    this.Slot.SaveObject(item);
+                }
+                else
+                {
+                    //Futura: la eliminiamo
+                    this.Slot.DeleteObject(item);
+                }
+            }
+
+            //Ricarica le nuove sulla lista
+            this.ListaSchedulazioniAttive.Clear();
+            this.ListaSchedulazioniAttive.AddRange(retlist);
+        }
 
 
 
