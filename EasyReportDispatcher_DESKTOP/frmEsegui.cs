@@ -92,9 +92,11 @@ namespace EasyReportDispatcher_DESKTOP
             }
             finally
             {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
                 this.Cursor = this.DefaultCursor;
-            this.btnEsegui.Text = "Esegui";
-            this.btnEsegui.Enabled = true;
+                this.btnEsegui.Text = "Esegui";
+                this.btnEsegui.Enabled = true;
             }
 
         }

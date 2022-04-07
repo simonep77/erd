@@ -721,7 +721,8 @@ namespace EasyReportDispatcher_DESKTOP
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    if (Properties.Settings.Default.StringaConnessione != AppContextERD.Slot.DB.ConnectionString)
+                    var aa = Properties.Settings.Default.StringaConnessione;
+                    if (AppContextERD.ConfigConnectionString != AppContextERD.Slot.DB.ConnectionString)
                     {
                         UI_Utils.ShowInfo("Puntamento DB modificato. Verrà riavviato il caricamento delle estrazioni.");
 

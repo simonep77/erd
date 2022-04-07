@@ -20,7 +20,7 @@ namespace EasyReportDispatcher_DESKTOP
 
         private void btnSalva_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Save();
+            AppContextERD.ConfigConnectionString = this.txtConnStr.Text;
             this.DialogResult = DialogResult.OK;
         }
     }

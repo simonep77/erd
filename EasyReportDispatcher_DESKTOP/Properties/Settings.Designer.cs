@@ -25,20 +25,19 @@ namespace EasyReportDispatcher_DESKTOP.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Server=remotemysql.com;UserId=ourKl13l8f;Password=IXehc1qbkZ;Database=ourKl13l8f;" +
-            "")]
-        public string StringaConnessione {
+        [global::System.Configuration.DefaultSettingValueAttribute("MYSQLDataBase")]
+        public string ClasseDataBase {
             get {
-                return ((string)(this["StringaConnessione"]));
+                return ((string)(this["ClasseDataBase"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("MYSQLDataBase")]
-        public string ClasseDataBase {
+        [global::System.Configuration.DefaultSettingValueAttribute("Server=xxxxx;UserId=xxxxx;Password=xxxxx;Database=report_dispatcher;")]
+        public string StringaConnessione {
             get {
-                return ((string)(this["ClasseDataBase"]));
+                return ((string)(this["StringaConnessione"]));
             }
         }
     }

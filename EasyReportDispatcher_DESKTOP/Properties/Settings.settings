@@ -2,11 +2,11 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="EasyReportDispatcher_DESKTOP.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="StringaConnessione" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Server=remotemysql.com;UserId=ourKl13l8f;Password=IXehc1qbkZ;Database=ourKl13l8f;</Value>
-    </Setting>
     <Setting Name="ClasseDataBase" Type="System.String" Scope="Application">
       <Value Profile="(Default)">MYSQLDataBase</Value>
+    </Setting>
+    <Setting Name="StringaConnessione" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Server=xxxxx;UserId=xxxxx;Password=xxxxx;Database=report_dispatcher;</Value>
     </Setting>
   </Settings>
 </SettingsFile>

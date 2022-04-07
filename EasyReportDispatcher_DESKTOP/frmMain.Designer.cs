@@ -150,7 +150,6 @@ namespace EasyReportDispatcher_DESKTOP
             this.btnManutenzione.Name = "btnManutenzione";
             this.btnManutenzione.Size = new System.Drawing.Size(111, 28);
             this.btnManutenzione.Text = "Manutenzione";
-            this.btnManutenzione.Visible = false;
             this.btnManutenzione.Click += new System.EventHandler(this.btnManutenzione_Click);
             // 
             // btnConfig
@@ -161,7 +160,6 @@ namespace EasyReportDispatcher_DESKTOP
             this.btnConfig.Name = "btnConfig";
             this.btnConfig.Size = new System.Drawing.Size(116, 28);
             this.btnConfig.Text = "Configurazione";
-            this.btnConfig.Visible = false;
             this.btnConfig.Click += new System.EventHandler(this.btnConfig_Click);
             // 
             // btnReload

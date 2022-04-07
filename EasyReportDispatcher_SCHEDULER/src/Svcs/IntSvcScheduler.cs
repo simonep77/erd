@@ -216,43 +216,54 @@ namespace EasyReportDispatcher_SCHEDULER.src.Svcs
             var bSendEmail = true;
             var sb = new StringBuilder();
 
-            using (var jslot = AppContextERD.Service.CreateSlot())
+            try
             {
-                //Ricerca schedulazione db
-                var sched = jslot.LoadObjNullByPK<ReportSchedulazione>(schedId);
-
-                if (sched != null)
+                using (var jslot = AppContextERD.Service.CreateSlot())
                 {
-                    sched.StatoId = eReport.StatoSchedulazione.Avviata;
-                    jslot.SaveObject(sched);
-                }
+                    //Ricerca schedulazione db
+                    var sched = jslot.LoadObjNullByPK<ReportSchedulazione>(schedId);
 
-                //Aggiorna piano schedulazione
+                    if (sched != null)
+                    {
+                        sched.StatoId = eReport.StatoSchedulazione.Avviata;
+                        jslot.SaveObject(sched);
+                    }
 
-                //Scrive nel log il debug User1
-                jslot.OnLogDebugSent += ((a, b, c) => { if (b == DebugLevel.User_1) sb.AppendLine(c); });
+                    //Aggiorna piano schedulazione
 
-                var repBiz = sched.Estrazione.ToBizObject<ReportEstrazioneBIZ>();
+                    //Scrive nel log il debug User1
+                    jslot.OnLogDebugSent += ((a, b, c) => { if (b == DebugLevel.User_1) sb.AppendLine(c); });
 
-                try
-                {
-                    repBiz.Run(true, bSendEmail, true);
-                }
-                catch (Exception)
-                {
-                };
+                    var repBiz = sched.Estrazione.ToBizObject<ReportEstrazioneBIZ>();
 
-                //Termina schedulazione
-                if (sched != null)
-                {
-                    if (repBiz.LastResult.Id > 0)
-                        sched.OutputId = repBiz.LastResult.Id;
+                    try
+                    {
+                        repBiz.Run(true, bSendEmail, true);
+                    }
+                    catch (Exception)
+                    {
+                    };
+
+                    //Termina schedulazione
+                    if (sched != null)
+                    {
+                        if (repBiz.LastResult.Id > 0)
+                            sched.OutputId = repBiz.LastResult.Id;
 
 
-                    sched.StatoId = eReport.StatoSchedulazione.Eseguita;
-                    jslot.SaveObject(sched);
+                        sched.StatoId = eReport.StatoSchedulazione.Eseguita;
+                        jslot.SaveObject(sched);
+                    }
                 }
             }
+            finally
+            {
+                //Forza deallocazione memoria non più utilizzata
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+
+
         }
 
     }
