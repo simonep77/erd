@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace EasyReportDispatcher_DESKTOP.src
 {
@@ -87,14 +89,14 @@ namespace EasyReportDispatcher_DESKTOP.src
 
         public static string ReadConfig(string key)
         {
-            var regKey = Registry.LocalMachine.CreateSubKey("Software\\Easy Report\\Desktop");
+            var regKey = Registry.CurrentUser.CreateSubKey("Software\\Easy Report\\Desktop");
 
             return regKey.GetValue(key, Properties.Settings.Default[key]).ToString();
         }
 
         public static string SaveConfig(string key, string value)
         {
-            var regKey = Registry.LocalMachine.CreateSubKey("Software\\Easy Report\\Desktop");
+            var regKey = Registry.CurrentUser.CreateSubKey("Software\\Easy Report\\Desktop");
 
             regKey.SetValue(key, value);
 

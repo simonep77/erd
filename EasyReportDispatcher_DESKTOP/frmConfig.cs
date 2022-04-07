@@ -23,5 +23,10 @@ namespace EasyReportDispatcher_DESKTOP
             AppContextERD.ConfigConnectionString = this.txtConnStr.Text;
             this.DialogResult = DialogResult.OK;
         }
+
+        private void frmConfig_Load(object sender, EventArgs e)
+        {
+            this.txtConnStr.Text = AppContextERD.ConfigConnectionString;
+        }
     }
 }

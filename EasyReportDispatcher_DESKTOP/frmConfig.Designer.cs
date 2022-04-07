@@ -54,13 +54,12 @@
             // 
             // txtConnStr
             // 
-            this.txtConnStr.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::EasyReportDispatcher_DESKTOP.Properties.Settings.Default, "StringaConnessione", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtConnStr.Location = new System.Drawing.Point(231, 23);
             this.txtConnStr.Multiline = true;
             this.txtConnStr.Name = "txtConnStr";
             this.txtConnStr.Size = new System.Drawing.Size(356, 149);
             this.txtConnStr.TabIndex = 2;
-            this.txtConnStr.Text = global::EasyReportDispatcher_DESKTOP.Properties.Settings.Default.StringaConnessione;
+            this.txtConnStr.Text = "Server=xxxxx;UserId=xxxxx;Password=xxxxx;Database=report_dispatcher;";
             // 
             // frmConfig
             // 
@@ -76,6 +75,7 @@
             this.Name = "frmConfig";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Configurazione";
+            this.Load += new System.EventHandler(this.frmConfig_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
