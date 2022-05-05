@@ -617,6 +617,13 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             {
                 //Fisico o UNC
                 var finalPath = string.Format(this.DataObj.CopyToPath, this.LastResult.DataOraInizio);
+
+                //Si assicura la presenza della cartella
+                var dir = Path.GetDirectoryName(finalPath);
+
+                Directory.CreateDirectory(dir);
+
+                //Ok, scrive il file
                 File.WriteAllBytes(finalPath, this.LastResult.DataBlob);
             }
 
