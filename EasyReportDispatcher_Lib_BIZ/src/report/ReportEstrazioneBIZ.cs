@@ -707,8 +707,8 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                                 msg.Bcc.Add(item.MailBCC.Trim());
 
                             msg.IsBodyHtml = true;
-                            msg.Subject = item.MailSUBJ;
-                            msg.Body = item.MailBODY;
+                            msg.Subject = String.Format(item.MailSUBJ, this.LastResult.DataOraInizio);
+                            msg.Body = String.Format(item.MailBODY, this.LastResult.DataOraInizio);
 
                             if (string.IsNullOrWhiteSpace(this.DataObj.CopyToPath))
                             {
