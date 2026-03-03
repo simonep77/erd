@@ -16,3 +16,7 @@
 /EasyReportDispatcher_DESKTOP/obj
 /EasyReportDispatcher_SCHEDULER/bin
 /EasyReportDispatcher_SCHEDULER/obj
+/ERD.Scheduler/obj
+/ERD.Scheduler/bin/Debug/net8.0
+/ERD.Service/bin/Debug/net8.0
+/ERD.Service/obj
