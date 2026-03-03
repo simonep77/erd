@@ -521,6 +521,7 @@ namespace ERD.Service.BIZ
                 filenameMail = Path.ChangeExtension(this.LastResult.NomeFile, @".zip");
                 using (ZipOutputStream s = new ZipOutputStream(ms))
                 {
+                    s.IsStreamOwner = false; //non chiude lo stream sottostante
                     s.SetLevel(5); // 0 - store only to 9 - means best compression
                     s.Password = dest.Password;
 
@@ -530,10 +531,11 @@ namespace ERD.Service.BIZ
 
                     using (var input = new MemoryStream(this.LastResult.DataBlob))
                     {
+                        input.Position = 0;
                         input.CopyTo(s);
                     }
-                    s.Finish();
-                    s.Close();
+                    //s.Finish();
+                    //s.Close();
                 }
 
             }
