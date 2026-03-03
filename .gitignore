@@ -20,3 +20,7 @@
 /ERD.Scheduler/bin/Debug/net8.0
 /ERD.Service/bin/Debug/net8.0
 /ERD.Service/obj
+/ERD.Scheduler/bin/Release/net8.0
+/ERD.Service/bin/Release/net8.0
+/ERD.Scheduler/Properties/PublishProfiles
+/ERD.Scheduler/Properties/launchSettings.json
