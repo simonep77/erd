@@ -30,22 +30,10 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
         #region PROPERTY
         private DataTable mTabResultSQL;
-        private ReportEstrazioneOutput mLastResult;
-
-        public ReportEstrazioneOutput LastResult
-        {
-            get
-            {
-                return this.mLastResult;
-            }
-            set
-            {
-                this.mLastResult = value;
-            }
-        }
+        public ReportEstrazioneOutput LastResult { get; set; }
 
         private ReportEstrazioneOutputLista mListaOutput;
-        public ReportEstrazioneOutputLista ListaOutput
+        public ReportEstrazioneOutputLista ListaOutput 
         {
             get
             {
@@ -357,14 +345,14 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             this.Slot.LogDebug(DebugLevel.Debug_1, "Avvio Run()");
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin salvataggio output");
-            this.mLastResult = this.Slot.CreateObject<ReportEstrazioneOutput>();
-            this.mLastResult.EstrazioneId = this.DataObj.Id;
-            this.mLastResult.DataOraInizio = DateTime.Now;
-            this.mLastResult.StatoId = eReport.StatoEstrazione.Avviata;
-            this.mLastResult.TipoFileId = this.DataObj.TipoFileId;
+            this.LastResult = this.Slot.CreateObject<ReportEstrazioneOutput>();
+            this.LastResult.EstrazioneId = this.DataObj.Id;
+            this.LastResult.DataOraInizio = DateTime.Now;
+            this.LastResult.StatoId = eReport.StatoEstrazione.Avviata;
+            this.LastResult.TipoFileId = this.DataObj.TipoFileId;
 
             if (saveResult)
-                this.Slot.SaveObject(this.mLastResult);
+                this.Slot.SaveObject(this.LastResult);
             this.Slot.LogDebug(DebugLevel.Debug_1, "End salvataggio output");
 
             try
@@ -398,13 +386,13 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 }
 
                 //Esito OK
-                this.mLastResult.StatoId = eReport.StatoEstrazione.TerminataConSuccesso;
+                this.LastResult.StatoId = eReport.StatoEstrazione.TerminataConSuccesso;
 
             }
             catch (Exception e)
             {
-                this.mLastResult.StatoId = eReport.StatoEstrazione.TerminataConErrori;
-                this.mLastResult.EstrazioneEsito = e.Message;
+                this.LastResult.StatoId = eReport.StatoEstrazione.TerminataConErrori;
+                this.LastResult.EstrazioneEsito = e.Message;
             }
             finally
             {
@@ -414,20 +402,20 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
             //Fine: aggiornamento output
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin aggiornamento output");
-            this.mLastResult.DataOraFine = DateTime.Now;
+            this.LastResult.DataOraFine = DateTime.Now;
 
             if (saveResult)
             {
-                this.Slot.SaveObject(this.mLastResult);
-                this.ListaOutput.AddOrUpdate(this.mLastResult);
+                this.Slot.SaveObject(this.LastResult);
+                this.ListaOutput.AddOrUpdate(this.LastResult);
             }
 
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "End aggiornamento output");
 
             //Se errori esce
-            if (this.mLastResult.StatoId == eReport.StatoEstrazione.TerminataConErrori)
-                throw new ApplicationException(@"L'esecuzione e' terminata con errori: " + this.mLastResult.EstrazioneEsito);
+            if (this.LastResult.StatoId == eReport.StatoEstrazione.TerminataConErrori)
+                throw new ApplicationException(@"L'esecuzione e' terminata con errori: " + this.LastResult.EstrazioneEsito);
 
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin pulizia output");
@@ -674,8 +662,8 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                 return retList;
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "Begin invio mail");
-            this.mLastResult.MailEsito = string.Empty;
-            this.mLastResult.MailDataInvio = DateTime.MinValue;
+            this.LastResult.MailEsito = string.Empty;
+            this.LastResult.MailDataInvio = DateTime.MinValue;
             var sbErr = new StringBuilder();
 
 
@@ -744,7 +732,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                             this.Slot.LogDebug(DebugLevel.User_1, $" >> MailBCC: {item.MailBCC}");
 
                             //Fine: aggiornamento
-                            this.mLastResult.MailDataInvio = DateTime.Now;
+                            this.LastResult.MailDataInvio = DateTime.Now;
                         }
 
                     }
@@ -762,7 +750,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
 
             //Salva esito mail
             if (saveResult)
-                this.Slot.SaveObject(this.mLastResult);
+                this.Slot.SaveObject(this.LastResult);
 
             //Ripropaga email
             if (sbErr.Length > 0)
@@ -871,7 +859,7 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             db.AddParameter(Costanti.Sql_Params.DATE_END_THIS_WEEK, dtAppo.AddDays(6));
 
             //@ERD_LAST_ELAB: ultima elaborazione
-            var lastOutput = this.ListaOutput.Where(o => o.Id != this.mLastResult?.Id).OrderBy(o => o.Id).LastOrDefault();
+            var lastOutput = this.ListaOutput.Where(o => o.Id != this.LastResult?.Id).OrderBy(o => o.Id).LastOrDefault();
 
             dtAppo = lastOutput?.DataOraInizio ?? new DateTime(1900, 1, 1);
 
@@ -927,9 +915,9 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             }
 
             //Imposta Output
-            this.mLastResult.NomeFile = this.getNomeFileIstantaneo();
-            this.mLastResult.DataLen = sb.Length;
-            this.mLastResult.DataBlob = Encoding.UTF8.GetBytes(sb.ToString());
+            this.LastResult.NomeFile = this.getNomeFileIstantaneo();
+            this.LastResult.DataLen = sb.Length;
+            this.LastResult.DataBlob = Encoding.UTF8.GetBytes(sb.ToString());
             this.Slot.LogDebug(DebugLevel.Debug_1, "End render csv");
 
         }
@@ -941,9 +929,9 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
             var sheetname = !string.IsNullOrEmpty(this.DataObj.SheetName) ? this.DataObj.SheetName : this.DataObj.Nome.PadRight(30, ' ').Substring(0, 30).Trim();
 
             var excel = ExcelUT.EseguiRenderDataTableExcel(this.mTabResultSQL, this.DataObj.Nome, this.DataObj.Titolo, sheetname, null);
-            this.mLastResult.NomeFile = this.getNomeFileIstantaneo();
-            this.mLastResult.DataLen = excel.DatiMemory.Length;
-            this.mLastResult.DataBlob = excel.DatiMemory;
+            this.LastResult.NomeFile = this.getNomeFileIstantaneo();
+            this.LastResult.DataLen = excel.DatiMemory.Length;
+            this.LastResult.DataBlob = excel.DatiMemory;
 
             this.Slot.LogDebug(DebugLevel.Debug_1, "End render excel flat");
         }
@@ -984,9 +972,9 @@ namespace EasyReportDispatcher_Lib_BIZ.src.report
                     tpl.SaveAs(msOut);
 
                     //Imposta blob output
-                    this.mLastResult.NomeFile = this.getNomeFileIstantaneo();
-                    this.mLastResult.DataBlob = msOut.ToArray();
-                    this.mLastResult.DataLen = this.mLastResult.DataBlob.Length;
+                    this.LastResult.NomeFile = this.getNomeFileIstantaneo();
+                    this.LastResult.DataBlob = msOut.ToArray();
+                    this.LastResult.DataLen = this.LastResult.DataBlob.Length;
 
                 }
             }
