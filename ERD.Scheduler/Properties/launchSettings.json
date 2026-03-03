@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "ERD.Scheduler": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "NET_ENVIRONMENT": "Development"
+      }
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

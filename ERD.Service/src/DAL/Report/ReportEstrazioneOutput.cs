@@ -1,0 +1,51 @@
+﻿using Business.Data.Objects.Core;
+using Business.Data.Objects.Core.Attributes;
+
+namespace ERD.Service.DAL
+{
+    [Table("report_estrazioni_output")]
+    public abstract class ReportEstrazioneOutput : DataObject<ReportEstrazioneOutput>
+    {
+        [PrimaryKey, AutoIncrement]
+        public abstract long Id { get; }
+
+        public abstract int EstrazioneId { get; set; }
+
+        [DefaultValue("1")]
+        public abstract sbyte StatoId { get; set; }
+
+        [PropertyMap(nameof(StatoId))]
+        public abstract ReportEstrazioneOutputStato Stato { get; }
+
+        [AcceptNull()]
+        public abstract string EstrazioneEsito { get; set; }
+
+        public abstract DateTime DataOraInizio { get; set; }
+
+        [AcceptNull()]
+        public abstract DateTime DataOraFine { get; set; }
+
+        public abstract sbyte TipoFileId { get; set; }
+
+        public abstract string NomeFile { get; set; }
+
+        [AcceptNull()]
+        public abstract int DataLen { get; set; }
+
+        [AcceptNull(), LoadOnAccess]
+        public abstract byte[] DataBlob { get; set; }
+
+        [AcceptNull()]
+        public abstract string MailEsito { get; set; }
+
+        [AcceptNull()]
+        public abstract DateTime MailDataInvio { get; set; }
+
+        [AutoInsertTimestamp()]
+        public abstract DateTime DataInserimento { get; }
+
+        [AutoUpdateTimestamp()]
+        public abstract DateTime DataAggiornamento { get; }
+
+    }
+}

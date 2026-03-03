@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29306.81
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37012.4 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyReportDispatcher_Lib_Common", "EasyReportDispatcher_Lib_Common\EasyReportDispatcher_Lib_Common.csproj", "{B5A1EF14-47CA-4F0E-8C97-A2546A66B9C4}"
 EndProject
@@ -14,6 +14,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyReportDispatcher_DESKTOP", "EasyReportDispatcher_DESKTOP\EasyReportDispatcher_DESKTOP.csproj", "{6151736D-ED94-43D2-B5F0-38950068E399}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyReportDispatcher_SCHEDULER", "EasyReportDispatcher_SCHEDULER\EasyReportDispatcher_SCHEDULER.csproj", "{1AA5122D-4561-41D9-B48D-75067FD8C326}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERD.Service", "ERD.Service\ERD.Service.csproj", "{4F5A765B-2BDA-4550-B77C-426D2ACB0EDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERD.Scheduler", "ERD.Scheduler\ERD.Scheduler.csproj", "{E1E86DD1-D450-4066-AC22-5EB15C11F6B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{1AA5122D-4561-41D9-B48D-75067FD8C326}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AA5122D-4561-41D9-B48D-75067FD8C326}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AA5122D-4561-41D9-B48D-75067FD8C326}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F5A765B-2BDA-4550-B77C-426D2ACB0EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F5A765B-2BDA-4550-B77C-426D2ACB0EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F5A765B-2BDA-4550-B77C-426D2ACB0EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F5A765B-2BDA-4550-B77C-426D2ACB0EDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1E86DD1-D450-4066-AC22-5EB15C11F6B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1E86DD1-D450-4066-AC22-5EB15C11F6B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1E86DD1-D450-4066-AC22-5EB15C11F6B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1E86DD1-D450-4066-AC22-5EB15C11F6B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
