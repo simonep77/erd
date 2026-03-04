@@ -1,4 +1,5 @@
 ﻿using Business.Data.Objects.Common.Utils;
+using DocumentFormat.OpenXml.EMMA;
 using ERD.Scheduler;
 using ERD.Service.BIZ;
 using ERD.Service.BIZ.Utils;
@@ -17,22 +18,20 @@ namespace ERD.Scheduler
 {
     public class IntSvcScheduler
     {
-
         public string Schedule_Last_Hash { get; set; } = string.Empty;
         public DateTime Schedule_Last_Refresh { get; set; } = DateTime.MinValue;
+        private List<Schedule> SystemSchedules { get; set; } = new List<Schedule>();
+        private List<Schedule> UserSchedules { get; set; } = new List<Schedule>();
 
 
         public void Start()
         {
             AppContextERD.WriteLog("INFO", @"Schedulatore interno job inizializzazione...");
-            //Crea lo scheduler principale
-            JobManager.Initialize();
-            JobManager.JobStart += info => AppContextERD.WriteLog("INFO", $" > Avvio job [report] n.{info.Name}");
-            JobManager.JobEnd += info => AppContextERD.WriteLog("INFO", $" > Fine job [report] n.{info.Name}");
-            JobManager.JobException += info => AppContextERD.WriteLog("ERROR", $" > Errore job [report] n.{info.Name}: {info.Exception}");
 
-            JobManager.Start();
-
+            //Schedula check modifiche
+            this.SystemSchedules.Add(new Schedule(() => this.runUpdateScheduleCheck(false), s => s.Every(AppContextERD.SCHEDULE_CHECK_SECONDS).Seconds()));
+            //Rischedula update del piano ogni notte
+            this.SystemSchedules.Add(new Schedule(() => this.runUpdateScheduleCheck(true), s => s.Everyday().At(AppContextERD.SCHEDULE_REBUILD_TIME.Hour, AppContextERD.SCHEDULE_REBUILD_TIME.Minute)));
             //Lancia il primo caricamento del piano
             this.runUpdateScheduleCheck(true);
 
@@ -42,29 +41,19 @@ namespace ERD.Scheduler
         public void Stop()
         {
             AppContextERD.WriteLog("INFO", @"Schedulatore interno job in chiusura...");
-            //Stoppa schedulatore
-            JobManager.StopAndBlock();
+
+            //Stoppa schedulazioni di sistema, le resetta e le pulisce
+            this.SystemSchedules.Stop();
+            this.SystemSchedules.ResetScheduling();
+            this.SystemSchedules.Clear();
+
+
+            //Stoppa tutte le schedulazioni utente, le resetta e le pulisce
+            this.UserSchedules.Stop();
+            this.UserSchedules.ResetScheduling();
+            this.UserSchedules.Clear();
 
             AppContextERD.WriteLog("INFO", @"Schedulatore interno job terminato");
-        }
-
-
-
-
-
-        private void printSchedules()
-        {
-
-            var sb = new StringBuilder();
-            sb.AppendLine($"Schedulazioni caricate: {JobManager.AllSchedules.Count()}");
-
-            foreach (var key in JobManager.AllSchedules.OrderBy(x => x.NextRun))
-            {
-                sb.AppendLine($" > {key.Name} @ {key.NextRun:dd/MM/yyyy HH:mm}");
-            }
-
-            AppContextERD.WriteLog("INFO", sb.ToString());
-
         }
 
 
@@ -72,31 +61,15 @@ namespace ERD.Scheduler
         public void ReloadReportSchedules()
         {
             //Mette in pausa tutte le schedulazioni
-            JobManager.Stop();
+            this.SystemSchedules.Stop();
+            this.UserSchedules.Stop();
             try
             {
-                //Cerca i job non di systema
-                JobManager.RemoveAllJobs();
-
-                //Schedula check modifiche
-                JobManager.AddJob(() =>
-                {
-                    this.runUpdateScheduleCheck(false);
-                },
-                    s => s.WithName("SYS_Check_Updates").ToRunEvery(AppContextERD.SCHEDULE_CHECK_SECONDS).Seconds()
-                );
-
-                //Rischedula update del piano ogni notte
-                JobManager.AddJob(() =>
-                {
-                    this.runUpdateScheduleCheck(true);
-                },
-                    s => s.WithName("SYS_Rebuild_Plan").ToRunEvery(1).Days().At(0, 7)
-                );
+                this.UserSchedules.ResetScheduling();
+                this.UserSchedules.Clear();
 
                 using (var slot = AppContextERD.CreateSlot())
                 {
-
                     //Carica tutte le estrazioni per rivalutarle
                     var reports = slot.CreateList<ReportEstrazioneLista>()
                                         .SearchAllObjects()
@@ -106,19 +79,19 @@ namespace ERD.Scheduler
                     var dtPlanEnd = dtPlanStart.AddDays(AppContextERD.SCHEDULE_PLAN_DAYS);
 
                     //Verifica essistenza ed aggiunge schedulazioni
-                    reports.ForEach(r => {
+                    reports.ForEach(r =>
+                    {
                         try
                         {
                             //Ricalcola piano schedulazione. All'interno se piano non attivo elimina tutto
                             r.RebuildPianoSchedulazione(dtPlanStart, dtPlanEnd);
 
-                            r.ListaSchedulazioniAttive.ForEach(s => {
+                            r.ListaSchedulazioniAttive.ForEach(s =>
+                            {
                                 var schedId = s.Id;
+                                this.UserSchedules.Add(new Schedule(() => this.runUserJob(schedId), x => x.OnceAt(s.DataEsecuzione)));
 
-                                JobManager.AddJob(() => this.runUserJob(schedId),
-                                                    j => j.WithName(r.DataObj.Nome).ToRunOnceAt(s.DataEsecuzione));
-
-
+                                AppContextERD.WriteLog(@"INFO", $"   > Schedulazione il {s.DataEsecuzione:dd/MM/yyyy HH:mm} - {s.Id.ToString().PadLeft(6, '0')} - {r.DataObj.Nome}");
                             });
                         }
                         catch (Exception e)
@@ -129,13 +102,13 @@ namespace ERD.Scheduler
                     });
                 }
 
-                this.printSchedules();
-
+                AppContextERD.WriteLog(@"INFO", $"Totale schedulazioni caricate: {this.UserSchedules.Count}");
             }
             finally
             {
                 //Riavvia tutte le schedulazioni
-                JobManager.Start();
+                this.SystemSchedules.Start();
+                this.UserSchedules.Start();
             }
 
         }
@@ -178,7 +151,7 @@ namespace ERD.Scheduler
         {
             using (var slot = AppContextERD.CreateSlot())
             {
-                return Convert.ToHexString(SHA1.HashData(Encoding.UTF8.GetBytes(string.Join(",", 
+                return Convert.ToHexString(SHA1.HashData(Encoding.UTF8.GetBytes(string.Join(",",
                                 slot.CreateList<ReportEstrazioneLista>()
                                     .OrderByLinq(x => x.Id)
                                     .SearchByLinq(x => x.Attivo == 1 && x.CronString != "" && DateTime.Today.Between(x.DataInizio, x.DataFine))
@@ -193,20 +166,19 @@ namespace ERD.Scheduler
             var bSendEmail = true;
             var sb = new StringBuilder();
 
+            AppContextERD.WriteLog("INFO", $" > Avvio schedulazione {schedId}");
             try
             {
                 using (var jslot = AppContextERD.CreateSlot())
                 {
                     //Ricerca schedulazione db
-                    var sched = jslot.LoadObjNullByPK<ReportSchedulazione>(schedId);
+                    var sched = jslot.LoadObjByPK<ReportSchedulazione>(schedId);
 
-                    if (sched != null)
-                    {
-                        sched.StatoId = eReport.StatoSchedulazione.Avviata;
-                        jslot.SaveObject(sched);
-                    }
+                    AppContextERD.WriteLog("INFO", $" > Schedulazione {schedId}: [report] {sched.Estrazione.Nome}");
 
                     //Aggiorna piano schedulazione
+                    sched.StatoId = eReport.StatoSchedulazione.Avviata;
+                    jslot.SaveObject(sched);
 
                     //Scrive nel log il debug User1
                     jslot.OnLogDebugSent += (a, b, c) => sb.AppendLine($"{b} - {c}");
@@ -217,33 +189,27 @@ namespace ERD.Scheduler
                     {
                         repBiz.Run(true, bSendEmail, true);
                     }
-                    catch (Exception)
-                    {
-                    };
+                    catch (Exception) { }
 
-                    //Termina schedulazione
-                    if (sched != null)
-                    {
-                        if (repBiz.LastResult.Id > 0)
-                            sched.OutputId = repBiz.LastResult.Id;
-
-
-                        sched.StatoId = eReport.StatoSchedulazione.Eseguita;
-                        jslot.SaveObject(sched);
-                    }
-
+                    //Aggiorna piano schedulazione
+                    if (repBiz.LastResult.Id > 0)
+                        sched.OutputId = repBiz.LastResult.Id;
+                    sched.StatoId = eReport.StatoSchedulazione.Eseguita;
+                    jslot.SaveObject(sched);
+                
                     //Se presente un log di debug lo scrive
-                    if (sb.Length >0)
+                    if (sb.Length > 0)
                         AppContextERD.WriteLog("SLOT_DEBUG", sb.ToString());
                 }
             }
             catch (Exception e)
             {
-                AppContextERD.WriteLog("ERROR", $"Errore nell'esecuzione della schedulazione {schedId}: {e.Message}");
+                AppContextERD.WriteLog("INFO", $" > Errore schedulazione {schedId}: {e.Message}");
                 AppContextERD.NotificaMailErrore($"Schedulazione {schedId}", e.Message, e.StackTrace);
             }
             finally
             {
+                AppContextERD.WriteLog("INFO", $" > Fine schedulazione {schedId}");
                 //Forza deallocazione memoria non più utilizzata
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
