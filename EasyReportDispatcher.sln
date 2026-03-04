@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.37012.4 d17.14
+VisualStudioVersion = 17.14.37012.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyReportDispatcher_Lib_Common", "EasyReportDispatcher_Lib_Common\EasyReportDispatcher_Lib_Common.csproj", "{B5A1EF14-47CA-4F0E-8C97-A2546A66B9C4}"
 EndProject
@@ -18,6 +18,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERD.Service", "ERD.Service\ERD.Service.csproj", "{4F5A765B-2BDA-4550-B77C-426D2ACB0EDE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERD.Scheduler", "ERD.Scheduler\ERD.Scheduler.csproj", "{E1E86DD1-D450-4066-AC22-5EB15C11F6B3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DBSCRIPTS", "DBSCRIPTS", "{6C83A596-D32D-B35F-00DD-F0C99B673980}"
+	ProjectSection(SolutionItems) = preProject
+		DBSCRIPTS\mysql_report_dispatcher.sql = DBSCRIPTS\mysql_report_dispatcher.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
