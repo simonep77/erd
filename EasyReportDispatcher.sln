@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DBSCRIPTS", "DBSCRIPTS", "{
 		DBSCRIPTS\mysql_report_dispatcher.sql = DBSCRIPTS\mysql_report_dispatcher.sql
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERD.Web", "ERD.Web\ERD.Web.csproj", "{FEC683B7-B00A-41F7-A024-887ED2BA53A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{E1E86DD1-D450-4066-AC22-5EB15C11F6B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1E86DD1-D450-4066-AC22-5EB15C11F6B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1E86DD1-D450-4066-AC22-5EB15C11F6B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEC683B7-B00A-41F7-A024-887ED2BA53A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEC683B7-B00A-41F7-A024-887ED2BA53A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEC683B7-B00A-41F7-A024-887ED2BA53A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEC683B7-B00A-41F7-A024-887ED2BA53A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
