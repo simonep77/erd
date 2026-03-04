@@ -24,3 +24,6 @@
 /ERD.Service/bin/Release/net8.0
 /ERD.Scheduler/Properties/PublishProfiles
 /ERD.Scheduler/Properties/launchSettings.json
+/ERD.Web/bin/Debug/net9.0
+/ERD.Web/obj/Debug/net9.0
+/ERD.Web/obj
