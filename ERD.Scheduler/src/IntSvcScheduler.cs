@@ -1,12 +1,16 @@
-﻿using ERD.Scheduler;
-using System.Text;
-using FluentScheduler;
+﻿using Business.Data.Objects.Common.Utils;
+using ERD.Scheduler;
 using ERD.Service.BIZ;
-using ERD.Service.DAL;
-using Business.Data.Objects.Common.Utils;
-using ERD.Service.DAL.Query;
-using ERD.Service.Common.Enums;
 using ERD.Service.BIZ.Utils;
+using ERD.Service.Common.Enums;
+using ERD.Service.DAL;
+using FluentScheduler;
+using MoreLinq;
+using Org.BouncyCastle.Crypto.Digests;
+using System.IO;
+using System.Security.Cryptography;
+using System.Security.Policy;
+using System.Text;
 
 
 namespace ERD.Scheduler
@@ -93,69 +97,36 @@ namespace ERD.Scheduler
                 using (var slot = AppContextERD.CreateSlot())
                 {
 
-                    //Carica tutte le estrazioni
+                    //Carica tutte le estrazioni per rivalutarle
                     var reports = slot.CreateList<ReportEstrazioneLista>()
-                                        .SearchByLinq(x => x.CronString != "" && x.DataInizio <= DateTime.Today && x.DataFine >= DateTime.Today)
+                                        .SearchAllObjects()
                                         .ToBizObjectList<ReportEstrazioneBIZ>();
 
                     var dtPlanStart = DateTime.Now;
                     var dtPlanEnd = dtPlanStart.AddDays(AppContextERD.SCHEDULE_PLAN_DAYS);
 
                     //Verifica essistenza ed aggiunge schedulazioni
-                    foreach (var repBiz in reports)
-                    {
+                    reports.ForEach(r => {
                         try
                         {
-                            if (repBiz.DataObj.Attivo == 0)
-                            {
-                                //Per le non attive eliminiamo eventuali schedulazioni attive
-                                repBiz.EliminaSchedulazioniAttive();
-                            }
-                            else
-                            {
-                                //Per le nuove ricalcoliamo il piano
-                                repBiz.RebuildPianoSchedulazione(dtPlanStart, dtPlanEnd);
+                            //Ricalcola piano schedulazione. All'interno se piano non attivo elimina tutto
+                            r.RebuildPianoSchedulazione(dtPlanStart, dtPlanEnd);
 
-                                foreach (var item in repBiz.ListaSchedulazioniAttive)
-                                {
-                                    var schedId = item.Id;
+                            r.ListaSchedulazioniAttive.ForEach(s => {
+                                var schedId = s.Id;
 
-                                    JobManager.AddJob(() =>
-                                    {
-                                        this.runUserJob(schedId);
-                                    },
-                                    s => s.WithName(repBiz.DataObj.Nome).ToRunOnceAt(item.DataEsecuzione));
-                                }
-                            }
+                                JobManager.AddJob(() => this.runUserJob(schedId),
+                                                    j => j.WithName(r.DataObj.Nome).ToRunOnceAt(s.DataEsecuzione));
 
+
+                            });
                         }
                         catch (Exception e)
                         {
-                            AppContextERD.WriteLog("ERROR", $"Errore nel caricamento della schedulazione per {repBiz.DataObj.Nome} ({repBiz.DataObj.Id}): {e.Message}");
-                            try
-                            {
-
-                                MailUT.SendMail(host: AppContextERD.Conf["SmtpNotifiche:Host"],
-                                                                port: int.Parse(AppContextERD.Conf["SmtpNotifiche:Port"]),
-                                                                useauth: bool.Parse(AppContextERD.Conf["SmtpNotifiche:UseAuthentication"]),
-                                                                ssl: bool.Parse(AppContextERD.Conf["SmtpNotifiche:EnableSsl"]),
-                                                                user: AppContextERD.Conf["SmtpNotifiche:Username"],
-                                                                pass: AppContextERD.Conf["SmtpNotifiche:Password"],
-                                                                from: AppContextERD.Conf["SmtpNotifiche:From"],
-                                                                to: AppContextERD.Conf["SmtpNotifiche:To"],
-                                                                cc: AppContextERD.Conf["SmtpNotifiche:Cc"],
-                                                                subj: $"ERR - ERD Scheduler - {repBiz.DataObj.Nome} ({repBiz.DataObj.Id})",
-                                                                body: $"Si è verificato il seguente errore:<br/>{e.Message}<br/><br/>{e.StackTrace}", 
-                                                                files: null);
-                            }
-                            catch (Exception)
-                            {
-                                AppContextERD.WriteLog("ERROR", $"Errore nell'invio mail di notifica");
-                            }
+                            AppContextERD.WriteLog("ERROR", $"Errore nel caricamento della schedulazione per {r.DataObj.Nome} ({r.DataObj.Id}): {e.Message}");
+                            AppContextERD.NotificaMailErrore($"{r.DataObj.Nome} ({r.DataObj.Id})", e.Message, e.StackTrace);
                         }
-
-                    }
-
+                    });
                 }
 
                 this.printSchedules();
@@ -172,40 +143,49 @@ namespace ERD.Scheduler
 
         private void runUpdateScheduleCheck(bool force)
         {
-
-            var bEseguiReload = force;
-
-            //Ricalcola hash schedulazioni
-            var newhash = this.calculateHash();
-
-            //Verifica hash non impostato
-            bEseguiReload |= string.IsNullOrWhiteSpace(this.Schedule_Last_Hash);
-
-            //Verifica hash cambiato
-            bEseguiReload |= (newhash != this.Schedule_Last_Hash);
-
-
-            //Se necessario reload procede
-            if (bEseguiReload)
+            try
             {
-                this.ReloadReportSchedules();
+                var bEseguiReload = force;
 
-                this.Schedule_Last_Hash = newhash;
-                this.Schedule_Last_Refresh = DateTime.Now;
+                //Ricalcola hash schedulazioni
+                var newhash = this.calculateHash();
+
+                //Verifica hash non impostato
+                bEseguiReload |= string.IsNullOrWhiteSpace(this.Schedule_Last_Hash);
+
+                //Verifica hash cambiato
+                bEseguiReload |= (newhash != this.Schedule_Last_Hash);
+
+
+                //Se necessario reload procede
+                if (bEseguiReload)
+                {
+                    this.ReloadReportSchedules();
+
+                    this.Schedule_Last_Hash = newhash;
+                    this.Schedule_Last_Refresh = DateTime.Now;
+                }
             }
-
+            catch (Exception e)
+            {
+                AppContextERD.WriteLog("ERROR", $"Errore nel refresh della schedulazione: {e.Message}");
+                AppContextERD.NotificaMailErrore($"Refresh della schedulazione: {e.Message}", e.Message, e.StackTrace);
+            }
         }
+
 
         private string calculateHash()
         {
             using (var slot = AppContextERD.CreateSlot())
             {
-                return QueryReports.CalculateSchedulesHash(slot);
+                return Convert.ToHexString(SHA1.HashData(Encoding.UTF8.GetBytes(string.Join(",", 
+                                slot.CreateList<ReportEstrazioneLista>()
+                                    .OrderByLinq(x => x.Id)
+                                    .SearchByLinq(x => x.Attivo == 1 && x.CronString != "" && DateTime.Today.Between(x.DataInizio, x.DataFine))
+                                    .Select(x => $"[{x.Id}]_[{x.CronString}]")))));
+
             }
         }
-
-
-
 
 
         private void runUserJob(long schedId)
@@ -256,6 +236,11 @@ namespace ERD.Scheduler
                     if (sb.Length >0)
                         AppContextERD.WriteLog("SLOT_DEBUG", sb.ToString());
                 }
+            }
+            catch (Exception e)
+            {
+                AppContextERD.WriteLog("ERROR", $"Errore nell'esecuzione della schedulazione {schedId}: {e.Message}");
+                AppContextERD.NotificaMailErrore($"Schedulazione {schedId}", e.Message, e.StackTrace);
             }
             finally
             {

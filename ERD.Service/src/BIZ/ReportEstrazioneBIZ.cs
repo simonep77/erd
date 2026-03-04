@@ -902,14 +902,12 @@ namespace ERD.Service.BIZ
             return false;
         }
 
-
-        public void DeleteFull()
+        protected override void deleteExecBefore()
         {
             this.Slot.DeleteAll(this.ListaDesinatariEmail);
             this.Slot.DeleteAll(this.ListaOutput);
             this.Slot.DeleteAll(this.ListaSchedulazioni);
             this.DeleteHistory(-1);
-            this.Slot.DeleteObject(this.DataObj);
         }
 
 
@@ -965,60 +963,53 @@ namespace ERD.Service.BIZ
 
         public void RebuildPianoSchedulazione(DateTime dtFrom, DateTime dtTo)
         {
+            //Se non attiva la schedulazione allora rimuove tutte le schedulazioni attive
+            if (this.DataObj.Attivo <= 0 || string.IsNullOrWhiteSpace(this.DataObj.CronString))
+            {
+                this.EliminaSchedulazioniAttive();
+                return;
+            }
+
+            //Ricalcola
             var recalc = this.CalcSchedules(dtFrom, dtTo);
 
-            var retlist = new List<ReportSchedulazione>();
-
-            foreach (var data in recalc)
+            recalc.ForEach(d =>
             {
-                var scheds = this.ListaSchedulazioniAttive.Where(x => x.DataEsecuzione == data);
+                var scheds = this.ListaSchedulazioniAttive.Where(x => x.DataEsecuzione == d);
 
                 if (!scheds.Any())
                 {
                     //Crea nuova
                     var sched = this.Slot.CreateObject<ReportSchedulazione>();
                     sched.EstrazioneId = this.DataObj.Id;
-                    sched.TriggerKey = $"T_{this.DataObj.Id}_dt_{data:yyyyMMddHHmm}";
-                    sched.DataEsecuzione = data;
+                    sched.DataEsecuzione = d;
                     sched.StatoId = eReport.StatoSchedulazione.Pianificata;
 
                     this.Slot.SaveObject(sched);
-
-                    retlist.Add(sched);
-
-                    //esce
-                    continue;
+                    sched.ExtraDataSet("IsOk", true);
+                    this.ListaSchedulazioniAttive.Add(sched);
                 }
+                else
+                    //Esiste già, la mantiene e la marca come da controllata (per eventuale update stato)
+                    scheds.ForEach(x => x.ExtraDataSet("IsOk", true));
+            });
 
-                //Rimuove dalla lista quelle trovate
-                foreach (var item in scheds)
-                {
-                    //Aggiunge a schedulazioni ancora valide
-                    retlist.Add(item);
-                    //Rimuove da lista globale (serve per rimuovere poi quelle non più schedulate)
-                    this.ListaSchedulazioniAttive.Remove(item);
-                }
-
-            }
-
-            //Rimuove dal db e dalla lista quelle non più schedulate
-            foreach (var item in this.ListaSchedulazioniAttive)
+            //Gestisce quelle non verificate
+            this.ListaSchedulazioniAttive.Where(x => !x.ExtraDataGet<bool>("IsOk", false)).ToList().ForEach(x =>
             {
-                if (item.DataEsecuzione <= dtFrom)
+                if (x.DataEsecuzione <= dtFrom)
                 {
-                    item.StatoId = eReport.StatoSchedulazione.Saltata;
-                    this.Slot.SaveObject(item);
+                    x.StatoId = eReport.StatoSchedulazione.Saltata;
+                    this.Slot.SaveObject(x);
                 }
                 else
                 {
                     //Futura: la eliminiamo
-                    this.Slot.DeleteObject(item);
+                    this.Slot.DeleteObject(x);
                 }
-            }
+                this.ListaSchedulazioniAttive.Remove(x);
+            });
 
-            //Ricarica le nuove sulla lista
-            this.ListaSchedulazioniAttive.Clear();
-            this.ListaSchedulazioniAttive.AddRange(retlist);
         }
 
 

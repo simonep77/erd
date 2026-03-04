@@ -1,4 +1,5 @@
 ﻿using Business.Data.Objects.Core;
+using ERD.Service.BIZ.Utils;
 using Microsoft.Extensions.Configuration;
 
 namespace ERD.Scheduler
@@ -29,6 +30,36 @@ namespace ERD.Scheduler
             bs.DB.AutoCloseConnection = true;
 
             return bs;
+        }
+
+
+        /// <summary>
+        /// Invia notifica errore via mail
+        /// </summary>
+        /// <param name="subj"></param>
+        /// <param name="errore"></param>
+        /// <param name="extra"></param>
+        public static void NotificaMailErrore(string subj, string errore, string extra)
+        {
+            try
+            {
+                MailUT.SendMail(host: AppContextERD.Conf["SmtpNotifiche:Host"],
+                                port: int.Parse(AppContextERD.Conf["SmtpNotifiche:Port"]),
+                                useauth: bool.Parse(AppContextERD.Conf["SmtpNotifiche:UseAuthentication"]),
+                                ssl: bool.Parse(AppContextERD.Conf["SmtpNotifiche:EnableSsl"]),
+                                user: AppContextERD.Conf["SmtpNotifiche:Username"],
+                                pass: AppContextERD.Conf["SmtpNotifiche:Password"],
+                                from: AppContextERD.Conf["SmtpNotifiche:From"],
+                                to: AppContextERD.Conf["SmtpNotifiche:To"],
+                                cc: AppContextERD.Conf["SmtpNotifiche:Cc"],
+                                subj: $"ERR - ERD Scheduler - {subj})",
+                                body: $"Si è verificato il seguente errore:<br/>{errore}<br/><br/>{extra}",
+                                files: null);
+            }
+            catch (Exception e)
+            {
+                AppContextERD.WriteLog("ERROR", $"Errore nell'invio mail di notifica errore: {e.Message}");
+            }
         }
 
     }

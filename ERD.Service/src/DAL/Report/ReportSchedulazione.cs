@@ -14,9 +14,6 @@ namespace ERD.Service.DAL
         [PropertyMap(nameof(EstrazioneId))]
         public abstract ReportEstrazione Estrazione { get; }
 
-        [MaxLength(50)]
-        public abstract string TriggerKey { get; set; }
-
         public abstract DateTime DataEsecuzione { get; set; }
 
         public abstract sbyte StatoId { get; set; }
