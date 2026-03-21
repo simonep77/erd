@@ -1,0 +1,122 @@
+@using Business.Data.Objects.Common
+@model DataPager
+
+@{
+    var offsets = new[] { 10, 20, 50, 100, 200 };
+    bool isFirst = Model.Page <= 1;
+    bool isLast  = Model.Page >= Model.TotPages;
+    int  fromRec = Model.TotRecords == 0 ? 0 : Model.Position + 1;
+    int  toRec   = Math.Min(Model.Position + Model.Offset, Model.TotRecords);
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2
+            border rounded-3 px-3 py-2 bg-white shadow-sm">
+
+    <div class="d-flex align-items-center gap-2">
+        <span class="badge rounded-pill bg-light text-dark border fw-semibold">
+            <i class="fa-solid fa-database me-1 text-secondary"></i>
+            @Model.TotRecords.ToString("N0") record
+        </span>
+        @if (Model.TotRecords > 0)
+        {
+            <small class="text-muted font-monospace">@fromRec – @toRec</small>
+        }
+    </div>
+
+
+    <div class="d-flex align-items-center gap-1">
+
+
+        <button type="button"
+                class="btn btn-outline-secondary btn-sm px-2"
+                title="Prima pagina"
+                @(isFirst ? "disabled" : "")
+                onclick="dpGoTo(1)">
+            <i class="fa-solid fa-angles-left"></i>
+        </button>
+
+        <button type="button"
+                class="btn btn-outline-secondary btn-sm px-2"
+                title="Pagina precedente"
+                @(isFirst ? "disabled" : "")
+                onclick="dpGoTo(@(Model.Page - 1))">
+            <i class="fa-solid fa-angle-left"></i>
+        </button>
+
+        <div class="d-flex align-items-center gap-1 px-2">
+            <span class="fw-bold text-primary">@Model.Page</span>
+            <span class="text-muted">/</span>
+            <span class="text-muted">@Model.TotPages</span>
+        </div>
+
+        <button type="button"
+                class="btn btn-outline-secondary btn-sm px-2"
+                title="Pagina successiva"
+                @(isLast ? "disabled" : "")
+                onclick="dpGoTo(@(Model.Page + 1))">
+            <i class="fa-solid fa-angle-right"></i>
+        </button>
+
+        <button type="button"
+                class="btn btn-outline-secondary btn-sm px-2"
+                title="Ultima pagina"
+                @(isLast ? "disabled" : "")
+                onclick="dpGoTo(@Model.TotPages)">
+            <i class="fa-solid fa-angles-right"></i>
+        </button>
+
+        <div class="vr mx-1"></div>
+
+        <div class="d-flex align-items-center gap-2">
+            <label class="text-muted small mb-0" for="dp-offset-sel">
+                <i class="fa-solid fa-list-ol me-1"></i>Righe
+            </label>
+            <select id="dp-offset-sel"
+                    class="form-select form-select-sm"
+                    style="width: auto"
+                    onchange="dpChangeOffset(this.value)">
+                @foreach (var o in offsets)
+                {
+                    if (o == Model.Offset)
+                    {
+                        <option value="@o" selected>@o</option>
+                    }
+                    else
+                    {
+                        <option value="@o">@o</option>
+                    }
+                }
+            </select>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    /**
+     * dpGoTo(page)
+     * Naviga alla pagina indicata.
+     * Personalizza in base al meccanismo di navigazione
+     * della tua applicazione (query-string, form submit, AJAX, ecc.).
+     */
+    function dpGoTo(page) {
+        // ── query-string (default) ────────────────────────────────────
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', page);
+        window.location.href = url.toString();
+
+        // ── AJAX (decommenta e adatta) ────────────────────────────────
+        // fetchPage({ page: page, offset: document.getElementById('dp-offset-sel').value });
+    }
+
+    /**
+     * dpChangeOffset(offset)
+     * Cambia il numero di righe per pagina e torna alla pagina 1.
+     */
+    function dpChangeOffset(offset) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('offset', offset);
+        url.searchParams.set('page', 1);
+        window.location.href = url.toString();
+    }
+</script>

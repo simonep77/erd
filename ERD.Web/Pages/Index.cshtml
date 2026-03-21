@@ -1,10 +1,66 @@
 ﻿@page
-@model IndexModel
+@model Index
 @{
     ViewData["Title"] = "Home page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h4 class="display-4">Lista estrazioni @this.Model.Lista.Count</h4>
+
+
+
 </div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table table-vcenter card-table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Gruppo</th>
+                            <th>Nome</th>
+                            <th>Num. Output</th>
+                            <th>Invio Email</th>
+                            <th>Schedulazione</th>
+                            <th>CronString</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in this.Model.Lista)
+                        {
+                            <tr>
+                                <td>@item.Nome</td>
+                                <td class="text-secondary">@item.Gruppo</td>
+                                <td class="text-secondary">@item.NumOutputStorico</td>
+                                <td class="text-secondary">@(item.InvioMailAttivo == 1 ? "SI" : "NO")</td>
+                                <td class="text-secondary">@(item.Attivo == 1 ? "SI" : "NO")</td>
+                                <td class="text-secondary">@item.CronString</td>
+                                <td>
+                                    <a asp-page="/Report/AddOrEdit" asp-route-Id="@item.Id" >Edit</a>
+                                </td>
+                            </tr>
+                        }
+
+                        @if (!this.Model.Lista.Any())
+                        {
+                            <tr><td colspan="99" class="text-center">Nessuna estrazione presente</td></tr>
+                        }
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="99">
+                                @await Html.PartialAsync("_DataPager", this.Model.Pager)
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
