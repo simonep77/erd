@@ -77,9 +77,7 @@ namespace ERD.Web.Pages
                 this.ReportBiz.DataObj.NomeFileMask = input.NomeFileMask;
                 this.ReportBiz.DataObj.UtenteIdAggiornamento = UtenteCorrenteId();
 
-
-
-                this.ReportBiz.Save();
+                this.ReportBiz.Salva();
 
                 return new JsonResult(new
                 {

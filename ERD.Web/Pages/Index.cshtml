@@ -5,21 +5,44 @@
 }
 
 <div class="text-center">
-    <h4 class="display-4">Lista estrazioni @this.Model.Lista.Count</h4>
+    <h2 class="">Lista estrazioni</h2>
+</div>
 
+<div class="row">
+    <div class="col-4">
+        <select id="selGruppo" class="form-select">
+            <option value="">- Qualsiasi Gruppo -</option>
+            @foreach (var gp in this.Model.ListaGruppi)
+            {
+                <option value="@gp" selected="@(gp == this.Model.g)">@gp</option>
+            }
+        </select>
+    </div>
 
+    <div class="col-3">
+        <input type="text" id="txtNome" class="form-control" placeholder="Filtra per nome" value="@Model.n" />
+    </div>
+
+    <div class="col-3 pt-2">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="chkSchedulati" checked="@(this.Model.s == "1")" />
+            <label class="form-check-label fw-medium" for="Attivo">Solo schedulati</label>
+        </div>
+    </div>
 
 </div>
 
 <div class="row">
     <div class="col-12">
         <div class="card">
+
             <div class="table-responsive">
                 <table class="table table-vcenter card-table table-striped">
                     <thead>
                         <tr>
-                            <th>Gruppo</th>
+                            <th>ID#</th>
                             <th>Nome</th>
+                            <th>Gruppo</th>
                             <th>Num. Output</th>
                             <th>Invio Email</th>
                             <th>Schedulazione</th>
@@ -32,14 +55,15 @@
                         @foreach (var item in this.Model.Lista)
                         {
                             <tr>
-                                <td>@item.Nome</td>
+                                <td>@item.Id</td>
+                                <td> <a asp-page="/Report/AddOrEdit" asp-route-Id="@item.Id">@item.Nome</a></td>
                                 <td class="text-secondary">@item.Gruppo</td>
                                 <td class="text-secondary">@item.NumOutputStorico</td>
                                 <td class="text-secondary">@(item.InvioMailAttivo == 1 ? "SI" : "NO")</td>
                                 <td class="text-secondary">@(item.Attivo == 1 ? "SI" : "NO")</td>
                                 <td class="text-secondary">@item.CronString</td>
                                 <td>
-                                    <a asp-page="/Report/AddOrEdit" asp-route-Id="@item.Id" >Edit</a>
+                                   
                                 </td>
                             </tr>
                         }
@@ -64,3 +88,47 @@
     </div>
 </div>
 
+@section Scripts {
+
+    <script>
+        $(function () {
+            //Colorazione filtri impostati
+            $("#selGruppo").toggleClass("bg-yellow-lt ", $("#selGruppo").val() != "");
+            $("#selGruppo option").toggleClass("bg-yellow-lt", $("#selGruppo").val() != "");
+            $("#txtNome").toggleClass("bg-yellow-lt", $("#txtNome").val() != '');
+
+            $("#selGruppo").on("change", function () {
+                const url = new URL(window.location.href);
+                val = $("#selGruppo").val().trim();
+                if (val == "")
+                    url.searchParams.delete('g');
+                else
+                    url.searchParams.set('g', val);
+                window.location.href = url.toString();
+            });
+
+            $("#chkSchedulati").on("change", function () {
+                const url = new URL(window.location.href);
+
+                val = $("#chkSchedulati:checked").length > 0 ? "1" : "";
+                if (val == "")
+                    url.searchParams.delete('s');
+                else
+                    url.searchParams.set('s', val);
+                window.location.href = url.toString();
+            });
+
+            $("#txtNome").on("change", function () {
+                const url = new URL(window.location.href);
+                val = $("#txtNome").val().trim();
+                if (val == "")
+                    url.searchParams.delete('n');
+                else
+                    url.searchParams.set('n', val);
+                window.location.href = url.toString();
+            });
+
+        });
+    </script>
+
+}
