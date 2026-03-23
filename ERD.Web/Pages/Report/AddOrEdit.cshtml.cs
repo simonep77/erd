@@ -11,10 +11,7 @@ namespace ERD.Web.Pages
     {
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
-        public ReportEstrazioneBIZ ReportBiz { get; set; }
-
-        [BindProperty()]
-        public InputModel Input { get; set; } = new();
+        public ReportEstrazioneBIZ ReportBiz => this.Slot.LazyStore.Get(nameof(ReportBiz), () => this.Slot.BizNewWithLoadOrNewByPK<ReportEstrazioneBIZ>(Id));
 
         // Liste per le tendine (popolate in OnGet, non servono in OnPost)
         public List<SelectListItem> Connessioni { get; set; } = new();
@@ -26,12 +23,7 @@ namespace ERD.Web.Pages
 
         public void OnGet()
         {
-            this.ReportBiz = this.Slot.BizNewWithLoadOrNewByPK<ReportEstrazioneBIZ>(Id);
-
             this.PopolaListe();
-
-            if (this.IsEdit)
-                this.CaricaPerModifica();
         }
 
 
@@ -43,10 +35,8 @@ namespace ERD.Web.Pages
         // ════════════════════════════════════════════════════════════════
         public IActionResult OnPostSave([FromBody] InputModel input)
         {
-            Input = input;
-            ModelState.Clear();
             // Valida il model
-            if (!TryValidateModel(Input, nameof(Input)))
+            if (!TryValidateModel(input))
             {
                 var errors = ModelState
                     .Where(kv => kv.Value?.Errors.Count > 0)
@@ -65,35 +55,31 @@ namespace ERD.Web.Pages
 
             try
             {
-                int savedId;
-                this.ReportBiz = this.Slot.BizNewWithLoadOrNewByPK<ReportEstrazioneBIZ>(Id);
-
                 // ── MODIFICA ──────────────────────────────────────
-                this.ReportBiz.DataObj.Nome = Input.Nome;
-                this.ReportBiz.DataObj.Attivo = Input.Attivo ? (sbyte)1 : (sbyte)0;
-                this.ReportBiz.DataObj.Titolo = Input.Titolo;
-                this.ReportBiz.DataObj.Gruppo = Input.Gruppo;
-                this.ReportBiz.DataObj.Note = Input.Note;
-                this.ReportBiz.DataObj.ConnessioneId = Input.ConnessioneId;
-                this.ReportBiz.DataObj.TipoFileId = Input.TipoFileId;
-                this.ReportBiz.DataObj.TemplateId = Input.TemplateId ?? 0;
-                this.ReportBiz.DataObj.InvioMailAttivo = Input.InvioMailAttivo ? (sbyte)1 : (sbyte)0;
-                this.ReportBiz.DataObj.SqlText = Input.SqlText;
-                this.ReportBiz.DataObj.SheetName = Input.SheetName;
-                this.ReportBiz.DataObj.CronString = Input.CronString;
-                this.ReportBiz.DataObj.DataInizio = Input.DataInizio;
-                this.ReportBiz.DataObj.DataFine = Input.DataFine;
-                this.ReportBiz.DataObj.NumOutputStorico = Input.NumOutputStorico;
-                this.ReportBiz.DataObj.EstrazioniAccorpateIds = Input.EstrazioniAccorpateIds;
-                this.ReportBiz.DataObj.AccorpaSoloDati = Input.AccorpaSoloDati ? (sbyte)1 : (sbyte)0;
-                this.ReportBiz.DataObj.CopyToPath = Input.CopyToPath;
-                this.ReportBiz.DataObj.NomeFileMask = Input.NomeFileMask;
+                this.ReportBiz.DataObj.Nome = input.Nome;
+                this.ReportBiz.DataObj.Attivo = input.Attivo ? (sbyte)1 : (sbyte)0;
+                this.ReportBiz.DataObj.Titolo = input.Titolo;
+                this.ReportBiz.DataObj.Gruppo = input.Gruppo;
+                this.ReportBiz.DataObj.Note = input.Note;
+                this.ReportBiz.DataObj.ConnessioneId = input.ConnessioneId;
+                this.ReportBiz.DataObj.TipoFileId = input.TipoFileId;
+                this.ReportBiz.DataObj.TemplateId = input.TemplateId ?? 0;
+                this.ReportBiz.DataObj.InvioMailAttivo = input.InvioMailAttivo ? (sbyte)1 : (sbyte)0;
+                this.ReportBiz.DataObj.SqlText = input.SqlText;
+                this.ReportBiz.DataObj.SheetName = input.SheetName;
+                this.ReportBiz.DataObj.CronString = input.CronString;
+                this.ReportBiz.DataObj.DataInizio = input.DataInizio;
+                this.ReportBiz.DataObj.DataFine = input.DataFine;
+                this.ReportBiz.DataObj.NumOutputStorico = input.NumOutputStorico;
+                this.ReportBiz.DataObj.EstrazioniAccorpateIds = input.EstrazioniAccorpateIds;
+                this.ReportBiz.DataObj.AccorpaSoloDati = input.AccorpaSoloDati ? (sbyte)1 : (sbyte)0;
+                this.ReportBiz.DataObj.CopyToPath = input.CopyToPath;
+                this.ReportBiz.DataObj.NomeFileMask = input.NomeFileMask;
                 this.ReportBiz.DataObj.UtenteIdAggiornamento = UtenteCorrenteId();
 
 
 
                 this.ReportBiz.Save();
-                savedId = this.ReportBiz.DataObj.Id;
 
                 return new JsonResult(new
                 {
@@ -101,7 +87,7 @@ namespace ERD.Web.Pages
                     message = IsEdit
                         ? "Estrazione aggiornata con successo."
                         : "Estrazione creata con successo.",
-                    id = savedId
+                    id = this.ReportBiz.DataObj.Id
                 });
             }
             catch (Exception ex)
@@ -114,42 +100,10 @@ namespace ERD.Web.Pages
         // Metodi privati di supporto
         // ════════════════════════════════════════════════════════════════
 
-        private void CaricaPerModifica()
-        {
-            this.Input = new InputModel
-            {
-                Id = this.ReportBiz.DataObj.Id,
-                Nome = this.ReportBiz.DataObj.Nome,
-                Attivo = this.ReportBiz.DataObj.Attivo == 1,
-                Titolo = this.ReportBiz.DataObj.Titolo,
-                Gruppo = this.ReportBiz.DataObj.Gruppo,
-                Note = this.ReportBiz.DataObj.Note,
-                ConnessioneId = this.ReportBiz.DataObj.ConnessioneId,
-                TipoFileId = this.ReportBiz.DataObj.TipoFileId,
-                TemplateId = this.ReportBiz.DataObj.TemplateId == 0 ? null : this.ReportBiz.DataObj.TemplateId,
-                InvioMailAttivo = this.ReportBiz.DataObj.InvioMailAttivo == 1,
-                SqlText = this.ReportBiz.DataObj.SqlText,
-                SheetName = this.ReportBiz.DataObj.SheetName,
-                CronString = this.ReportBiz.DataObj.CronString,
-                DataInizio = this.ReportBiz.DataObj.DataInizio,
-                DataFine = this.ReportBiz.DataObj.DataFine,
-                NumOutputStorico = this.ReportBiz.DataObj.NumOutputStorico,
-                EstrazioniAccorpateIds = this.ReportBiz.DataObj.EstrazioniAccorpateIds,
-                AccorpaSoloDati = this.ReportBiz.DataObj.AccorpaSoloDati == 1,
-                CopyToPath = this.ReportBiz.DataObj.CopyToPath,
-                NomeFileMask = this.ReportBiz.DataObj.NomeFileMask,
-            };
-            Input.Id = this.Id; // placeholder
-        }
+       
 
         private void PopolaListe()
         {
-            // Connessioni = ReportConnessione.GetAll()
-            //     .Select(c => new SelectListItem(c.Nome, c.Id.ToString())).ToList();
-            // TipiFile = ReportTipoFile.GetAll()
-            //     .Select(t => new SelectListItem(t.Descrizione, t.Id.ToString())).ToList();
-            // Templates = ReportTemplate.GetAll()
-            //     .Select(t => new SelectListItem(t.Nome, t.Id.ToString())).ToList();
 
             Connessioni = new() { new SelectListItem("— seleziona —", "") };
             TipiFile = new() { new SelectListItem("— seleziona —", "") };
@@ -165,11 +119,6 @@ namespace ERD.Web.Pages
             // return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             return 1; // placeholder
         }
-
-
-
-
-
 
         #region MyRegion
 

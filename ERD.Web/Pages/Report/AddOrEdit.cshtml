@@ -14,11 +14,12 @@
         </a>
         <div>
             <h4 class="mb-0 fw-semibold">
-                <i class="fa-solid fa-file-export text-primary me-2"></i>@Model.Input?.Nome
+                <i class="fa-solid fa-file-export text-primary me-2"></i>@(Model.IsEdit? Model.ReportBiz.DataObj.Nome : "<Nuovo>")
             </h4>
             @if (Model.IsEdit)
             {
-                <small class="text-muted">ID: @Model.Input?.Id</small>
+                <small class="text-muted">
+                    ID: Model.ReportBiz.DataObj.Id</small>
             }
         </div>
         <div class="ms-auto">
@@ -45,7 +46,7 @@
             <div class="card border shadow-sm mb-4">
                 <div class="card-header bg-white py-3">
                     <h6 class="mb-0 fw-semibold text-secondary">
-                        <i class="fa-solid fa-circle-info me-2"></i>Anagrafica
+                        <i class="fa-solid fa-circle-info me-2"></i>Dati generali
                     </h6>
                 </div>
                 <div class="card-body">
@@ -57,7 +58,7 @@
                                 Nome <span class="text-danger">*</span>
                             </label>
                             <input type="text" id="Nome" class="form-control"
-                                   value="@Model.Input.Nome" maxlength="100"
+                                   value="@Model.ReportBiz.DataObj.Nome" maxlength="100"
                                    placeholder="Nome univoco dell'estrazione" />
                             <div class="invalid-feedback" id="err-Nome"></div>
                         </div>
@@ -66,7 +67,7 @@
                         <div class="col-12">
                             <label class="form-label fw-medium" for="Titolo">Titolo</label>
                             <input type="text" id="Titolo" class="form-control"
-                                   value="@Model.Input.Titolo"
+                                   value="@Model.ReportBiz.DataObj.Titolo"
                                    placeholder="Titolo leggibile (opzionale)" />
                         </div>
 
@@ -74,23 +75,15 @@
                         <div class="col-md-7">
                             <label class="form-label fw-medium" for="Gruppo">Gruppo</label>
                             <input type="text" id="Gruppo" class="form-control"
-                                   value="@Model.Input.Gruppo"
+                                   value="@Model.ReportBiz.DataObj.Gruppo"
                                    placeholder="Categoria / gruppo" />
-                        </div>
-                        <div class="col-md-5 d-flex align-items-end pb-1">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox"
-                                       role="switch" id="Attivo"
-                                       @(Model.Input.Attivo ? "checked" : "") />
-                                <label class="form-check-label fw-medium" for="Attivo">Attivo</label>
-                            </div>
                         </div>
 
                         @* Note *@
                         <div class="col-12">
                             <label class="form-label fw-medium" for="Note">Note</label>
                             <textarea id="Note" class="form-control" rows="3"
-                                      placeholder="Note libere…">@Model.Input.Note</textarea>
+                                      placeholder="Note libere…">@Model.ReportBiz.DataObj.Note</textarea>
                         </div>
 
                     </div>
@@ -113,7 +106,7 @@
                             </label>
                             <textarea id="SqlText" class="form-control font-monospace"
                                       rows="9" style="font-size:.85rem"
-                                      placeholder="SELECT …">@Model.Input.SqlText</textarea>
+                                      placeholder="SELECT …">@Model.ReportBiz.DataObj.SqlText</textarea>
                             <div class="invalid-feedback" id="err-SqlText"></div>
                         </div>
 
@@ -122,7 +115,7 @@
                                 Nome foglio (Excel)
                             </label>
                             <input type="text" id="SheetName" class="form-control"
-                                   value="@Model.Input.SheetName" placeholder="Sheet1" />
+                                   value="@Model.ReportBiz.DataObj.SheetName" placeholder="Sheet1" />
                         </div>
 
                     </div>
@@ -144,7 +137,7 @@
                                 Maschera nome file
                             </label>
                             <input type="text" id="NomeFileMask" class="form-control"
-                                   value="@Model.Input.NomeFileMask" maxlength="150"
+                                   value="@Model.ReportBiz.DataObj.NomeFileMask" maxlength="150"
                                    placeholder="es. report_{data}.xlsx" />
                         </div>
 
@@ -153,7 +146,7 @@
                                 Output in storico
                             </label>
                             <input type="number" id="NumOutputStorico" class="form-control"
-                                   value="@Model.Input.NumOutputStorico" min="1" max="999" />
+                                   value="@Model.ReportBiz.DataObj.NumOutputStorico" min="1" max="999" />
                         </div>
 
                         <div class="col-12">
@@ -161,7 +154,7 @@
                                 Copia su percorso
                             </label>
                             <input type="text" id="CopyToPath" class="form-control"
-                                   value="@Model.Input.CopyToPath"
+                                   value="@Model.ReportBiz.DataObj.CopyToPath"
                                    placeholder="\\server\share\cartella" />
                         </div>
 
@@ -170,7 +163,7 @@
                                 IDs estrazioni da accorpare
                             </label>
                             <input type="text" id="EstrazioniAccorpateIds" class="form-control"
-                                   value="@Model.Input.EstrazioniAccorpateIds"
+                                   value="@Model.ReportBiz.DataObj.EstrazioniAccorpateIds"
                                    placeholder="es. 3,7,12" />
                         </div>
 
@@ -178,7 +171,7 @@
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox"
                                        role="switch" id="AccorpaSoloDati"
-                                       @(Model.Input.AccorpaSoloDati ? "checked" : "") />
+                                       @(Model.ReportBiz.DataObj.AccorpaSoloDati == 1 ? "checked" : "") />
                                 <label class="form-check-label fw-medium" for="AccorpaSoloDati">
                                     Accorpa solo dati
                                 </label>
@@ -215,7 +208,7 @@
                             <select id="ConnessioneId" class="form-select">
                                 @foreach (var item in Model.Connessioni)
                                 {
-                                    <option value="@item.Value" selected="@(item.Value == Model.Input.ConnessioneId.ToString())">@item.Text</option>
+                                    <option value="@item.Value" selected="@(item.Value == Model.ReportBiz.DataObj.ConnessioneId.ToString())">@item.Text</option>
                                 }
                             </select>
                             <div class="invalid-feedback" id="err-ConnessioneId"></div>
@@ -229,7 +222,7 @@
                             <select id="TipoFileId" class="form-select">
                                 @foreach (var item in Model.TipiFile)
                                 {
-                                    <option value="@item.Value" selected="@(item.Value == Model.Input.TipoFileId.ToString())">@item.Text</option>
+                                    <option value="@item.Value" selected="@(item.Value == Model.ReportBiz.DataObj.TipoFileId.ToString())">@item.Text</option>
                                 }
                             </select>
                             <div class="invalid-feedback" id="err-TipoFileId"></div>
@@ -241,7 +234,7 @@
                             <select id="TemplateId" class="form-select">
                                 @foreach (var item in Model.Templates)
                                 {
-                                    <option value="@item.Value" selected="@(item.Value == Model.Input.TemplateId.ToString())">@item.Text</option>
+                                    <option value="@item.Value" selected="@(item.Value == Model.ReportBiz.DataObj.TemplateId.ToString())">@item.Text</option>
                                 }
                             </select>
                         </div>
@@ -251,7 +244,7 @@
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox"
                                        role="switch" id="InvioMailAttivo"
-                                       @(Model.Input.InvioMailAttivo ? "checked" : "") />
+                                       @(Model.ReportBiz.DataObj.InvioMailAttivo == 1 ? "checked" : "") />
                                 <label class="form-check-label fw-medium" for="InvioMailAttivo">
                                     <i class="fa-solid fa-envelope me-1 text-secondary"></i>
                                     Invio mail attivo
@@ -272,13 +265,21 @@
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox"
+                                       role="switch" id="Attivo"
+                                @(Model.ReportBiz.DataObj.Attivo == 1 ? "checked" : "") />
+                                <label class="form-check-label fw-medium" for="Attivo">Attiva</label>
+                            </div>
+                        </div>
 
                         <div class="col-12">
                             <label class="form-label fw-medium" for="CronString">
                                 Stringa CRON <span class="text-danger">*</span>
                             </label>
                             <input type="text" id="CronString" class="form-control font-monospace"
-                                   value="@Model.Input.CronString" placeholder="0 8 * * 1-5" />
+                                   value="@Model.ReportBiz.DataObj.CronString" placeholder="0 8 * * 1-5" />
                             <div class="form-text">
                                 <i class="fa-solid fa-circle-question me-1"></i>
                                 Formato: minuto ora giorno mese giorno-settimana
@@ -292,7 +293,7 @@
                                 Data inizio <span class="text-danger">*</span>
                             </label>
                             <input type="date" id="DataInizio" class="form-control"
-                                   value="@Model.Input.DataInizio.ToString("yyyy-MM-dd")" />
+                                   value="@Model.ReportBiz.DataObj.DataInizio.ToString("yyyy-MM-dd")" />
                             <div class="invalid-feedback" id="err-DataInizio"></div>
                         </div>
 
@@ -301,7 +302,7 @@
                                 Data fine <span class="text-danger">*</span>
                             </label>
                             <input type="date" id="DataFine" class="form-control"
-                                   value="@Model.Input.DataFine.ToString("yyyy-MM-dd")" />
+                                   value="@Model.ReportBiz.DataObj.DataFine.ToString("yyyy-MM-dd")" />
                             <div class="invalid-feedback" id="err-DataFine"></div>
                         </div>
 
@@ -309,23 +310,6 @@
                 </div>
             </div>
 
-            @* Card: Info record (solo modifica) *@
-            @if (Model.IsEdit)
-            {
-                <div class="card border shadow-sm">
-                    <div class="card-header bg-white py-3">
-                        <h6 class="mb-0 fw-semibold text-secondary">
-                            <i class="fa-solid fa-tag me-2"></i>Informazioni record
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <dl class="row mb-0 small text-muted">
-                            <dt class="col-5">ID</dt>
-                            <dd class="col-7 mb-1">@Model.Input.Id</dd>
-                        </dl>
-                    </div>
-                </div>
-            }
 
         </div>@* /col-lg-5 *@
 
@@ -347,7 +331,7 @@ $(function () {
     // ── Raccoglie tutti i valori del form ─────────────────────────────────
     function raccogliDati() {
         var d = {
-            Id:                     @Model.Input.Id,
+            Id:                     @Model.ReportBiz.DataObj.Id,
             Nome:                   $('#Nome').val().trim(),
             Attivo:                 $('#Attivo').is(':checked'),
             Titolo:                 $('#Titolo').val().trim() || null,
@@ -360,8 +344,8 @@ $(function () {
             SqlText:                $('#SqlText').val().trim(),
             SheetName:              $('#SheetName').val().trim()              || null,
             CronString:             $('#CronString').val().trim(),
-            DataInizio:             $('#DataInizio').val(),
-            DataFine:               $('#DataFine').val(),
+            DataInizio:             $('#DataInizio').val() || '2001-01-01',
+            DataFine:               $('#DataFine').val() || '9999-12-31',
             NumOutputStorico:       parseInt($('#NumOutputStorico').val())    || 20,
             EstrazioniAccorpateIds: $('#EstrazioniAccorpateIds').val().trim() || null,
             AccorpaSoloDati:        $('#AccorpaSoloDati').is(':checked'),
@@ -419,7 +403,7 @@ $(function () {
                         '<i class="fa-solid fa-circle-check me-2"></i>' + res.message);
 
                     // Dopo inserimento: aggiorna URL senza ricarica
-                    if (@Model.Input.Id === 0 && res.id > 0) {
+                    if (@Model.ReportBiz.DataObj.Id === 0 && res.id > 0) {
                         const nuovoUrl = window.location.pathname.replace(/\/+$/, '') + '/' + res.id;
                         window.history.replaceState(null, '', nuovoUrl);
                     }

@@ -64,7 +64,10 @@ namespace ERD.Service.DAL
 
         public abstract string CronString { get; set; }
 
+        [DefaultValue("01/01/2001")]
         public abstract DateTime DataInizio { get; set; }
+
+        [DefaultValue("31/12/9999")]
         public abstract DateTime DataFine { get; set; }
 
         [DefaultValue("20")]
