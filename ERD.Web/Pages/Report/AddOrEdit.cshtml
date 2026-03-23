@@ -229,7 +229,7 @@
                             <select id="TipoFileId" class="form-select">
                                 @foreach (var item in Model.TipiFile)
                                 {
-                                    <option value="@item.Value" selected="@(item.Value == Model.Input.ConnessioneId.ToString())">@item.Text</option>
+                                    <option value="@item.Value" selected="@(item.Value == Model.Input.TipoFileId.ToString())">@item.Text</option>
                                 }
                             </select>
                             <div class="invalid-feedback" id="err-TipoFileId"></div>
@@ -239,10 +239,9 @@
                         <div class="col-12">
                             <label class="form-label fw-medium" for="TemplateId">Template</label>
                             <select id="TemplateId" class="form-select">
-                                <option value="">(nessuno)</option>
                                 @foreach (var item in Model.Templates)
                                 {
-                                    <option value="@item.Value" selected="@(item.Value == Model.Input.ConnessioneId.ToString())">@item.Text</option>
+                                    <option value="@item.Value" selected="@(item.Value == Model.Input.TemplateId.ToString())">@item.Text</option>
                                 }
                             </select>
                         </div>
@@ -284,6 +283,7 @@
                                 <i class="fa-solid fa-circle-question me-1"></i>
                                 Formato: minuto ora giorno mese giorno-settimana
                             </div>
+
                             <div class="invalid-feedback" id="err-CronString"></div>
                         </div>
 

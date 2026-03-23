@@ -52,76 +52,18 @@ namespace ERD.Service.BIZ
                                                                                                                         .SearchByLinq(x => x.EstrazioneId == this.DataObj.Id && x.StatoId == eReport.StatoSchedulazione.Pianificata));
 
 
-
-        /// <summary>
-        /// Data la stringa cron di schedulazione indica se puo' girare oppure no. Funziona solo su base giornaliera
-        /// </summary>
-        public bool CanRunSchedulato
-        {
-            get
-            {
-                //Se non valorizzata stringa cron esce
-                if (this.DataObj.Attivo != 1 || string.IsNullOrEmpty(this.DataObj.CronString))
-                    return false;
-
-                //Valuta lanciabilita' ora
-                try
-                {
-                    var dtNow = DateTime.Now;
-                    var nextRun = this.GetNextSchedule(dtNow.Date);
-
-                    //Valuta se gia' eseguito oppure se ha altre schedulazioni nella giornata
-                    while (nextRun < dtNow)
-                    {
-                        //Carica le esecuzioni successive alla data di presunto run
-                        var lastRun = this.ListaOutput.Where(o => o.DataOraInizio >= nextRun);
-
-                        //Se non presenti esecuzioni OK, puo' partire
-                        if (!lastRun.Any())
-                            return true;
-
-                        //Sono presenti, dobbiamo verificare ulteriori altre schedulazioni nella giornata
-                        nextRun = this.GetNextSchedule(lastRun.First().DataOraInizio.AddSeconds(1));
-                    }
-
-                    return false;
-
-                }
-                catch (Exception e)
-                {
-                    //Trap errori
-                    this.Slot.LogDebug(DebugLevel.Error_1, $"Errore su property 'CanRunSchedulato': {e.Message}");
-                    this.Slot.LogDebug(DebugLevel.Error_1, e.StackTrace);
-                }
-
-                return false;
-            }
-        }
-
-
+        
 
         /// <summary>
         /// Indica se previsto invio email
         /// </summary>
-        public bool IsPrevistoInvioMail
-        {
-            get
-            {
-                return (this.DataObj.InvioMailAttivo > 0 && this.ListaDesinatariEmail.Where(d => d.Attivo > 0).Any());
-            }
-        }
+        public bool IsPrevistoInvioMail => this.LazyGet(nameof(IsPrevistoInvioMail), () => this.DataObj.InvioMailAttivo > 0 && this.ListaDesinatariEmail.Where(d => d.Attivo > 0).Any());
 
 
         /// <summary>
         /// Indica se presenti altre estrazioni da accorpare a questa
         /// </summary>
-        public bool IsAccorpato
-        {
-            get
-            {
-                return !string.IsNullOrWhiteSpace(this.DataObj.EstrazioniAccorpateIds);
-            }
-        }
+        public bool IsAccorpato => this.LazyGet(nameof(IsAccorpato), () => !string.IsNullOrWhiteSpace(this.DataObj.EstrazioniAccorpateIds));
 
 
         public IEnumerable<ReportEstrazione> ListaEstrazioniDaAccorpare => this.LazyGet(nameof(ListaEstrazioniDaAccorpare), () =>
@@ -1011,8 +953,6 @@ namespace ERD.Service.BIZ
             });
 
         }
-
-
 
     } // class
 

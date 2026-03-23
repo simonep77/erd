@@ -102,7 +102,8 @@
     function dpGoTo(page) {
         // ── query-string (default) ────────────────────────────────────
         const url = new URL(window.location.href);
-        url.searchParams.set('page', page);
+        url.searchParams.set('p', page);
+        console.log(JSON.stringify(url));
         window.location.href = url.toString();
 
         // ── AJAX (decommenta e adatta) ────────────────────────────────
@@ -115,8 +116,8 @@
      */
     function dpChangeOffset(offset) {
         const url = new URL(window.location.href);
-        url.searchParams.set('offset', offset);
-        url.searchParams.set('page', 1);
+        url.searchParams.set('o', offset);
+        url.searchParams.set('p', 1);
         window.location.href = url.toString();
     }
 </script>
