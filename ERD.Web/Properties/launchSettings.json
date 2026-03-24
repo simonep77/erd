@@ -4,7 +4,8 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Database:Connectionstring": "Server=cspldbmy01.casagit.it;UserId=rduser_svil;Password=Sviluppo1.;Database=report_dispatcher_svil;"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5229"

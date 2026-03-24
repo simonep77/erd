@@ -49,7 +49,7 @@ namespace ERD.Service.BIZ.Utils
                 if (dt.Columns[i].DataType == typeof(decimal))
                 {
                     worksheet.Column(colIdx).Cells().Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
-                    worksheet.Column(colIdx).CellsUsed().Style.NumberFormat.Format = "0.00 €";
+                    worksheet.Column(colIdx).CellsUsed().Style.NumberFormat.Format = "#,##0.00 €";
                 }
                 else
                 {

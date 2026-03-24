@@ -1,0 +1,79 @@
+﻿@using Business.Data.Objects.Common
+@model ReportEstrazioneBIZ
+
+<div class="modal fade" id="modal-esegui" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">ESEGUI -> @Model.DataObj.Nome</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3 align-items-end">
+                    
+                    <div class="col-auto">
+                        <div class="form-label">Scegli l'azione</div>
+                        <div>
+                           
+                            <label class="form-check">
+                                <input id="radEseguiScarica" class="form-check-input" type="radio" name="radios" checked>
+                                <span class="form-check-label">Esegui e scarica risultato</span>
+                            </label>
+
+                            <div class="ms-4">
+                                <label class="form-check">
+                                    <input id="chkEseguiSalvaStorico" class="form-check-input" type="checkbox">
+                                    <span class="form-check-label">Salva in storico</span>
+                                </label>
+
+                                @if (this.Model.IsPrevistoCopyToPath)
+                                {
+                                    <label class="form-check">
+                                        <input id="chkEseguiCopiaPath" class="form-check-input" type="checkbox">
+                                        <span class="form-check-label">Copia su path previsto</span>
+                                    </label>
+                                }
+
+                                @if (this.Model.IsPrevistoInvioMail)
+                                {
+                                    <label class="form-check">
+                                        <input id="chkEseguiInviaEmail" class="form-check-input" type="checkbox">
+                                        <span class="form-check-label">Invia e-mail</span>
+                                    </label>
+                                }
+
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <label class="form-check">
+                                <input id="radEseguiSoloQuery" class="form-check-input" type="radio" name="radios">
+                                <span class="form-check-label">Esegui query semplice</span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+          
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Esegui</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $(function(){ 
+            
+            $("#modal-esegui input[type='radio']").on("change", function(){
+                    $("#modal-esegui input[type='checkbox']").prop("disabled", $("#radEseguiScarica:checked").length == 0);
+            }).first().change();
+
+        });
+    </script>
+
+</div>
+

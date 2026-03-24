@@ -46,7 +46,8 @@
                             <th>Num. Output</th>
                             <th>Invio Email</th>
                             <th>Schedulazione</th>
-                            <th>CronString</th>
+                            <th>Prossima esecuzione</th>
+                            <th>Copia su Path</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -54,16 +55,31 @@
 
                         @foreach (var item in this.Model.Lista)
                         {
-                            <tr>
-                                <td>@item.Id</td>
-                                <td> <a asp-page="/Report/AddOrEdit" asp-route-Id="@item.Id">@item.Nome</a></td>
-                                <td class="text-secondary">@item.Gruppo</td>
-                                <td class="text-secondary">@item.NumOutputStorico</td>
-                                <td class="text-secondary">@(item.InvioMailAttivo == 1 ? "SI" : "NO")</td>
-                                <td class="text-secondary">@(item.Attivo == 1 ? "SI" : "NO")</td>
-                                <td class="text-secondary">@item.CronString</td>
+                            <tr data-repo-id="@item.DataObj.Id">
+                                <td>@item.DataObj.Id</td>
+                                <td> <a asp-page="/Report/AddOrEdit" asp-route-Id="@item.DataObj.Id">@item.DataObj.Nome</a></td>
+                                <td class="text-secondary">@item.DataObj.Gruppo</td>
+                                <td class="text-secondary">@item.DataObj.NumOutputStorico</td>
+                                <td class="text-secondary">@(item.IsPrevistoInvioMail ? "SI" : "NO")</td>
+
+                                @if (!item.IsSchedulazioneAttiva)
+                                {
+                                    <td class="text-secondary">NO</td>
+                                }
+                                else
+                                {
+                                    <td class="text-secondary">SI
+                                        <br />
+                                        <span class="badge badge-sm bg-yellow text-yellow-fg">@item.DataObj.CronString</span>
+                                    </td>
+                                }
+
+                                
+
+                                <td class="text-secondary">@(item.IsSchedulazioneAttiva ? item.GetNextSchedule(DateTime.Now).ToString("dd/MM/yyyy HH:mm") : "")</td>
+                                <td class="text-secondary">@(item.IsPrevistoCopyToPath ? "SI" : "NO")</td>
                                 <td>
-                                   
+                                    <button class="btn btn-sm btn-primary ddd">Esegui</button>
                                 </td>
                             </tr>
                         }
@@ -126,6 +142,16 @@
                 else
                     url.searchParams.set('n', val);
                 window.location.href = url.toString();
+            });
+
+            $(".ddd").on("click", function () {
+                
+                 ajaxGetAsync("?handler=Esegui&id="+$(this).parents("tr").attr("data-repo-id"), null, function(data){
+                    $("#modal-esegui").remove();
+                    $("body").append(data);
+                    $("#modal-esegui").modal("show");
+                 });
+
             });
 
         });

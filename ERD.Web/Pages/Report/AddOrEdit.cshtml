@@ -31,7 +31,10 @@
     </div>
 
     @* ── Alert feedback AJAX ── *@
-    <div id="ajax-alert" class="alert d-none mb-3" role="alert"></div>
+    <div id="ajax-alert" class="alert d-none mb-3" role="alert">
+        <span class="testo"></span>
+        @* <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a> *@
+    </div>
 
     @* ── Antiforgery token (letto da jQuery) ── *@
     @Html.AntiForgeryToken()
@@ -380,6 +383,7 @@
                 $('#ajax-alert')
                     .removeClass('d-none alert-success alert-danger')
                     .addClass('alert-' + tipo)
+                    .find("span.testo")
                     .html(messaggio);
                 $('html, body').animate({ scrollTop: $('#ajax-alert').offset().top - 80 }, 250);
             }

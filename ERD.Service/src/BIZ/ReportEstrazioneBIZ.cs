@@ -1,6 +1,7 @@
 ﻿using Business.Data.Objects.Core;
 using Business.Data.Objects.Database;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.EMMA;
 using ERD.Service.BIZ.Utils;
 using ERD.Service.Common;
 using ERD.Service.Common.Enums;
@@ -58,8 +59,17 @@ namespace ERD.Service.BIZ
         /// Indica se previsto invio email
         /// </summary>
         public bool IsPrevistoInvioMail => this.LazyGet(nameof(IsPrevistoInvioMail), () => this.DataObj.InvioMailAttivo > 0 && this.ListaDesinatariEmail.Where(d => d.Attivo > 0).Any());
-
-
+        
+        /// <summary>
+        /// Indica se prevista la copia su path
+        /// </summary>
+        public bool IsPrevistoCopyToPath => this.LazyGet(nameof(IsPrevistoCopyToPath), () => !string.IsNullOrWhiteSpace(this.DataObj.CopyToPath));
+        
+        /// <summary>
+        /// Indica se attiva la schedulazione
+        /// </summary>
+        public bool IsSchedulazioneAttiva => this.LazyGet(nameof(IsSchedulazioneAttiva), () => this.DataObj.Attivo > 0 && !string.IsNullOrWhiteSpace(this.DataObj.CronString));
+        
         /// <summary>
         /// Indica se presenti altre estrazioni da accorpare a questa
         /// </summary>

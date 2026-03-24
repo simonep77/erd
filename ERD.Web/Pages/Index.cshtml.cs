@@ -1,5 +1,7 @@
 using Business.Data.Objects.Common;
 using Business.Data.Objects.Common.Utils;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using ERD.Service.BIZ;
 using ERD.Service.DAL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -19,7 +21,7 @@ namespace ERD.Web.Pages
         [BindProperty(SupportsGet = true)]
         public string s { get; set; } = string.Empty;
 
-        public ReportEstrazioneLista Lista {  get; set; }
+        public IEnumerable<ReportEstrazioneBIZ> Lista {  get; set; }
 
         public DataPager Pager { get; set; }
 
@@ -31,9 +33,22 @@ namespace ERD.Web.Pages
             this.g = this.g?.Trim();
             this.n = this.n?.Trim();
 
-            this.Lista = this.Slot.CreateList<ReportEstrazioneLista>(this.p, this.o)
-                .OrderByLinqDesc(x => x.Id).SearchByLinq(x => (g.IsNull() || g == "" || x.Gruppo == g) && (n.IsNull() || n == "" || x.Nome.Like($"%{n}%")) && (s.IsNull() || s == "" || (x.Attivo == 1 && x.CronString != "")));
-            this.Pager = this.Lista.Pager;
+            var l = this.Slot.CreateList<ReportEstrazioneLista>(this.p, this.o)
+                .OrderByLinqDesc(x => x.Id)
+                .SearchByLinq(x => (g.IsNull() || g == "" || x.Gruppo == g) && (n.IsNull() || n == "" || x.Nome.Like($"%{n}%")) && (s.IsNull() || s == "" || (x.Attivo == 1 && x.CronString != "")))
+                .ToBizObjectPagedList<ReportEstrazioneBIZ>();
+            this.Pager = l.Pager;
+            this.Lista = l;
         }
+
+
+
+        public ActionResult OnGetEsegui(int id)
+        {
+            var reBiz = this.Slot.BizNewWithLoadOrNewByPK<ReportEstrazioneBIZ>(id);
+
+            return this.Partial("~/Pages/Report/_Partial_Esegui.cshtml", reBiz);
+        }
+
     }
 }
