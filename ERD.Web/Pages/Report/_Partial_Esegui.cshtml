@@ -55,24 +55,73 @@
 
                 </div>
           
-
+                <div class="download d-none">
+                    aaaaa
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Esegui</button>
+                <button id="btnReshow" type="button" class="btn btn-success d-none">Riapri Tabella</button>
+                <button id="btnEsegui" type="button" class="btn btn-primary">Esegui</button>
+
             </div>
+
         </div>
     </div>
 
     <script>
 
-        $(function(){ 
-            
-            $("#modal-esegui input[type='radio']").on("change", function(){
-                    $("#modal-esegui input[type='checkbox']").prop("disabled", $("#radEseguiScarica:checked").length == 0);
-            }).first().change();
+            $(function(){
+                $("#btnEsegui").setDisabled(true);
 
-        });
+                $("#modal-esegui input[type='radio']").on("change", function(){
+                        $("#modal-esegui input[type='checkbox']").prop("disabled", $("#radEseguiScarica:checked").length == 0);
+                        $("#btnEsegui").setDisabled(false);
+                }).first().change();
+
+                $("#btnEsegui").on("click", function(){
+                    if ($("#radEseguiSoloQuery").is(":checked"))
+                    {
+                        eseguiTable();
+                    }
+                    else
+                    {
+                      eseguiFile();
+                    }
+                });
+
+                $("#btnReshow").on("click", function(){
+                    $("#modal-result-table").modal("show");
+                });
+
+            });
+
+            function eseguiTable() {
+               $("#btnEsegui").setDisabled(true).html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> In corso..');
+               ajaxGetAsync("?handler=EseguiTable&id=@Model.DataObj.Id", null, function(data){
+                    $("#modal-result-table").remove();
+                    //console.log(data);
+                    $("body").append(data);
+                    $("#modal-result-table").modal("show");
+                    $("#btnEsegui").html("Esegui").setDisabled(false); 
+                    $("#btnReshow").removeClass("d-none");
+
+                 }, null, 'none');
+            }
+
+            function eseguiFile() {
+
+               $("#btnEsegui").setDisabled(true).html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> In corso..');
+               ajaxGetAsync("?handler=EseguiFile&id=@Model.DataObj.Id&invia=false&copia=false", null, function(data){
+                    $("#modal-result-table").remove();
+                    $("#btnEsegui").html("Esegui").setDisabled(false);
+                    $("#btnReshow").addClass("d-none");
+                    console.log(data);
+                    $("div.download").removeClass("d-none").html(data.nomeFile);
+                 }, null, 'none');
+
+            }
+
     </script>
 
 </div>

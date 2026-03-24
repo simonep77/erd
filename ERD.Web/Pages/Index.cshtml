@@ -64,11 +64,12 @@
 
                                 @if (!item.IsSchedulazioneAttiva)
                                 {
-                                    <td class="text-secondary">NO</td>
+                                    <td class="text-secondary text-center">NO</td>
                                 }
                                 else
                                 {
-                                    <td class="text-secondary">SI
+                                    <td class="text-secondary text-center">
+                                        SI
                                         <br />
                                         <span class="badge badge-sm bg-yellow text-yellow-fg">@item.DataObj.CronString</span>
                                     </td>
@@ -149,7 +150,7 @@
                  ajaxGetAsync("?handler=Esegui&id="+$(this).parents("tr").attr("data-repo-id"), null, function(data){
                     $("#modal-esegui").remove();
                     $("body").append(data);
-                    $("#modal-esegui").modal("show");
+                    $("#modal-esegui").modal({backdrop: false, keyboard: false}).modal("show");
                  });
 
             });

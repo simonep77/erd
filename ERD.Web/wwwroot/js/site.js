@@ -136,7 +136,8 @@ function evaluateJsonResponseNew(data) {
 //Funzione standardizzata per le richieste GET Ajax
 function ajaxGetAsync(urlGet, dataObj, callbackSuccess, callbackError, selectorWaiter) {
 
-    loaderOn(selectorWaiter);
+    if (selectorWaiter !== 'none')
+        loaderOn(selectorWaiter);
 
     var jqXhr = $.ajax({
         async: true,
@@ -186,7 +187,7 @@ function ajaxGetAsync(urlGet, dataObj, callbackSuccess, callbackError, selectorW
 function ajaxPostAsync(urlGet, dataObj, callbackSuccess, callbackError, selectorWaiter) {
 
     loaderOn(selectorWaiter);
-
+    
     var jqXhr = $.ajax({
         async: true,
         cache: false,
@@ -194,6 +195,7 @@ function ajaxPostAsync(urlGet, dataObj, callbackSuccess, callbackError, selector
         url: urlGet,
         datatype: "json",
         data: dataObj,
+        //headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
         content: "application/json; charset=iso-8859-1",
         xhrFields: { "LoaderSelector": selectorWaiter }
     })

@@ -50,5 +50,32 @@ namespace ERD.Web.Pages
             return this.Partial("~/Pages/Report/_Partial_Esegui.cshtml", reBiz);
         }
 
+
+        public ActionResult OnGetEseguiTable(int id)
+        {
+            var reBiz = this.Slot.BizNewWithLoadOrNewByPK<ReportEstrazioneBIZ>(id);
+            var tab = reBiz.RunSQL();
+            return this.Partial("~/Pages/Report/_Partial_Result_Table.cshtml", tab);
+        }
+
+
+        public ActionResult OnGetEseguiFile(int id, bool invia, bool copia)
+        {
+            var reBiz = this.Slot.BizNewWithLoadOrNewByPK<ReportEstrazioneBIZ>(id);
+            reBiz.Run(true, invia, copia);
+            
+            var mime = reBiz.LastResult.TipoFileId == ERD.Service.Common.Enums.eReport.TipoFile.Csv 
+                        ? "text/csv" 
+                        : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            return new ObjectResult(new
+            {
+                NomeFile = reBiz.LastResult.NomeFile,
+                HistoryId = reBiz.LastResult.Id,
+                MimeType = mime
+            });
+        }
+
+
     }
 }

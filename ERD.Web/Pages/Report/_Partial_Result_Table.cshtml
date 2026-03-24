@@ -1,0 +1,101 @@
+﻿@using Business.Data.Objects.Common
+@using System.Data
+@model DataTable
+@{
+    var rowIndex = 0;
+}
+
+<div class="modal fade" id="modal-result-table" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-full-width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Risultato - righe trovate: <b>@Model.Rows.Count</b><span class="tablefilter"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               <div class="">
+                    <input id="txtTableFilter" type="text" class="form-control" placeholder="Ricerca nella tabella">
+               </div>
+                <div class="table-responsive tableWrap">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                @foreach (DataColumn col in this.Model.Columns)
+                                {
+                                    <th>@col.ColumnName</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (DataRow row in this.Model.Rows)
+                            {
+                                <tr>
+                                    <td>@(++rowIndex)</td>
+                                    @foreach (DataColumn col in this.Model.Columns)
+                                    {
+                                        <td>@row[col]</td>
+                                    }
+                                </tr>
+                            }
+
+                            @if (this.Model.Rows.Count == 0)
+                            {
+                                <tr><td colspan="99" class="text-center">Nessuna riga trovata</td></tr>
+                            }
+
+                        </tbody>
+    
+                    </table>
+                </div>
+          
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $(function(){
+
+            $("#txtTableFilter").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                var count = 0;
+                $("#modal-result-table tbody tr").filter(function() {
+                    var found = $(this).text().toLowerCase().indexOf(value) > -1;
+                    if (found)
+                        count++;
+                        $(this).toggle(found);
+                });
+
+                $("span.tablefilter").toggle(count != $("#modal-result-table tbody tr").length).html(" - di cui filtrate: " + count);
+            });
+        });
+
+    </script>
+
+    <style>
+            #modal-result-table .tableWrap {
+                height: 500px;
+                border: 1px solid grey;
+                overflow: auto;
+            }
+
+            #modal-result-table thead tr th {
+                position: sticky;
+                top: 0;
+            }
+
+            #modal-result-table tfoot tr th {
+                position: sticky;
+                bottom: 0;
+            }
+
+    </style>
+
+</div>
+
