@@ -3,6 +3,7 @@ using Business.Data.Objects.Common.Utils;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using ERD.Service.BIZ;
 using ERD.Service.DAL;
+using Hfs.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -59,20 +60,18 @@ namespace ERD.Web.Pages
         }
 
 
-        public ActionResult OnGetEseguiFile(int id, bool invia, bool copia)
+        public ActionResult OnGetEseguiFile(int id, bool storico, bool invia, bool copia)
         {
             var reBiz = this.Slot.BizNewWithLoadOrNewByPK<ReportEstrazioneBIZ>(id);
-            reBiz.Run(true, invia, copia);
-            
-            var mime = reBiz.LastResult.TipoFileId == ERD.Service.Common.Enums.eReport.TipoFile.Csv 
-                        ? "text/csv" 
-                        : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-
+            reBiz.Run(storico, invia, copia);
+          
             return new ObjectResult(new
             {
                 NomeFile = reBiz.LastResult.NomeFile,
                 HistoryId = reBiz.LastResult.Id,
-                MimeType = mime
+                MimeType = MimeHelper.GetMimeFromFilename(reBiz.LastResult.NomeFile),
+                BlobFile = reBiz.LastResult.DataBlob,
+                TipoFile = reBiz.LastResult.TipoFileId
             });
         }
 

@@ -55,8 +55,9 @@
 
                 </div>
           
-                <div class="download d-none">
-                    aaaaa
+                <div class="alert alert-success download d-none">
+                    @* <a class="xlsx d-none" href="ms-excel:ofe|u|xxxxx"></a>
+                    <a class="csv d-none" href="ms-excel:ofe|u|http:...xls"></a> *@
                 </div>
             </div>
             <div class="modal-footer">
@@ -112,12 +113,17 @@
             function eseguiFile() {
 
                $("#btnEsegui").setDisabled(true).html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> In corso..');
-               ajaxGetAsync("?handler=EseguiFile&id=@Model.DataObj.Id&invia=false&copia=false", null, function(data){
+               var invia=$("#chkEseguiInviaEmail:checked").length > 0;
+               var copia=$("#chkEseguiCopiaPath:checked").length > 0;
+               var storico=$("#chkEseguiSalvaStorico:checked").length > 0;
+               ajaxGetAsync(`?handler=EseguiFile&id=@Model.DataObj.Id&invia=${invia}&copia=${copia}&storico=${storico}`, null, function(data){
                     $("#modal-result-table").remove();
                     $("#btnEsegui").html("Esegui").setDisabled(false);
                     $("#btnReshow").addClass("d-none");
-                    console.log(data);
-                    $("div.download").removeClass("d-none").html(data.nomeFile);
+                    $("div.download").removeClass("d-none").html(`<span>Risultato: </span><a href="data:application/octet-stream;base64,${data.blobFile}" download="${data.nomeFile}">${data.nomeFile}</a>`);
+                    // $("div.download")
+                    //     .removeClass("d-none")
+                    //     .html(`<span>Risultato: </span><a href="ms-excel:ofe|u|data:application/octet-stream;base64,${data.blobFile}" download="${data.nomeFile}">${data.nomeFile}</a>`);
                  }, null, 'none');
 
             }
