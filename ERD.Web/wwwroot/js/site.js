@@ -186,17 +186,18 @@ function ajaxGetAsync(urlGet, dataObj, callbackSuccess, callbackError, selectorW
 //Funzione standardizzata per le richieste GET Ajax
 function ajaxPostAsync(urlGet, dataObj, callbackSuccess, callbackError, selectorWaiter) {
 
-    loaderOn(selectorWaiter);
+    if (selectorWaiter !== 'none')
+        loaderOn(selectorWaiter);
     
     var jqXhr = $.ajax({
         async: true,
         cache: false,
-        type: "POST",
+        method: "POST",
         url: urlGet,
-        datatype: "json",
-        data: dataObj,
-        //headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
-        content: "application/json; charset=iso-8859-1",
+        //dataType: "json",
+        data: JSON.stringify(dataObj),
+        headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+        contentType: 'application/json',
         xhrFields: { "LoaderSelector": selectorWaiter }
     })
         .done(function (data, textStatus, jqXHR) {

@@ -118,7 +118,48 @@ namespace ERD.Web.Pages
             return 1; // placeholder
         }
 
-        #region MyRegion
+
+        public ActionResult OnGetConnessione(int idconn)
+        {
+            var conn = this.Slot.LoadObjOrNewByPK<ReportConnessione>(idconn);
+            return this.Partial("~/Pages/Report/_Partial_Connessione.cshtml", conn);
+
+        }
+
+        public JsonResult OnPostConnessioneSave([FromBody] ConnectionModel input)
+        {
+            var conn = this.Slot.LoadObjOrNewByPK<ReportConnessione>(input.Id);
+
+            conn.Nome = input.Nome;
+            conn.BdoDbConnectioType = input.DbProvider;
+            conn.ConnectionString = input.ConnectionString;
+
+            this.Slot.SaveObject(conn);
+
+            input.Id = conn.Id;
+
+            return new JsonResult(new
+            {
+                success = true,
+                connessione = input
+            });
+        }
+
+        public JsonResult OnPostConnessioneDelete(int idconn)
+        {
+            var conn = this.Slot.LoadObjOrNewByPK<ReportConnessione>(idconn);
+
+            this.Slot.DeleteObject(conn);
+
+            return new JsonResult(new
+            {
+                success = true,
+            });
+        }
+
+
+
+        #region MODELS
 
         // ════════════════════════════════════════════════════════════════
         // INPUT MODEL  (bind dal form via AJAX)
@@ -207,9 +248,32 @@ namespace ERD.Web.Pages
         }
 
 
+        public class ConnectionModel
+        {
+            public int Id { get; set; }
+
+            // ── Anagrafica ────────────────────────────────────────────
+            [Required(ErrorMessage = "Il nome è obbligatorio.")]
+            [MaxLength(100, ErrorMessage = "Massimo 100 caratteri.")]
+            [Display(Name = "Nome")]
+            public string Nome { get; set; } = string.Empty;
+
+            [Required(ErrorMessage = "Il tipo di database è obbligatorio.")]
+            [MaxLength(100, ErrorMessage = "Massimo 100 caratteri.")]
+            [Display(Name = "DbProvider")]
+            public string DbProvider { get; set; } = string.Empty;
+
+            [Required(ErrorMessage = "La stringa di connessione è obbligatoria.")]
+            [MaxLength(1000, ErrorMessage = "Massimo 1000 caratteri.")]
+            [Display(Name = "ConnectionString")]
+            public string ConnectionString { get; set; } = string.Empty;
+
+        }
+
+
         #endregion
 
 
 
-    }
+        }
 }

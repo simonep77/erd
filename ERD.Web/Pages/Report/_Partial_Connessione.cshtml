@@ -1,0 +1,90 @@
+﻿@using Business.Data.Objects.Common
+@model ReportConnessione
+
+<div class="modal fade" id="modal-connessione" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">CONNESSIONE @(Model.Id == 0 ? " - Nuova" : " - Modifica")</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+
+                    @* Nome *@
+                    <div class="col-12">
+                        <label class="form-label fw-medium" for="ConnNome">
+                            Nome <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" id="ConnNome" class="form-control"
+                               value="@Model.Nome" maxlength="100"
+                               placeholder="Nome univoco della connessione" />
+                        <div class="invalid-feedback" id="err-ConnNome"></div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label fw-medium" for="BdoDbConnectioType">
+                            Tipo database <span class="text-danger">*</span>
+                        </label>
+                        <select id="BdoDbConnectioType" class="form-select">
+                            <option value="">- Seleziona tipo database -</option>
+                            <option value="MSSQL2005DataBase" selected="@(Model.BdoDbConnectioType.ToLower() == "mssql2005database")">SQL Server</option>
+                            <option value="MYSQLDatabase" selected="@(Model.BdoDbConnectioType.ToLower() == "mysqldatabase")">MYSQL</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label fw-medium" for="ConnectionString">
+                            ConnectionString <span class="text-danger">*</span>
+                        </label>
+                        <textarea rows="5" id="ConnectionString" class="form-control"
+                                  maxlength="1000" placeholder="ConnectionString">@Model.ConnectionString</textarea>
+                        <div class="invalid-feedback" id="err-ConnectionString"></div>
+                    </div>
+                    <div class="conn-result d-none alert"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                <button id="btnSalvaConn" type="button" class="btn btn-primary">Salva</button>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+
+            $(function(){
+               
+                $("#btnSalvaConn").on("click", function() {
+                    
+                    var btnInner = $(this).html();
+                    $(this).setLoader('on', 'Salvataggio..')
+
+                    var d = {
+                        Id: @Model.Id,
+                        Nome: $("#ConnNome").val(),
+                        DbProvider: $("#BdoDbConnectioType").val(),
+                        ConnectionString: $("#ConnectionString").val()
+                    };
+
+                    ajaxPostAsync("?handler=ConnessioneSave", d, function(data) {
+                        $("#btnSalvaConn").setLoader('off').hide();
+                        $("div.conn-result").removeClass("d-none").addClass("alert-success").html("Connessione salvata con successo");
+                        setTimeout(function() {
+                           $("#modal-connessione").modal("hide");
+                           $("#modal-connessione").remove();
+                           $("#ConnessioneId option[value='@Model.Id']").remove();
+                           $("#ConnessioneId").append($("<option>", { value: data.connessione.id, text: data.connessione.nome, selected: true }));
+                        }, 5 * 1000);
+                    }, null, 'none');
+                });
+            });
+
+
+    </script>
+
+</div>
+

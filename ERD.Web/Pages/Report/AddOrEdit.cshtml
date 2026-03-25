@@ -1,4 +1,4 @@
-﻿@page "{Id:int?}"
+﻿@page
 @model AddOrEdit
 @{
     ViewData["Title"] = "Gestione Estrazione";
@@ -89,6 +89,13 @@
                                 }
                             </select>
                             <div class="invalid-feedback" id="err-ConnessioneId"></div>
+
+                            <div class="ps-3 mt-2">
+                                <button id="btnConnAdd" class="btn btn-sm btn-primary" title="Nuova connessione"><i class="fa-solid fa-plus"></i></button>
+                                <button id="btnConnEdit" class="btn btn-sm btn-primary" title="Modifica connessione"><i class="fa-solid fa-edit"></i></button>
+                                <button id="btnConnDel" class="btn btn-sm btn-primary bg-danger" title="Elimina connessione"><i class="fa-solid fa-minus"></i></button>
+                            </div>
+
                         </div>
 
                         @* Note *@
@@ -407,9 +414,8 @@
             $('button.btn-save').on('click', function () {
 
                 resetValidation();
-                var btnInner = $(this).html();
-                $('button.btn-save').prop('disabled', true)
-                    .html('<span class="spinner-border spinner-border-sm me-2" role="status"></span>Salvataggio…');
+
+                $('button.btn-save').setLoader('on', 'Salvataggio..');
 
                 $.ajax({
                     url:         saveUrl,
@@ -447,9 +453,37 @@
                     },
 
                     complete: function () {
-                        $('button.btn-save').prop('disabled', false)
-                            .html(btnInner);
+                        $('button.btn-save').setLoader('off');
                     }
+                });
+            });
+
+            $("#btnConnAdd").on("click", function(){
+                ajaxGetAsync("?handler=Connessione&idconn=0", null, function(data){
+                    $("#modal-connessione").remove();
+                    $("body").append(data);
+                    $("#modal-connessione").modal({backdrop: true, keyboard: true}).modal("show");
+                });
+            });
+
+            $("#btnConnEdit").on("click", function(){
+                if ($("#ConnessioneId").val() == "")
+                    return;
+                ajaxGetAsync("?handler=Connessione&idconn=" + $("#ConnessioneId").val(), null, function(data){
+                    $("#modal-connessione").remove();
+                    $("body").append(data);
+                    $("#modal-connessione").modal({backdrop: true, keyboard: true}).modal("show");
+                });
+            });
+
+            $("#btnConnDel").on("click", function(){
+                if (!confirm("Sei sicuro di voler eliminare la connessione?"))
+                    return;
+                var connId = $("#ConnessioneId").val();
+                ajaxPostAsync(`?handler=ConnessioneDelete&idconn=${connId}`, null, function(data){
+                    mostraAlert('success',
+                                '<i class="fa-solid fa-circle-check me-2"></i>Connessione rimossa');
+                    $(`#ConnessioneId option[value='${connId}']`).remove();
                 });
             });
 
