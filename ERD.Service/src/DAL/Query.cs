@@ -13,7 +13,7 @@ namespace ERD.Service.DAL
         /// <returns></returns>
         public static IEnumerable<string> GruppiReportGetAll(this BusinessSlot slot)
         {
-            slot.DB.SQL = @"SELECT DISTINCT Gruppo FROM report_estrazioni WHERE Gruppo IS NOT NULL ORDER BY Gruppo";
+            slot.DB.SQL = @"SELECT DISTINCT Gruppo FROM report_estrazioni WHERE Gruppo IS NOT NULL AND Attivo<>-1 ORDER BY Gruppo";
             var tab = slot.DB.Select();
             return tab.Rows.Cast<DataRow>().Select(r => r["Gruppo"].ToString()!).ToList();  
         }
