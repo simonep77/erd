@@ -36,7 +36,7 @@ namespace ERD.Web.Pages
 
             var l = this.Slot.CreateList<ReportEstrazioneLista>(this.p, this.o)
                 .OrderByLinqDesc(x => x.Id)
-                .SearchByLinq(x => (g.IsNull() || g == "" || x.Gruppo == g) && (n.IsNull() || n == "" || x.Nome.Like($"%{n}%")) && (s.IsNull() || s == "" || (x.Attivo == 1 && x.CronString != "")))
+                .SearchByLinq(x => x.Attivo != -1 && (g.IsNull() || g == "" || x.Gruppo == g) && (n.IsNull() || n == "" || x.Nome.Like($"%{n}%")) && (s.IsNull() || s == "" || (x.Attivo == 1 && x.CronString != "")))
                 .ToBizObjectPagedList<ReportEstrazioneBIZ>();
             this.Pager = l.Pager;
             this.Lista = l;
@@ -74,7 +74,6 @@ namespace ERD.Web.Pages
                 TipoFile = reBiz.LastResult.TipoFileId
             });
         }
-
 
     }
 }

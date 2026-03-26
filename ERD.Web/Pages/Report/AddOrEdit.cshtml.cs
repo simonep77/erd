@@ -55,29 +55,30 @@ namespace ERD.Web.Pages
 
             try
             {
+                var repBiz = this.Slot.BizNewWithLoadOrNewByPK<ReportEstrazioneBIZ>(input.Id);
                 // ── MODIFICA ──────────────────────────────────────
-                this.ReportBiz.DataObj.Nome = input.Nome;
-                this.ReportBiz.DataObj.Attivo = input.Attivo ? (sbyte)1 : (sbyte)0;
-                this.ReportBiz.DataObj.Titolo = input.Titolo;
-                this.ReportBiz.DataObj.Gruppo = input.Gruppo;
-                this.ReportBiz.DataObj.Note = input.Note;
-                this.ReportBiz.DataObj.ConnessioneId = input.ConnessioneId;
-                this.ReportBiz.DataObj.TipoFileId = input.TipoFileId;
-                this.ReportBiz.DataObj.TemplateId = input.TemplateId ?? 0;
-                this.ReportBiz.DataObj.InvioMailAttivo = input.InvioMailAttivo ? (sbyte)1 : (sbyte)0;
-                this.ReportBiz.DataObj.SqlText = input.SqlText;
-                this.ReportBiz.DataObj.SheetName = input.SheetName;
-                this.ReportBiz.DataObj.CronString = input.CronString;
-                this.ReportBiz.DataObj.DataInizio = input.DataInizio;
-                this.ReportBiz.DataObj.DataFine = input.DataFine;
-                this.ReportBiz.DataObj.NumOutputStorico = input.NumOutputStorico;
-                this.ReportBiz.DataObj.EstrazioniAccorpateIds = input.EstrazioniAccorpateIds;
-                this.ReportBiz.DataObj.AccorpaSoloDati = input.AccorpaSoloDati ? (sbyte)1 : (sbyte)0;
-                this.ReportBiz.DataObj.CopyToPath = input.CopyToPath;
-                this.ReportBiz.DataObj.NomeFileMask = input.NomeFileMask;
-                this.ReportBiz.DataObj.UtenteIdAggiornamento = UtenteCorrenteId();
+                repBiz.DataObj.Nome = input.Nome;
+                repBiz.DataObj.Attivo = input.Attivo ? (sbyte)1 : (sbyte)0;
+                repBiz.DataObj.Titolo = input.Titolo;
+                repBiz.DataObj.Gruppo = input.Gruppo;
+                repBiz.DataObj.Note = input.Note;
+                repBiz.DataObj.ConnessioneId = input.ConnessioneId;
+                repBiz.DataObj.TipoFileId = input.TipoFileId;
+                repBiz.DataObj.TemplateId = input.TemplateId ?? 0;
+                repBiz.DataObj.InvioMailAttivo = input.InvioMailAttivo ? (sbyte)1 : (sbyte)0;
+                repBiz.DataObj.SqlText = input.SqlText;
+                repBiz.DataObj.SheetName = input.SheetName;
+                repBiz.DataObj.CronString = input.CronString;
+                repBiz.DataObj.DataInizio = input.DataInizio;
+                repBiz.DataObj.DataFine = input.DataFine;
+                repBiz.DataObj.NumOutputStorico = input.NumOutputStorico;
+                repBiz.DataObj.EstrazioniAccorpateIds = input.EstrazioniAccorpateIds;
+                repBiz.DataObj.AccorpaSoloDati = input.AccorpaSoloDati ? (sbyte)1 : (sbyte)0;
+                repBiz.DataObj.CopyToPath = input.CopyToPath;
+                repBiz.DataObj.NomeFileMask = input.NomeFileMask;
+                repBiz.DataObj.UtenteIdAggiornamento = UtenteCorrenteId();
 
-                this.ReportBiz.Salva();
+                repBiz.Salva();
 
                 return new JsonResult(new
                 {
@@ -85,7 +86,7 @@ namespace ERD.Web.Pages
                     message = IsEdit
                         ? "Estrazione aggiornata con successo."
                         : "Estrazione creata con successo.",
-                    id = this.ReportBiz.DataObj.Id
+                    id = repBiz.DataObj.Id
                 });
             }
             catch (Exception ex)
@@ -128,6 +129,23 @@ namespace ERD.Web.Pages
 
         public JsonResult OnPostConnessioneSave([FromBody] ConnectionModel input)
         {
+            if (!TryValidateModel(input))
+            {
+                var errors = ModelState
+                    .Where(kv => kv.Value?.Errors.Count > 0)
+                    .ToDictionary(
+                        kv => kv.Key,
+                        kv => kv.Value!.Errors.Select(e => e.ErrorMessage).First()
+                    );
+
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = "Correggi i campi evidenziati.",
+                    errors
+                });
+            }
+
             var conn = this.Slot.LoadObjOrNewByPK<ReportConnessione>(input.Id);
 
             conn.Nome = input.Nome;
@@ -157,6 +175,14 @@ namespace ERD.Web.Pages
             });
         }
 
+
+        public ActionResult OnPostEstrazioneDelete(int id)
+        {
+            var reBiz = this.Slot.BizNewWithLoadOrNewByPK<ReportEstrazioneBIZ>(id);
+            reBiz.EliminaLogicamente();
+
+            return new JsonResult(new { success = true });
+        }
 
 
         #region MODELS

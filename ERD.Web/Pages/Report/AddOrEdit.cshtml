@@ -19,7 +19,7 @@
             @if (Model.IsEdit)
             {
                 <small class="text-muted">
-                    ID: Model.ReportBiz.DataObj.Id
+                    ID: @Model.ReportBiz.DataObj.Id
                 </small>
             }
         </div>
@@ -326,9 +326,9 @@
     <div class="d-flex align-items-center gap-3 mb-4">
 
         <div>
-            <h4 class="mb-0 fw-semibold">
-                
-            </h4>
+            <button id="btnEstrazDel" type="button" class="btn btn-danger px-4">
+                <i class="fa-solid fa-trash me-2"></i>Elimina
+            </button>
            
         </div>
         <div class="ms-auto">
@@ -352,9 +352,6 @@
             // ── Token antiforgery (richiesto dal PageModel) ───────────────────────
             const token = $('input[name="__RequestVerificationToken"]').val();
 
-            // ── URL dell'handler Save ─────────────────────────────────────────────
-            // Razor Pages: stessa pagina + ?handler=Save
-            const saveUrl = window.location.pathname + '?handler=Save';
 
             // ── Raccoglie tutti i valori del form ─────────────────────────────────
             function raccogliDati() {
@@ -418,7 +415,7 @@
                 $('button.btn-save').setLoader('on', 'Salvataggio..');
 
                 $.ajax({
-                    url:         saveUrl,
+                    url:         window.location.pathname + '?handler=Save',
                     method:      'POST',
                     contentType: 'application/json',
                     headers:     { 'RequestVerificationToken': token },
@@ -484,6 +481,22 @@
                     mostraAlert('success',
                                 '<i class="fa-solid fa-circle-check me-2"></i>Connessione rimossa');
                     $(`#ConnessioneId option[value='${connId}']`).remove();
+                });
+            });
+
+            $("#btnEstrazDel").on("click", function(){
+                if (!confirm("Sei sicuro di voler eliminare l'estrazione?"))
+                    return;
+                
+                ajaxPostAsync("?handler=EstrazioneDelete&id=@Model.Id", null, function(data){
+                    mostraAlert('warning',
+                                '<i class="fa-solid fa-circle-check me-2"></i>Estrazione rimossa');
+                    $('button.btn-save').remove();
+
+                    setTimeout(function() {
+                        window.location.href = "/Index";
+                        }, 5 * 1000);
+
                 });
             });
 

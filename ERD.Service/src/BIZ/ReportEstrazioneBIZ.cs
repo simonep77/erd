@@ -6,6 +6,7 @@ using ERD.Service.BIZ.Utils;
 using ERD.Service.Common;
 using ERD.Service.Common.Enums;
 using ERD.Service.DAL;
+using ERD.Service.Models;
 using Hfs.Client;
 using ICSharpCode.SharpZipLib.Zip;
 using MoreLinq;
@@ -13,6 +14,7 @@ using NCrontab.Advanced;
 using System.Data;
 using System.Net;
 using System.Text;
+using System.Text.Json;
 
 namespace ERD.Service.BIZ
 {
@@ -23,7 +25,7 @@ namespace ERD.Service.BIZ
 
 
         #region PROPERTY
-        private DataTable mTabResultSQL;
+        private DataTable? mTabResultSQL;
         public ReportEstrazioneOutput LastResult { get; set; }
 
         public ReportEstrazioneOutputLista ListaOutput => this.LazyGet(nameof(ListaOutput), () => this.Slot.CreateList<ReportEstrazioneOutputLista>()
@@ -53,23 +55,23 @@ namespace ERD.Service.BIZ
                                                                                                                         .SearchByLinq(x => x.EstrazioneId == this.DataObj.Id && x.StatoId == eReport.StatoSchedulazione.Pianificata));
 
 
-        
+
 
         /// <summary>
         /// Indica se previsto invio email
         /// </summary>
         public bool IsPrevistoInvioMail => this.LazyGet(nameof(IsPrevistoInvioMail), () => this.DataObj.InvioMailAttivo > 0 && this.ListaDesinatariEmail.Where(d => d.Attivo > 0).Any());
-        
+
         /// <summary>
         /// Indica se prevista la copia su path
         /// </summary>
         public bool IsPrevistoCopyToPath => this.LazyGet(nameof(IsPrevistoCopyToPath), () => !string.IsNullOrWhiteSpace(this.DataObj.CopyToPath));
-        
+
         /// <summary>
         /// Indica se attiva la schedulazione
         /// </summary>
         public bool IsSchedulazioneAttiva => this.LazyGet(nameof(IsSchedulazioneAttiva), () => this.DataObj.Attivo > 0 && !string.IsNullOrWhiteSpace(this.DataObj.CronString));
-        
+
         /// <summary>
         /// Indica se presenti altre estrazioni da accorpare a questa
         /// </summary>
@@ -99,7 +101,7 @@ namespace ERD.Service.BIZ
         /// <summary>
         /// Template XLSX da utilizzare al posto di quello a DB
         /// </summary>
-        public byte[] ForcedTemplate { get; set; }
+        public byte[] ForcedTemplate { get; set; } = null;
 
 
         #endregion
@@ -429,13 +431,13 @@ namespace ERD.Service.BIZ
             if (pathText.StartsWith(@"{", StringComparison.Ordinal))
             {
                 //HFS
-                dynamic obj = Newtonsoft.Json.JsonConvert.DeserializeObject(pathText);
+                var obj = JsonSerializer.Deserialize<CopyToPathReportModel>(pathText)
+                    ?? throw new ArgumentException($"Il valore della stringa Json in {nameof(ReportEstrazione.CopyToPath)} non è valido");
 
-                string hfsuri = obj.Uri;
                 string vpath = string.Format(obj.Path.ToString(), this.LastResult.DataOraInizio);
 
                 ////vai   aa
-                using (var hfs = new HfsClient(hfsuri))
+                using (var hfs = new HfsClient(obj.Uri))
                 {
                     hfs.FileWriteFromBuffer(vpath, this.LastResult.DataBlob);
                 }
@@ -773,7 +775,7 @@ namespace ERD.Service.BIZ
 
             var sheetname = !string.IsNullOrEmpty(this.DataObj.SheetName) ? this.DataObj.SheetName : this.DataObj.Nome.PadRight(30, ' ').Substring(0, 30).Trim();
 
-            var excel = ExcelUT.EseguiRenderDataTableExcel(this.mTabResultSQL, this.DataObj.Nome, this.DataObj.Titolo, sheetname, null);
+            var excel = ExcelUT.EseguiRenderDataTableExcel(this.mTabResultSQL!, this.DataObj.Nome, this.DataObj.Titolo, sheetname, null);
             this.LastResult.NomeFile = this.getNomeFileIstantaneo();
             this.LastResult.DataLen = excel.DatiMemory.Length;
             this.LastResult.DataBlob = excel.DatiMemory;

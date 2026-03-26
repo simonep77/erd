@@ -1,5 +1,6 @@
 ﻿@using Business.Data.Objects.Common
 @using System.Data
+
 @model DataTable
 @{
     var rowIndex = 0;
@@ -35,7 +36,21 @@
                                     <td>@(++rowIndex)</td>
                                     @foreach (DataColumn col in this.Model.Columns)
                                     {
-                                        <td>@row[col]</td>
+                                        if (row[col].GetType().IsNumber())
+                                        {
+                                            if (row[col].GetType().IsDecimal())
+                                            {
+                                                <td class="text-end">@($"{row[col]:N2}")</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-end">@($"{row[col]:N0}")</td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <td>@row[col]</td>
+                                        }
                                     }
                                 </tr>
                             }

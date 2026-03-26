@@ -8,9 +8,9 @@ namespace ERD.Service.BIZ.Utils
 
         public class ExcelRender
         {
-            public string NomeFile;
-            public byte[] DatiMemory;
-            public string MimeType = @"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            public required string NomeFile { get; set; }
+            public required byte[] DatiMemory { get; set; }
+            public string MimeType { get; set; } = @"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         }
 
         /// <summary>
@@ -24,10 +24,7 @@ namespace ERD.Service.BIZ.Utils
         /// <returns></returns>
         public static ExcelRender EseguiRenderDataTableExcel(DataTable dt, string nomeStat, string titolo, string sheetName, Dictionary<string, string> args)
         {
-            var oEsitoRender = new ExcelRender();
-
-            oEsitoRender.NomeFile = String.Format("Report_{0}_{1:yyyyMMdd_HHmmss}.xlsx", nomeStat, DateTime.Now);
-
+            
             var workbook = new ClosedXML.Excel.XLWorkbook();
 
             //Se fornito imposta un nome sheet
@@ -46,10 +43,18 @@ namespace ERD.Service.BIZ.Utils
             {
                 var colIdx = i + 1;
 
-                if (dt.Columns[i].DataType == typeof(decimal))
+                if (dt.Columns[i].DataType.IsNumber())
                 {
                     worksheet.Column(colIdx).Cells().Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
-                    worksheet.Column(colIdx).CellsUsed().Style.NumberFormat.Format = "#,##0.00 €";
+
+                    if (dt.Columns[i].DataType.IsDecimal())
+                    {
+                        worksheet.Column(colIdx).CellsUsed().Style.NumberFormat.Format = "#,##0.00 €";
+                    }
+                    else if (dt.Columns[i].DataType.IsInteger())
+                    {
+                        worksheet.Column(colIdx).CellsUsed().Style.NumberFormat.Format = "#,##0";
+                    }
                 }
                 else
                 {
@@ -62,7 +67,7 @@ namespace ERD.Service.BIZ.Utils
             if (!String.IsNullOrEmpty(titolo))
             {
                 //Add titolo
-                worksheet.FirstRowUsed().InsertRowsAbove(1);
+                worksheet.FirstRowUsed()!.InsertRowsAbove(1);
 
                 //Ultima colonna
                 var cellLast = worksheet.Cell(1, dt.Columns.Count);
@@ -100,11 +105,14 @@ namespace ERD.Service.BIZ.Utils
             }
 
             //Scrive
-            var memoryStream = new MemoryStream();
+            using var memoryStream = new MemoryStream();
             workbook.SaveAs(memoryStream);
-            oEsitoRender.DatiMemory = memoryStream.ToArray();
 
-            return oEsitoRender;
+            return new ExcelRender
+            {
+                NomeFile = String.Format("Report_{0}_{1:yyyyMMdd_HHmmss}.xlsx", nomeStat, DateTime.Now),
+                DatiMemory = memoryStream.ToArray()
+            };
         }
 
 
@@ -112,10 +120,7 @@ namespace ERD.Service.BIZ.Utils
 
         public static ExcelRender EseguiRenderDataTableExcelTemplate(DataTable dt, string nomeFile, byte[] template, Dictionary<string, string> args)
         {
-            var oEsitoRender = new ExcelRender();
-
-            oEsitoRender.NomeFile = nomeFile;
-
+            
             var ms = new MemoryStream(template);
 
             var tpl = new ClosedXML.Report.XLTemplate(ms);
@@ -128,15 +133,16 @@ namespace ERD.Service.BIZ.Utils
             var ret = tpl.Generate();
             if (ret.HasErrors)
                 throw new ApplicationException(string.Join(" - ", ret.ParsingErrors.Select(s => s.Message)));
-            
+
             //Scrive
-            var memoryStream = new MemoryStream();
+            using var memoryStream = new MemoryStream();
             tpl.SaveAs(memoryStream);
 
             //Imposta blob output
-            oEsitoRender.DatiMemory = memoryStream.ToArray();
-
-            return oEsitoRender;
+            return new ExcelRender {
+                NomeFile = nomeFile,
+                DatiMemory = memoryStream.ToArray()
+            };
         }
 
 
